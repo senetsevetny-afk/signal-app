@@ -726,6 +726,109 @@ nav{position:fixed;left:0;right:0;bottom:0;background:rgba(8,15,26,.94);
 .fW.u{color:var(--up)} .fW.d{color:var(--down)}
 .btn.qt2{background:var(--card2);border:1px solid var(--line2);color:var(--tx);
   border-radius:13px;padding:12px;font:700 13px Manrope,sans-serif;width:100%;margin-top:12px;cursor:pointer}
+
+/* подсказки */
+.hlp{width:19px;height:19px;border-radius:50%;border:1px solid rgba(245,185,66,.5);
+  background:rgba(245,185,66,.12);color:var(--gold);font:800 11px Manrope,sans-serif;
+  cursor:pointer;flex:none;margin-left:7px;padding:0;line-height:1;
+  animation:hlpPulse 2.6s ease-in-out infinite}
+@keyframes hlpPulse{0%,70%,100%{box-shadow:0 0 0 0 rgba(245,185,66,.45)}
+  35%{box-shadow:0 0 0 6px rgba(245,185,66,0)}}
+#helpWrap{position:fixed;inset:0;z-index:125;background:rgba(0,0,0,.66);display:none;
+  align-items:center;justify-content:center;padding:20px;backdrop-filter:blur(4px)}
+#helpWrap.on{display:flex;animation:fadeIn .22s ease}
+@keyframes fadeIn{from{opacity:0}to{opacity:1}}
+.helpCard{background:var(--card);border:1px solid var(--line);border-radius:22px;padding:20px;
+  max-width:420px;width:100%;animation:popIn .3s cubic-bezier(.2,1.1,.4,1)}
+@keyframes popIn{from{opacity:0;transform:translateY(18px) scale(.96)}to{opacity:1;transform:none}}
+.helpTop{display:flex;align-items:center;gap:10px;margin-bottom:12px}
+.helpTop b{font-size:18px;font-weight:800;flex:1}
+.helpCard p{margin:0 0 12px;font-size:14px;line-height:1.6;color:var(--tx2);
+  opacity:0;animation:slideUp .45s ease forwards}
+@keyframes slideUp{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+/* аккордеон */
+.acc{background:var(--card);border:1px solid var(--line2);border-radius:18px;margin-bottom:10px;overflow:hidden}
+.accH{width:100%;display:flex;align-items:center;gap:4px;background:0;border:0;color:var(--tx);
+  padding:15px;cursor:pointer;font-family:inherit;text-align:left}
+.accH b{flex:1;font-size:14.5px;font-weight:800}
+.accArr{color:var(--tx3);font-size:13px;transition:transform .3s;margin-left:8px}
+.acc.on .accArr{transform:rotate(180deg);color:var(--gold)}
+.accB{max-height:0;overflow:hidden;transition:max-height .45s cubic-bezier(.3,1,.4,1);padding:0 13px}
+.acc.on .accB{max-height:2600px;padding-bottom:13px}
+@media (prefers-reduced-motion:reduce){.hlp{animation:none}.accB{transition:none}}
+
+.startCard{background:linear-gradient(160deg,#101A26,#0A1017);border:1px solid rgba(43,217,138,.22);
+  border-radius:22px;padding:15px;margin-bottom:14px}
+.startHead{display:flex;align-items:center;gap:9px;margin-bottom:13px}
+.startHead b{font-size:12px;letter-spacing:.18em;color:var(--up);font-weight:800}
+.stDotL{width:8px;height:8px;border-radius:50%;background:var(--up);
+  box-shadow:0 0 0 0 rgba(43,217,138,.6);animation:lvp 2.4s infinite}
+.startLbl{display:flex;align-items:center;font-size:10.5px;letter-spacing:.13em;color:var(--tx3);
+  font-weight:700;text-transform:uppercase;margin:16px 0 8px}
+.stMini{display:flex;align-items:center;gap:11px;background:var(--card2);border:1px solid var(--line2);
+  border-radius:14px;padding:11px 12px;margin-bottom:7px;cursor:pointer;transition:.16s}
+.stMini.on{border-color:rgba(43,217,138,.45);background:rgba(43,217,138,.08)}
+.stMini b{font-size:13.5px;font-weight:800;display:block}
+.stMini s{text-decoration:none;font-size:10.5px;color:var(--tx3)}
+.stIco2{width:30px;height:30px;border-radius:10px;display:grid;place-items:center;flex:none;
+  background:rgba(255,255,255,.05);border:1px solid var(--line2);font-size:14px;color:var(--tx2)}
+.stMini.on .stIco2{color:var(--up);border-color:rgba(43,217,138,.4);background:rgba(43,217,138,.12)}
+.stMini .stDot{width:15px;height:15px;border-radius:50%;border:2px solid var(--line2);flex:none;margin-top:0}
+.stMini.on .stDot{border-color:var(--up);background:radial-gradient(circle,var(--up) 0 3.5px,transparent 4.5px)}
+.tfRow{display:grid;grid-template-columns:repeat(6,1fr);gap:6px}
+.tfChip{background:var(--card2);border:1px solid var(--line2);color:var(--tx2);border-radius:10px;
+  padding:10px 0;font:700 11px 'JetBrains Mono',monospace;cursor:pointer;transition:.16s}
+.tfChip.on{background:rgba(43,217,138,.14);border-color:rgba(43,217,138,.45);color:var(--up)}
+.bigRun{margin-top:16px;background:linear-gradient(100deg,#21D07A,#12A45E);color:#04140C;
+  font-size:15.5px;letter-spacing:.06em;padding:17px;box-shadow:0 10px 28px -12px rgba(33,208,122,.8)}
+
+.pkHeadRow{display:flex;align-items:center;justify-content:space-between;width:100%}
+.sortBtn{display:flex;align-items:center;background:var(--card2);border:1px solid var(--line2);
+  color:var(--tx2);border-radius:9px;padding:6px 10px;font:700 11px Manrope,sans-serif;cursor:pointer}
+.sortBtn.on{color:var(--up);border-color:rgba(43,217,138,.4);background:rgba(43,217,138,.1)}
+.star{background:0;border:0;color:var(--tx3);font-size:15px;cursor:pointer;padding:0 2px;flex:none;line-height:1}
+.star.on{color:var(--gd,#E8B23A);color:var(--gold)}
+.pay{font:800 13px 'JetBrains Mono',monospace;color:var(--up);flex:none;margin-left:auto;
+  transition:color .35s,opacity .35s}
+.pay.na{color:var(--tx3);font-weight:700}
+.msc{display:inline-block;flex:none}
+.msc.idle svg{animation:mscBreath 4.2s ease-in-out infinite}
+.msc.loading svg{animation:mscSpin 2.4s ease-in-out infinite}
+@keyframes mscBreath{0%,100%{transform:translateY(0)}50%{transform:translateY(-3px)}}
+@keyframes mscSpin{0%,100%{transform:translateY(0) rotate(-2deg)}50%{transform:translateY(-2px) rotate(2deg)}}
+.helpMsc{display:flex;justify-content:center;margin-bottom:6px}
+@media (prefers-reduced-motion:reduce){.msc svg{animation:none!important}}
+
+.heroMsc{display:flex;justify-content:center;margin-bottom:6px}
+.heroTxt{text-align:center;margin-bottom:16px}
+.heroTxt b{display:block;font-size:19px;font-weight:800;letter-spacing:-.02em}
+.heroTxt span{font-size:12.5px;color:var(--tx2)}
+.secRun{margin-top:9px;background:var(--card2);border:1px solid var(--line2);color:var(--tx);
+  font-size:14px;padding:14px}
+.howBtn{position:relative;width:100%;margin-top:12px;background:0;border:0;color:var(--gold);
+  font:700 13px Manrope,sans-serif;cursor:pointer;padding:8px}
+.howPulse{position:absolute;inset:0;border-radius:12px;border:1px solid rgba(245,185,66,.35);
+  animation:howP 2.8s ease-in-out infinite;pointer-events:none}
+@keyframes howP{0%,70%,100%{opacity:.25}35%{opacity:.9}}
+.feat{display:flex;align-items:center;gap:11px;background:var(--card2);border:1px solid var(--line2);
+  border-radius:14px;padding:12px;margin-bottom:8px;cursor:pointer}
+.feat b{display:block;font-size:13.5px;font-weight:700}
+.feat s{text-decoration:none;font-size:11px;color:var(--tx3)}
+.featIc{width:32px;height:32px;border-radius:10px;display:grid;place-items:center;flex:none;
+  background:rgba(255,255,255,.05);border:1px solid var(--line2);font-size:15px}
+.tickerWrap{overflow:hidden;border-top:1px solid var(--line2);border-bottom:1px solid var(--line2);
+  padding:9px 0;margin:14px 0}
+.ticker{display:flex;gap:22px;white-space:nowrap;animation:tkRun 38s linear infinite;width:max-content}
+@keyframes tkRun{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+.tk{display:inline-flex;align-items:center;gap:7px;font-size:12px;cursor:pointer}
+.tk b{font-weight:700} .tk i{font-style:normal;color:var(--tx2)} .tk s{text-decoration:none;font-weight:700}
+.tkNa{font-size:12px;color:var(--tx3)}
+@media (prefers-reduced-motion:reduce){.ticker{animation:none}.howPulse{animation:none}}
+
+.sheet{background:var(--bg);border-radius:26px 26px 0 0;width:100%;max-width:520px;margin:0 auto;
+  max-height:92vh;display:flex;flex-direction:column;border-top:1px solid var(--line)}
+#aboutWrap{align-items:flex-end;background:rgba(0,0,0,.6);backdrop-filter:blur(3px)}
+#aboutWrap.on{display:flex}
 .disc{font-size:11.5px;color:var(--tx3);line-height:1.5;padding:4px 4px 16px;text-align:center}
 
 /* вердикт над графиком */
@@ -970,7 +1073,7 @@ nav{position:fixed;left:0;right:0;bottom:0;background:rgba(8,15,26,.94);
     <div class="brand">
       <span class="mark"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1"
         stroke-linecap="round" stroke-linejoin="round"><path d="M2 12h4l3-8 4 16 3-8h6"/></svg></span>
-      <div style="min-width:0"><h1>AI Comfort Signal</h1><span style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;display:block">анализ на реальных данных · <b style="color:var(--gold);font-weight:700">v32 · 14.09 15:58</b></span></div>
+      <div style="min-width:0"><h1>AI Comfort Signal</h1><span style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;display:block">анализ на реальных данных · <b style="color:var(--gold);font-weight:700">v40 · 14.09 19:54</b></span></div>
     </div>
     <button class="bell" onclick="openChat()" aria-label="Помощник"><svg viewBox="0 0 24 24" fill="none"
       stroke="currentColor" stroke-width="2"><path d="M18 8a6 6 0 10-12 0c0 7-3 8-3 8h18s-3-1-3-8"/>
@@ -988,6 +1091,9 @@ nav{position:fixed;left:0;right:0;bottom:0;background:rgba(8,15,26,.94);
 
   <!-- ================= HOME ================= -->
   <section class="tab on sigTheme" id="tab-home">
+    <div class="startCard">
+      <div class="heroMsc" id="heroMsc"></div>
+      <div class="heroTxt"><b>AI Comfort Signal</b><span>Выберите рынок, актив и срок</span></div>
 <div class="sigPick">
       <div class="mkTabs" id="sigMkt">
         <button data-m="crypto">Крипто</button>
@@ -996,6 +1102,27 @@ nav{position:fixed;left:0;right:0;bottom:0;background:rgba(8,15,26,.94);
       </div>
       <button class="sigAsset" id="sigAsset" onclick="sigPickAsset()"></button>
     </div>
+
+      <div class="startLbl">СТРАТЕГИЧЕСКИЙ ПРОФИЛЬ <span id="hStrat"></span></div>
+      <div id="stratMini"></div>
+
+      <div class="startLbl">СРОК ЭКСПИРАЦИИ <span id="hTf"></span></div>
+      <div class="tfRow" id="tfRow"></div>
+
+      <button class="btn bigRun" id="bigRun" onclick="getSignal()">⚡ ПОЛУЧИТЬ СИГНАЛ</button>
+      <button class="btn secRun" onclick="go('signals');setTimeout(()=>{if(!sigState.sig)getSignal()},50)">
+        🔍 Анализировать подробно</button>
+
+      <button class="howBtn" onclick="openHelp('flow')">❔ Как это работает<span class="howPulse"></span></button>
+    </div>
+
+    <div class="acc" id="acc-extra">
+      <button class="accH" onclick="accToggle('extra')">
+        <b>＋ Дополнительные возможности</b><span class="accArr">▾</span></button>
+      <div class="accB" id="extraBox"></div>
+    </div>
+
+    <div class="tickerWrap"><div class="ticker" id="ticker"></div></div>
     <div class="sigStat" id="sigStatus"></div>
     <div id="sigWrap"></div>
     <button class="btn qt2" style="margin-top:4px" onclick="go('signals')">Полный разбор и настройки ›</button>
@@ -1191,7 +1318,7 @@ nav{position:fixed;left:0;right:0;bottom:0;background:rgba(8,15,26,.94);
     <div class="sect">ПРОФИЛЬ И НАСТРОЙКИ</div>
     <div class="card">
       <div class="kv"><span>Пользователь</span><b id="pName">Гость</b></div>
-      <div class="kv"><span>Версия сборки</span><b class="mono" style="color:var(--gold)">v32 · 14.09 15:58</b></div>
+      <div class="kv"><span>Версия сборки</span><b class="mono" style="color:var(--gold)">v40 · 14.09 19:54</b></div>
       <div class="kv"><span>Источник данных</span><b>Binance Spot API</b></div>
       <div class="kv"><span>Сигналов в журнале</span><b id="pCount">0</b></div>
     </div>
@@ -1228,6 +1355,10 @@ nav{position:fixed;left:0;right:0;bottom:0;background:rgba(8,15,26,.94);
     </div>
 
     <div class="card">
+      <div class="grid2" style="gap:9px;margin-bottom:14px">
+        <button class="btn qt2" style="margin:0" onclick="openAbout()">О приложении</button>
+        <button class="btn qt2" style="margin:0" onclick="openSupport()">Поддержка</button>
+      </div>
       <div class="sect">ПОТОК КОТИРОВОК</div>
       <div class="hint" style="margin-bottom:12px">Прямое соединение по WebSocket: валютные пары, металлы и синтетические индексы, которые торгуются круглосуточно, включая выходные. Работает без регистрации — поле ниже менять не нужно.</div>
       <input id="qsApp" placeholder="идентификатор приложения" autocomplete="off">
@@ -1295,6 +1426,8 @@ nav{position:fixed;left:0;right:0;bottom:0;background:rgba(8,15,26,.94);
   <div id="pkList"></div>
 </div>
 <div id="pulseWrap"><div id="pulseSheet"></div></div>
+<div class="ov" id="aboutWrap"></div>
+<div id="helpWrap" onclick="if(event.target.id==='helpWrap')closeHelp()"></div>
 <div id="toast"></div>
 <nav>
   <div class="navin">
@@ -1933,11 +2066,26 @@ function pickerSwitch(t){
 
 const GRP={synth:'Индексы · работают круглосуточно',major:'Основные пары',cross:'Кросс-курсы',exotic:'Экзотика и металлы'};
 
+let pkSort='def';                       // 'def' | 'payout'
+function pkToggleSort(){ pkSort = pkSort==='payout'?'def':'payout'; haptic(); renderPicker() }
+
+/* одна строка списка — переиспользуемый компонент */
+function renderAssetRow(a,sub){
+  const fav=FAV.has(a.id);
+  return `<div class="pkRow" data-id="${a.id}">
+    <button class="star ${fav?'on':''}" onclick="favToggle('${a.id}',event)"
+      aria-label="В избранное">${fav?'★':'☆'}</button>
+    ${assetIcon(a)}
+    <div class="m"><b>${a.label}</b><div class="sub">${sub||''}</div></div>
+    ${payoutHTML(a.id)}
+    <span class="chev">›</span></div>`;
+}
+
 function renderPicker(){
   const q=(document.getElementById('pkSearch').value||'').trim().toUpperCase();
   const el=document.getElementById('pkList');
   if(pickerTab==='crypto'&&!cryptoLoaded){
-    el.innerHTML='<div class="empty"><span>⏳</span>Загружаю список биржи…</div>';
+    el.innerHTML='<div class="empty"><span>◷</span>Загружаю список биржи…</div>';
     document.getElementById('pkCount').textContent=''; return;
   }
   if(pickerTab==='crypto'&&cryptoErr){
@@ -1947,31 +2095,48 @@ function renderPicker(){
         :cryptoErr}
       <button onclick="retryCrypto()">Повторить</button></div>`;
   } else document.getElementById('pkNote').innerHTML='';
-  let list=REG[pickerTab].filter(a=>!q||a.id.includes(q)||a.label.includes(q));
-  document.getElementById('pkCount').textContent=list.length+' активов';
-  if(!list.length){el.innerHTML='<div class="empty"><span>🔍</span>Ничего не найдено</div>';return}
 
-  if(pickerTab==='forex'||pickerTab==='otc'){
-    el.innerHTML=['major','cross','exotic'].map(g=>{
-      const part=list.filter(a=>a.group===g); if(!part.length)return '';
-      return `<div class="pkGrp">${GRP[g]} · ${part.length}</div>`+part.map(a=>{
-        if(a.group==='synth')
-          return `<div class="pkRow" data-id="${a.id}">${assetIcon(a)}
-            <div class="m"><b>${a.label}</b><div class="sub">синтетический индекс · круглосуточно</div></div>
-            <span class="chev">›</span></div>`;
-        const [b,c]=fxParts(a.base||a.id);
-        return `<div class="pkRow" data-id="${a.id}">${assetIcon(a)}
-          <div class="m"><b>${a.label}</b><div class="sub">${curName(b)} → ${curName(c)}</div></div>
-          <span class="chev">›</span></div>`}).join('');
+  let list=REG[pickerTab].filter(a=>!q||a.id.includes(q)||a.label.toUpperCase().includes(q));
+
+  // шапка таблицы с сортировкой по выплате
+  document.getElementById('pkCount').innerHTML=
+    `<div class="pkHeadRow"><span>${list.length} активов</span>
+      <button class="sortBtn ${pkSort==='payout'?'on':''}" onclick="pkToggleSort()">
+        Выплата ${pkSort==='payout'?'↓':''} ${hlp('payout')}</button></div>`;
+  if(!list.length){el.innerHTML='<div class="empty"><span>◎</span>Ничего не найдено</div>';return}
+
+  const fav=list.filter(a=>FAV.has(a.id));
+  const rest=list.filter(a=>!FAV.has(a.id));
+  const subOf=a=>{
+    if(a.group==='synth')return 'синтетический индекс · круглосуточно';
+    if(a.market==='crypto')return a.vol?`оборот ${(a.vol/1e6).toFixed(1)} млн $ · ${fmtP(a.px)}`:'криптовалюта';
+    if(a.market==='otc')return 'OTC · расчёт по базовой паре';
+    const [b,c]=fxParts(a.base||a.id); return `${curName(b)} → ${curName(c)}`;
+  };
+  const byPayout=arr=>arr.slice().sort((x,y)=>{
+    const px=getAssetPayout(x.id), py=getAssetPayout(y.id);
+    if(px==null&&py==null)return 0;
+    if(px==null)return 1;                 // без выплаты — вниз
+    if(py==null)return -1;
+    return py-px || x.label.localeCompare(y.label);
+  });
+
+  let html='';
+  if(fav.length)html+=`<div class="pkGrp">Избранное · ${fav.length} ${hlp('fav')}</div>`
+    +(pkSort==='payout'?byPayout(fav):fav).map(a=>renderAssetRow(a,subOf(a))).join('');
+
+  if(pkSort==='payout'){
+    html+=`<div class="pkGrp">По выплате</div>`+byPayout(rest).slice(0,220).map(a=>renderAssetRow(a,subOf(a))).join('');
+  } else if(pickerTab==='forex'||pickerTab==='otc'){
+    html+=['synth','major','cross','exotic'].map(g=>{
+      const part=rest.filter(a=>a.group===g); if(!part.length)return '';
+      return `<div class="pkGrp">${GRP[g]} · ${part.length}</div>`
+        +part.map(a=>renderAssetRow(a,subOf(a))).join('');
     }).join('');
-  }else{
-    list=list.slice(0,220);
-    el.innerHTML=list.map(a=>`<div class="pkRow" data-id="${a.id}">${assetIcon(a)}
-      <div class="m"><b>${a.label}</b><div class="sub">оборот ${(a.vol/1e6).toFixed(1)} млн $ за сутки</div></div>
-      <div class="pkPx"><b class="mono">${fmtP(a.px)}</b>
-        <s style="color:${a.chg>=0?'var(--up)':'var(--down)'}">${a.chg>=0?'+':''}${a.chg.toFixed(2)}%</s></div>
-    </div>`).join('');
+  } else {
+    html+=rest.slice(0,220).map(a=>renderAssetRow(a,subOf(a))).join('');
   }
+  el.innerHTML=html;
 }
 
 function retryCrypto(){
@@ -1984,14 +2149,15 @@ function setAsset(id){
     sigState.sig=null;
     setTimeout(()=>{
       if(typeof sigSyncHead==='function')sigSyncHead();
-      const t=document.getElementById('tab-home');
-      if(t&&t.classList.contains('on'))sigLoad(id,S.tf);
+
     },60);
   }
   S.asset=id; S.cat=marketOf(id);
   const a=REG[S.cat].find(x=>x.id===id)||{id,market:S.cat,label:label(id),base:id.slice(0,-4)};
-  document.getElementById('assetBtn').innerHTML=
-    `${assetIcon(a)}<span class="al"><b>${a.label}</b><s>${a.market==='forex'?'валютная пара':'криптовалюта'}</s></span><span class="chev">›</span>`;
+  const ab=document.getElementById('assetBtn');
+  if(ab)ab.innerHTML=`${assetIcon(a)}<span class="al"><b>${a.label}</b>
+    <s>${a.market==='forex'?'валютная пара':a.market==='otc'?'OTC':'криптовалюта'}</s></span>
+    ${payoutHTML(a.id)}<span class="chev">›</span>`;
   closePicker(); haptic('medium');
   const nt=document.getElementById('catNote');
   if(a.market==='crypto'){ nt.innerHTML=''; }
@@ -4183,6 +4349,241 @@ function renderAllSignals(){
     : '<div class="empty"><span>◎</span>Пока пусто. Нажмите «Сканировать» или посчитайте пару на главной.</div>';
 }
 
+
+
+
+/* ═══════════ ГЛАВНАЯ: ЗАПУСК ПО КНОПКЕ ═══════════ */
+async function getSignal(){
+  const b=document.getElementById('bigRun');
+  const old=b.innerHTML;
+  b.disabled=true; b.innerHTML='<span class="spin"></span> считаю…';
+  setMascot('loading');
+  await sigLoad(S.asset,S.tf);
+  b.disabled=false; b.innerHTML=old;
+  setMascot(sigState.sig?sigState.sig.a.dir:'idle');
+  const w=document.getElementById('sigWrap');
+  if(w&&sigState.sig)setTimeout(()=>w.scrollIntoView({behavior:'smooth',block:'start'}),80);
+}
+function setMascot(state){
+  const el=document.getElementById('heroMsc');
+  if(el)el.innerHTML=mascot(state==='CALL'||state==='PUT'?state:state==='loading'?'loading':'idle',66);
+}
+
+/* ═══════════ ДОПОЛНИТЕЛЬНЫЕ ВОЗМОЖНОСТИ ═══════════ */
+const FEATURES=[
+  ['📊','Аналитика','итог, что менять, симулятор',"go('analytics')",'bt'],
+  ['📡','Пульс рынка','все инструменты и спидометры',"go('market')",'gauges'],
+  ['📈','Живой график','свечи в реальном времени',"openLive&&openLive()",'chart'],
+  ['🤖','Помощник','объяснит сигнал словами',"openChat()",'why'],
+  ['📜','Журнал','сделки и их исход',"go('history')",'journal'],
+  ['🧪','Проверка на истории','бэктест текущей связки',"go('signals')",'bt'],
+  ['⚙️','Стратегия и порог','настройки расчёта',"go('signals')",'strat'],
+  ['🛡','Лимиты сессии','стоп после серии убытков',"go('signals')",'sess']
+];
+function renderFeatureCard(f){
+  return `<div class="feat" onclick="${f[3]}">
+    <span class="featIc">${f[0]}</span>
+    <div style="flex:1"><b>${f[1]}</b><s>${f[2]}</s></div>
+    ${hlp(f[4])}<span class="chev">›</span></div>`;
+}
+function renderExtras(){
+  const el=document.getElementById('extraBox');
+  if(el&&!el.dataset.r){ el.innerHTML=FEATURES.map(renderFeatureCard).join(''); el.dataset.r='1' }
+}
+
+/* ═══════════ ТИКЕР: только реальные данные ═══════════ */
+function renderTicker(){
+  const el=document.getElementById('ticker'); if(!el)return;
+  const rows=(REG.crypto||[]).filter(a=>a.px>0).slice(0,12);
+  if(!rows.length){ el.innerHTML='<span class="tkNa">котировки недоступны</span>'; return }
+  const one=rows.map(a=>`<span class="tk" onclick="setAsset('${a.id}')">
+    <b>${a.label}</b> <i class="mono">${fmtP(a.px)}</i>
+    <s style="color:${a.chg>=0?'var(--up)':'var(--down)'}">${a.chg>=0?'+':''}${a.chg.toFixed(2)}%</s></span>`).join('');
+  el.innerHTML=one+one;
+}
+
+
+/* ═══════════ О БОТЕ И ПОДДЕРЖКА ═══════════ */
+const SUPPORT='marketaisupport';
+function openSupport(){
+  const url=`https://t.me/${SUPPORT}?text=`+encodeURIComponent(
+    'Здравствуйте! Мне нужна помощь с AI Comfort Signal.');
+  haptic('medium');
+  if(TG?.openTelegramLink)TG.openTelegramLink(url);
+  else window.open(url,'_blank');
+}
+const openOv=id=>{const e=document.getElementById(id);if(e){e.classList.add('on');haptic('medium')}};
+const closeOv=id=>{const e=document.getElementById(id);if(e){e.classList.remove('on');haptic()}};
+
+function openAbout(){
+  const w=document.getElementById('aboutWrap');
+  w.innerHTML=`<div class="sheet">
+    <div class="shHead">
+      <div style="flex:1"><b>О приложении</b><div class="sub2">что умеет и как устроено</div></div>
+      <button class="shX" onclick="closeOv('aboutWrap')">✕</button></div>
+    <div class="shBody">
+      <div style="text-align:center;padding:6px 0 16px">
+        ${mascot('idle',86)}
+        <div class="d2" style="margin-top:8px">AI Comfort Signal</div>
+        <div class="sub2">аналитический помощник по рыночным данным</div>
+      </div>
+      ${FEATURES.map(renderFeatureCard).join('')}
+      <div class="card" style="margin-top:14px">
+        <div class="listHead"><span>💬</span><b>Поддержка</b></div>
+        <div class="hint" style="margin-bottom:12px">Поможем разобраться с настройками и данными.</div>
+        <button class="btn qt2" style="margin:0" onclick="openSupport()">Открыть чат поддержки</button>
+      </div>
+      <div class="note warn" style="margin-top:12px"><div>
+        <b>Без обещаний результата</b>
+        Приложение даёт аналитическую информацию и не гарантирует будущий результат торговли.
+        Выплата — это условия брокера, а не прибыльность сигнала.</div></div>
+      <div class="disc">Версия сборки указана в шапке приложения.</div>
+    </div></div>`;
+  openOv('aboutWrap'); renderExtras();
+}
+
+/* ═══════════ МАСКОТ ═══════════ */
+function mascot(state,size){
+  const S2=size||72;
+  const eye=state==='loading'?'<animate attributeName="ry" values="5;1;5" dur="1.4s" repeatCount="indefinite"/>':'';
+  const col=state==='CALL'?'#21D07A':state==='PUT'?'#F4515F':state==='error'?'#F4515F':'#E8B23A';
+  const mouth=state==='CALL'?'M26 44 q10 9 20 0':state==='PUT'?'M26 47 q10 -6 20 0':'M28 45 h16';
+  return `<span class="msc ${state||'idle'}" style="width:${S2}px;height:${S2}px">
+    <svg viewBox="0 0 72 72" style="width:100%;height:100%">
+      <defs><radialGradient id="mg${S2}"><stop offset="0" stop-color="${col}" stop-opacity=".30"/>
+        <stop offset="1" stop-color="${col}" stop-opacity="0"/></radialGradient></defs>
+      <circle cx="36" cy="38" r="34" fill="url(#mg${S2})"/>
+      <line x1="36" y1="8" x2="36" y2="15" stroke="${col}" stroke-width="2.4" stroke-linecap="round"/>
+      <circle cx="36" cy="7" r="3.2" fill="${col}"/>
+      <rect x="12" y="16" width="48" height="42" rx="15" fill="#0E1826" stroke="${col}" stroke-width="2"/>
+      <ellipse cx="27" cy="34" rx="4.6" ry="5" fill="${col}">${eye}</ellipse>
+      <ellipse cx="45" cy="34" rx="4.6" ry="5" fill="${col}">${eye}</ellipse>
+      <path d="${mouth}" stroke="${col}" stroke-width="2.4" fill="none" stroke-linecap="round"/>
+      <rect x="4" y="30" width="6" height="14" rx="3" fill="${col}" opacity=".55"/>
+      <rect x="62" y="30" width="6" height="14" rx="3" fill="${col}" opacity=".55"/>
+    </svg></span>`;
+}
+
+/* ═══════════ PAYOUT: адаптер без выдуманных значений ═══════════ */
+const PAYOUT_SRC={ name:'не подключён', get:null, ttl:300000 };
+const payoutCache=new Map();
+
+/* Возвращает процент выплаты по активу или null, если реального источника нет. */
+function getAssetPayout(id){
+  if(!PAYOUT_SRC.get)return null;                 // источника нет — честное «нет данных»
+  const hit=payoutCache.get(id);
+  if(hit&&Date.now()-hit.t<PAYOUT_SRC.ttl)return hit.v;
+  try{
+    const v=PAYOUT_SRC.get(id);
+    if(typeof v!=='number'||!isFinite(v)||v<=0)return null;
+    payoutCache.set(id,{t:Date.now(),v});
+    return v;
+  }catch{ return null }
+}
+function payoutHTML(id){
+  const v=getAssetPayout(id);
+  return v==null
+    ? `<span class="pay na" title="Выплата временно недоступна">—</span>`
+    : `<span class="pay">+${v.toFixed(0)}%</span>`;
+}
+
+/* ═══════════ ИЗБРАННОЕ ═══════════ */
+let FAV=(()=>{try{return new Set(JSON.parse(localStorage.getItem('acs_fav')||'[]'))}catch{return new Set()}})();
+function favToggle(id,ev){
+  if(ev)ev.stopPropagation();
+  FAV.has(id)?FAV.delete(id):FAV.add(id);
+  try{localStorage.setItem('acs_fav',JSON.stringify([...FAV]))}catch{}
+  haptic(); renderPicker();
+}
+
+/* ═══════════ СВОРАЧИВАЕМЫЕ БЛОКИ И ПОДСКАЗКИ ═══════════ */
+const HELP={
+  pair:['Выбор инструмента',
+    'Три рынка: криптовалюты с биржи, валютные пары и OTC. У валют сверху списка идут индексы — они считаются круглосуточно, включая выходные, когда обычный рынок закрыт.',
+    'Тапните по строке пары, чтобы открыть полный список с поиском.'],
+  strat:['Стратегический профиль',
+    'Профиль меняет вес факторов в расчёте. Мульти-анализ считает все пятнадцать одинаково. Smart Money усиливает уровни, объём и старший таймфрейм, ослабляя осцилляторы. Price Action ставит во главу свечные формации и фигуры.',
+    'Один и тот же график при разных профилях даёт разный вердикт — это нормально, подходы действительно расходятся.'],
+  tf:['Срок экспирации',
+    'Время, через которое проверяется результат. На минуте шум сильнее сигнала: индикаторы успевают поменять сторону внутри одной свечи.',
+    'Чем длиннее срок, тем устойчивее расчёт, но тем дольше ждать исход.'],
+  score:['Сила и согласие',
+    'Сила от 0 до 10 показывает, насколько пятнадцать факторов согласны между собой. Ниже вашего порога сигнал помечается как WAIT.',
+    'Это не вероятность выигрыша. Согласие 80% означает, что индикаторы смотрят в одну сторону, а не что сделка сбудется в 80% случаев.'],
+  chart:['График и разметка',
+    'Свечи выбранного срока, линия EMA 21, пунктир текущей цены. Разметка добавляет красные границы фигуры и уровни поддержки и сопротивления с числом касаний.',
+    'Уровень тем весомее, чем больше раз цена его тестировала.'],
+  why:['Почему этот сигнал',
+    'Четыре самых весомых фактора за направление и обязательно один против. Приложение не прячет контраргумент: если MACD против тренда, вы это увидите.',
+    'Полный список всех пятнадцати факторов с весами — во вкладке «Сигналы».'],
+  gauges:['Спидометры',
+    'Осцилляторы и трендовые индикаторы считаются отдельно. Когда они расходятся, это и есть причина вердикта WAIT.',
+    'Под каждым написано, сколько факторов группы реально проголосовало, а сколько промолчало.'],
+  struct:['Структура рынка',
+    'Фигура графика, ближайшие уровни, положение цены в диапазоне, свечная формация и дивергенция цены с RSI.',
+    'Вход прямо в уровень против него — самый частый способ потерять по технике.'],
+  bt:['Проверка на истории',
+    'Та же логика прогоняется по прошлым свечам этой пары: сколько сигналов было и сколько совпало.',
+    'Рядом всегда стоит точка безубыточности. Если совпадений меньше неё, стратегия в минусе даже при красивом проценте.'],
+  mtf:['Согласие таймфреймов',
+    'Одна пара считается на 5m, 15m и 1h. Видно, идут ли младшие сроки против старших.',
+    'Когда младший спорит со старшим, это типичный вход против тренда.'],
+  live:['Лента бота',
+    'Бот сам обходит инструменты выбранного рынка, считает индикаторы и сообщает, когда находит вход выше порога.',
+    'Работает, пока приложение открыто. Свёрнутое ничего не считает.'],
+  sess:['Режим сессии',
+    'Лимит сделок на сессию и остановка после серии убытков. При достижении предела анализ блокируется.',
+    'Правило работает, только если поставлено заранее, на холодную голову.'],
+  flow:['Как это работает',
+    'Шаг 1 — выберите рынок: криптовалюты, валютные пары или OTC. Шаг 2 — актив: в списке есть поиск, избранное и колонка выплаты. Шаг 3 — срок экспирации.',
+    'Дальше нажмите «Получить сигнал». Приложение загрузит свечи, посчитает пятнадцать факторов и покажет CALL, PUT или WAIT с силой от 0 до 10.',
+    'Ничего не считается само: пока вы не нажали кнопку, запросов к рынку нет.',
+    'Результат каждого сигнала проверяется после экспирации по реальной цене и попадает в журнал. Оттуда берётся ваша настоящая статистика.'],
+  payout:['Что такое выплата',
+    'Выплата — это процент, который брокер начисляет при выигрышной сделке. При выплате 80% выигрыш приносит 80% ставки, а проигрыш забирает все 100%.',
+    'Отсюда точка безубыточности: 1 / (1 + выплата). При 80% это 55.6% совпадений — меньше этого значения стратегия в минусе.',
+    'Выплата — это не прибыльность сигнала и не процент попаданий. Это две разные величины.'],
+  fav:['Избранное',
+    'Звёздочка закрепляет инструмент вверху списка. Удобно, когда работаете с двумя-тремя парами.',
+    'Список хранится на вашем устройстве.'],
+  journal:['Журнал и результаты',
+    'Каждый сигнал фиксируется, а после экспирации приложение подтягивает реальную цену и отмечает, сбылся он или нет.',
+    'Никто не правит статистику вручную — поэтому через неделю вы увидите свой настоящий процент.']
+};
+
+function hlp(k){ return `<button class="hlp" onclick="event.stopPropagation();showHelp('${k}')" aria-label="Что это">?</button>` }
+
+const openHelp=k=>showHelp(k);
+function showHelp(k){
+  const h=HELP[k]; if(!h)return;
+  const w=document.getElementById('helpWrap');
+  w.innerHTML=`<div class="helpCard">
+    <div class="helpMsc">${mascot('idle',58)}</div>
+    <div class="helpTop"><b>${h[0]}</b>
+      <button class="shX" onclick="closeHelp()">✕</button></div>
+    ${h.slice(1).map((p,i)=>`<p style="animation-delay:${.08+i*.12}s">${p}</p>`).join('')}
+    <button class="btn qt2" onclick="closeHelp()">Понятно</button>
+  </div>`;
+  w.classList.add('on'); haptic('medium');
+}
+function closeHelp(){ document.getElementById('helpWrap').classList.remove('on') }
+
+/* сворачиваемый блок: закрыт по умолчанию */
+let accOpen={};
+function acc(key,title,body,help){
+  const open=!!accOpen[key];
+  return `<div class="acc ${open?'on':''}" id="acc-${key}">
+    <button class="accH" onclick="accToggle('${key}')">
+      <b>${title}</b>${help?hlp(help):''}<span class="accArr">▾</span></button>
+    <div class="accB">${body}</div>
+  </div>`;
+}
+function accToggle(key){
+  accOpen[key]=!accOpen[key]; haptic();
+  const el=document.getElementById('acc-'+key);
+  if(el)el.classList.toggle('on',accOpen[key]);
+}
+
 /* ═══════════ ПОЛНЫЙ ДВИЖОК НА ЭКРАНЕ СИГНАЛОВ ═══════════ */
 let sigOv=null, sigShowMarks=true, sigFull=false, sigMtfData=null;
 
@@ -4475,7 +4876,7 @@ function renderSignals(){
     <div class="sigRow3">
       <div><s>Время сигнала</s><b>${new Date(sig.ts).toLocaleTimeString('ru',{hour:'2-digit',minute:'2-digit'})}</b></div>
       <div><s>Текущая цена</s><b class="mono" id="sigPx">${fmtP(a.price)}</b></div>
-      <div><s>Согласие</s><b id="sigConf">${conf}%</b>
+      <div><s>Согласие ${hlp('score')}</s><b id="sigConf">${conf}%</b>
         <div class="dots">${Array.from({length:8},(_,i)=>
           `<i class="${i<Math.round(conf/12.5)?'on':''}"></i>`).join('')}</div></div>
     </div>
@@ -4484,7 +4885,7 @@ function renderSignals(){
       `<button class="sigTf ${t===sig.tf?'on':''}" onclick="sigLoad('${sig.sym}','${t}')">${t.toUpperCase()}</button>`).join('')}</div>
 
     <div class="chartHead">
-      <b>График ${sig.tf}</b>
+      <b>График ${sig.tf}</b>${hlp('chart')}
       <button class="mkBtn on" id="mkBtn" onclick="sigToggleMarks()">разметка</button>
     </div>
     <div class="sigChartBox"><canvas id="sigChart"></canvas></div>
@@ -4498,8 +4899,8 @@ function renderSignals(){
   </div>
 
   <div class="card why">
-    <div class="whyHead"><span class="whyBulb">💡</span><b>Почему этот сигнал?</b>
-      <button class="lnk" style="margin-left:auto" onclick="openSig('${sig.id}')">Подробнее ›</button></div>
+    <div class="whyHead"><span class="whyBulb">💡</span><b>Почему этот сигнал?</b>${hlp('why')}
+      <button class="lnk" style="margin-left:auto" onclick="openSig('${sig.id}')">Разбор ›</button></div>
     ${sigWhy(a)}
     ${sig.bt.t>=15?`<div class="whyBt">На истории такая связка дала
       <b style="color:${sig.bt.wr>=sig.bt.be?'var(--up)':'var(--down)'}">${(sig.bt.wr*100).toFixed(1)}%</b>
@@ -4521,7 +4922,7 @@ function renderSignals(){
   clearInterval(sigState.chartTimer);
   sigState.chartTimer=setInterval(()=>{
     const t=document.getElementById('tab-home');
-    if(t&&t.classList.contains('on')&&!document.hidden)sigLoad(sigState.sym,sigState.tf,true);
+    if(t&&t.classList.contains('on')&&!document.hidden&&sigState.sig)sigLoad(sigState.sym,sigState.tf,true);
   },20000);
 }
 
@@ -4540,7 +4941,7 @@ function renderSigLists(active,recent){
   const el=document.getElementById('sigLists'); if(!el)return;
   el.innerHTML=`
   ${active.length?`<div class="card">
-    <div class="listHead"><span>🚀</span><b>Активные сигналы</b><span class="cnt">${active.length}</span></div>
+    <div class="listHead"><span>🚀</span><b>Активные сигналы</b>${hlp('journal')}<span class="cnt">${active.length}</span></div>
     ${active.map(s=>`<div class="actRow" onclick="openSig('${s.id}')">
       ${assetIcon(REG[marketOf(s.sym)]?.find(x=>x.id===s.sym)||{id:s.sym,market:marketOf(s.sym),base:s.sym.replace('USDT','')})}
       <b>${label(s.sym)}</b>
@@ -4588,10 +4989,24 @@ function sigMarket(m){
   } else if(first) setAsset(first.id);
   document.querySelectorAll('#cats .opt').forEach(o=>o.classList.toggle('on',o.dataset.cat===m));
   catNote(); sigSyncHead(); haptic('medium');
-  sigLoad(S.asset,S.tf);
+}
+
+function renderStartPanel(){
+  const sm=document.getElementById('stratMini');
+  if(sm)sm.innerHTML=Object.entries(STRATS).map(([k,v])=>
+    `<div class="stMini ${k===STRAT?'on':''}" onclick="setStrat('${k}');sigState.sig=null;renderStartPanel()">
+      <span class="stIco2">${k==='multi'?'◫':k==='smart'?'◎':'∿'}</span>
+      <div style="flex:1"><b>${v.name}</b><s>${v.tag}</s></div>
+      <span class="stDot"></span></div>`).join('');
+  const tr=document.getElementById('tfRow');
+  if(tr)tr.innerHTML=['1m','5m','15m','30m','1h','4h'].map(t=>
+    `<button class="tfChip ${t===S.tf?'on':''}" onclick="S.tf='${t}';sigState.sig=null;renderStartPanel();sigLoad(S.asset,'${t}')">${t.toUpperCase()}</button>`).join('');
+  const hs=document.getElementById('hStrat'); if(hs&&!hs.innerHTML)hs.innerHTML=hlp('strat');
+  const ht=document.getElementById('hTf'); if(ht&&!ht.innerHTML)ht.innerHTML=hlp('tf');
 }
 
 function sigSyncHead(){
+  renderStartPanel();
   document.querySelectorAll('#sigMkt button').forEach(b=>
     b.classList.toggle('on',b.dataset.m===S.cat));
   const el=document.getElementById('sigAsset'); if(!el)return;
@@ -4609,7 +5024,7 @@ function go(t,from){
   document.querySelectorAll('.nb').forEach(b=>b.classList.toggle('on',b.dataset.t===(t==='detail'?lastTab:t)));
   window.scrollTo(0,0); haptic();
   if(t==='market'){ mkPane==='pulse'?renderPulse():renderOverview(); } if(t==='history')renderHistory();
-  if(t==='home'){ sigSyncHead(); renderSignals(); if(!sigState.sig&&!sigState.busy)sigLoad(S.asset,S.tf); renderHome(); }
+  if(t==='home'){ sigSyncHead(); renderSignals(); renderHome(); renderExtras(); renderTicker(); setMascot(sigState.sig?sigState.sig.a.dir:'idle'); }
   if(t==='chart')mountPage('ifChart','pg-chart');
   if(t==='signals'){renderEngine();renderAllSignals();renderLive();renderSess();}
   if(t==='analytics'){renderAnalytics();if(anaPane==='auto')renderAuto();if(anaPane==='advice'){renderAdvice();renderDiscipline()}}
@@ -4653,7 +5068,7 @@ document.getElementById('runBtn').removeAttribute('onclick');
 document.getElementById('beVal').textContent=(100/(1+S.payout)).toFixed(1)+'%';
 document.querySelectorAll('#payouts .opt').forEach(o=>o.classList.toggle('on',+o.dataset.p===S.payout));
 document.querySelectorAll('#mins .opt').forEach(o=>o.classList.toggle('on',+o.dataset.m===S.min));
-renderHistory(); renderHome(); renderSess(); renderAuto(); renderLive(); renderStrat(); sigSyncHead(); renderSignals(); sigLoad(S.asset,S.tf); if(AUTO&&AUTO.on)autoLoop(); setLang.init();
+renderHistory(); renderHome(); renderSess(); renderAuto(); renderLive(); renderStrat(); sigSyncHead(); renderSignals(); renderExtras(); setMascot('idle'); renderTicker(); if(AUTO&&AUTO.on)autoLoop(); setLang.init();
 if(TDKEY)document.getElementById('tdKey').value=TDKEY;
 document.getElementById('qsApp').value=QS_APP;
 if(AIKEY)document.getElementById('aiKey').value=AIKEY; resolvePending(); setInterval(resolvePending,30000);
