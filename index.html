@@ -434,9 +434,9 @@ nav{position:fixed;left:0;right:0;bottom:0;background:rgba(8,15,26,.94);
 .decDone.out{background:rgba(255,255,255,.04);border-color:var(--line2);color:var(--tx2)}
 .decDone button{margin-left:auto;background:0;border:0;color:var(--gold);font:700 12px Manrope,sans-serif;cursor:pointer}
 .sGrid{display:grid;grid-template-columns:1fr 1fr;gap:11px}
-#tdKey,#aiKey{width:100%;background:var(--card2);border:1px solid var(--line2);border-radius:12px;
+#tdKey,#aiKey,#qsApp{width:100%;background:var(--card2);border:1px solid var(--line2);border-radius:12px;
   color:var(--tx);font:600 13px 'JetBrains Mono',monospace;padding:13px}
-#tdKey:focus,#aiKey:focus{outline:none;border-color:var(--gold)}
+#tdKey:focus,#aiKey:focus,#qsApp:focus{outline:none;border-color:var(--gold)}
 .sGrid input{width:100%;background:var(--card2);border:1px solid var(--line2);border-radius:12px;
   color:var(--tx);font:800 19px 'JetBrains Mono',monospace;padding:12px}
 .sGrid input:focus{outline:none;border-color:var(--gold)}
@@ -970,7 +970,7 @@ nav{position:fixed;left:0;right:0;bottom:0;background:rgba(8,15,26,.94);
     <div class="brand">
       <span class="mark"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1"
         stroke-linecap="round" stroke-linejoin="round"><path d="M2 12h4l3-8 4 16 3-8h6"/></svg></span>
-      <div style="min-width:0"><h1>AI Comfort Signal</h1><span style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;display:block">анализ на реальных данных</span></div>
+      <div style="min-width:0"><h1>AI Comfort Signal</h1><span style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;display:block">анализ на реальных данных · <b style="color:var(--gold);font-weight:700">v28 · 14.09 15:13</b></span></div>
     </div>
     <button class="bell" onclick="openChat()" aria-label="Помощник"><svg viewBox="0 0 24 24" fill="none"
       stroke="currentColor" stroke-width="2"><path d="M18 8a6 6 0 10-12 0c0 7-3 8-3 8h18s-3-1-3-8"/>
@@ -987,7 +987,19 @@ nav{position:fixed;left:0;right:0;bottom:0;background:rgba(8,15,26,.94);
   </div>
 
   <!-- ================= HOME ================= -->
-  <section class="tab on" id="tab-home">
+  <section class="tab on sigTheme" id="tab-home">
+<div class="sigPick">
+      <div class="mkTabs" id="sigMkt">
+        <button data-m="crypto">Крипто</button>
+        <button data-m="forex">Форекс</button>
+        <button data-m="otc">OTC</button>
+      </div>
+      <button class="sigAsset" id="sigAsset" onclick="sigPickAsset()"></button>
+    </div>
+    <div class="sigStat" id="sigStatus"></div>
+    <div id="sigWrap"></div>
+    <div id="sigLists"></div>
+  
     <div class="card">
       <div class="sect">НОВЫЙ АНАЛИЗ</div>
 
@@ -1049,24 +1061,19 @@ nav{position:fixed;left:0;right:0;bottom:0;background:rgba(8,15,26,.94);
   </section>
 
   <!-- ================= SIGNALS ================= -->
-  <section class="tab sigTheme" id="tab-signals">
-    <div class="sigNav" id="sigNav">
-      <div class="opt on" data-v="sig"><b>Сигналы</b></div>
-      <div class="opt" data-v="hist" onclick="go('history')"><b>История</b></div>
-      <div class="opt" data-v="ana" onclick="go('analytics')"><b>Аналитика</b></div>
-      <div class="opt" data-v="prof" onclick="go('profile')"><b>Настройки</b></div>
+  <section class="tab" id="tab-signals">
+    <div class="rowHead" style="margin:2px 0 12px">
+      <div><div style="font-size:21px;font-weight:800">Все сигналы</div>
+        <div class="sub2">расчёты за эту сессию</div></div>
+      <button class="lnk" onclick="scanAll()">Сканировать</button>
     </div>
-    <div class="sigPick">
-      <div class="mkTabs" id="sigMkt">
-        <button data-m="crypto">Крипто</button>
-        <button data-m="forex">Форекс</button>
-        <button data-m="otc">OTC</button>
-      </div>
-      <button class="sigAsset" id="sigAsset" onclick="sigPickAsset()"></button>
+    <div class="seg c4 grid4" id="sigFilter" style="margin-bottom:14px">
+      <div class="opt on" data-f="ALL"><b>Все</b></div>
+      <div class="opt" data-f="CALL"><b>CALL</b></div>
+      <div class="opt" data-f="PUT"><b>PUT</b></div>
+      <div class="opt" data-f="WAIT"><b>WAIT</b></div>
     </div>
-    <div class="sigStat" id="sigStatus"></div>
-    <div id="sigWrap"></div>
-    <div id="sigLists"></div>
+    <div id="sigListAll"></div>
   </section>
 
   <!-- ================= DETAIL ================= -->
@@ -1179,6 +1186,7 @@ nav{position:fixed;left:0;right:0;bottom:0;background:rgba(8,15,26,.94);
     <div class="sect">ПРОФИЛЬ И НАСТРОЙКИ</div>
     <div class="card">
       <div class="kv"><span>Пользователь</span><b id="pName">Гость</b></div>
+      <div class="kv"><span>Версия сборки</span><b class="mono" style="color:var(--gold)">v28 · 14.09 15:13</b></div>
       <div class="kv"><span>Источник данных</span><b>Binance Spot API</b></div>
       <div class="kv"><span>Сигналов в журнале</span><b id="pCount">0</b></div>
     </div>
@@ -1215,7 +1223,18 @@ nav{position:fixed;left:0;right:0;bottom:0;background:rgba(8,15,26,.94);
     </div>
 
     <div class="card">
-      <div class="sect">КОТИРОВКИ ФОРЕКСА</div>
+      <div class="sect">ПОТОК КОТИРОВОК</div>
+      <div class="hint" style="margin-bottom:12px">Прямое соединение по WebSocket: валютные пары, металлы и синтетические индексы, которые торгуются круглосуточно, включая выходные. Работает без регистрации — поле ниже менять не нужно.</div>
+      <input id="qsApp" placeholder="идентификатор приложения" autocomplete="off">
+      <div class="grid2" style="margin-top:10px;gap:9px">
+        <button class="btn ghost" style="margin:0" onclick="qsTest()">Проверить поток</button>
+        <button class="btn ghost" style="margin:0" onclick="document.getElementById('qsApp').value='1089';qsTest()">Сбросить</button>
+      </div>
+      <div id="qsState" style="margin-top:10px"></div>
+    </div>
+
+    <div class="card">
+      <div class="sect">РЕЗЕРВНЫЙ ИСТОЧНИК</div>
       <div class="hint" style="margin-bottom:12px">Биржа Binance валютных пар не даёт. Для форекса нужен ключ провайдера — у Twelve Data он бесплатный: регистрация на twelvedata.com, 800 запросов в сутки.</div>
       <input id="tdKey" placeholder="Вставьте API-ключ" autocomplete="off">
       <div class="grid2" style="margin-top:10px;gap:9px">
@@ -1660,6 +1679,8 @@ async function loadCrypto(){
 }
 
 const label=id=>{
+  const sy=(typeof SYNTH!=='undefined')&&SYNTH.find(x=>x[0]===id);
+  if(sy)return sy[1];
   if(id.endsWith('-OTC'))return id.slice(0,3)+'/'+id.slice(3,6)+' OTC';
   const c=REG.crypto.find(a=>a.id===id); if(c)return c.label;
   const f=REG.forex.find(a=>a.id===id); if(f)return f.label;
@@ -1668,6 +1689,8 @@ const label=id=>{
 const marketOf=id=>id.endsWith('-OTC')?'otc':REG.forex.some(a=>a.id===id)?'forex':'crypto';
 
 function assetIcon(a){
+  if(a.group==='synth')
+    return `<span class="fx2"><i style="font-size:13px;color:var(--gold)">◈</i></span>`;
   if(a.market==='otc'){
     const [b,q]=fxParts(a.base||a.id);
     return `<span class="fx2"><i>${flag(b)}</i><i>${flag(q)}</i></span>`;
@@ -1765,10 +1788,110 @@ async function fxCandles(pair,tf,limit){
   throw new Error('для валютных пар нужен ключ Twelve Data. Откройте Профиль, вставьте бесплатный ключ — регистрация на twelvedata.com занимает минуту.');
 }
 
+/* ═══════════ ПОТОК КОТИРОВОК (WebSocket) ═══════════ */
+const QS_URL='wss://ws.derivws.com/websockets/v3?app_id=';
+let QS_APP=(()=>{try{return localStorage.getItem('acs_qsapp')||'1089'}catch{return '1089'}})();
+let qsSock=null, qsReady=null, qsReq=1, qsWait=new Map();
+
+/* синтетические индексы — торгуются круглосуточно, включая выходные */
+const SYNTH=[
+  ['R_10','Индекс 10'],['R_25','Индекс 25'],['R_50','Индекс 50'],
+  ['R_75','Индекс 75'],['R_100','Индекс 100'],
+  ['1HZ10V','Индекс 10 (1с)'],['1HZ25V','Индекс 25 (1с)'],
+  ['1HZ50V','Индекс 50 (1с)'],['1HZ75V','Индекс 75 (1с)'],['1HZ100V','Индекс 100 (1с)']
+];
+const SYNTH_IDS=SYNTH.map(x=>x[0]);
+const GRAN={'1m':60,'3m':180,'5m':300,'15m':900,'30m':1800,'1h':3600,'2h':7200,'4h':14400,'1d':86400};
+
+function qsSymbol(id){
+  if(id.endsWith('-OTC'))id=id.slice(0,-4);
+  if(SYNTH_IDS.includes(id))return id;
+  if(id==='XAUUSD')return 'frxXAUUSD';
+  if(id==='XAGUSD')return 'frxXAGUSD';
+  if(/^[A-Z]{6}$/.test(id))return 'frx'+id;
+  return null;
+}
+
+function qsConnect(){
+  if(qsSock&&qsSock.readyState===1)return Promise.resolve();
+  if(qsReady)return qsReady;
+  qsReady=new Promise((res,rej)=>{
+    try{ qsSock=new WebSocket(QS_URL+encodeURIComponent(QS_APP)) }
+    catch(e){ qsReady=null; return rej(new Error('поток недоступен: '+e.message)) }
+    const to=setTimeout(()=>{ qsReady=null; try{qsSock.close()}catch{}; rej(new Error('поток не ответил за 12 секунд')) },12000);
+    qsSock.onopen=()=>{ clearTimeout(to); res() };
+    qsSock.onerror=()=>{ clearTimeout(to); qsReady=null; rej(new Error('поток отклонил соединение')) };
+    qsSock.onclose=()=>{ qsReady=null; qsSock=null;
+      qsWait.forEach(w=>w.rej(new Error('соединение закрыто'))); qsWait.clear() };
+    qsSock.onmessage=e=>{
+      let m; try{ m=JSON.parse(e.data) }catch{ return }
+      const id=m.req_id, w=id&&qsWait.get(id);
+      if(!w)return;
+      qsWait.delete(id); clearTimeout(w.timer);
+      if(m.error)w.rej(new Error(m.error.message||'поток вернул ошибку'));
+      else w.res(m);
+    };
+  });
+  return qsReady;
+}
+
+function qsSend(payload,ms=15000){
+  return qsConnect().then(()=>new Promise((res,rej)=>{
+    const id=qsReq++;
+    const timer=setTimeout(()=>{ qsWait.delete(id); rej(new Error('поток не ответил вовремя')) },ms);
+    qsWait.set(id,{res,rej,timer});
+    qsSock.send(JSON.stringify({...payload,req_id:id}));
+  }));
+}
+
+async function qsCandles(id,tf,count=200){
+  const sym=qsSymbol(id);
+  if(!sym)throw new Error('инструмент не поддерживается потоком');
+  const g=GRAN[tf]||300;
+  const m=await qsSend({ticks_history:sym,adjust_start_time:1,count:Math.min(count,500),
+                        end:'latest',start:1,style:'candles',granularity:g});
+  const c=m.candles||[];
+  if(c.length<40)throw new Error('поток вернул '+c.length+' свечей');
+  return c.map(x=>({t:x.epoch*1000,o:+x.open,h:+x.high,l:+x.low,c:+x.close,v:0,
+                    ct:x.epoch*1000+g*1000}));
+}
+
+/* проверка соединения из профиля */
+async function qsTest(){
+  const st=document.getElementById('qsState');
+  QS_APP=(document.getElementById('qsApp').value||'1089').trim();
+  st.innerHTML='<div class="hint">Проверяю поток…</div>';
+  try{
+    const d=await qsCandles('EURUSD','5m',60);
+    const last=d[d.length-1];
+    try{localStorage.setItem('acs_qsapp',QS_APP)}catch{}
+    st.innerHTML=`<div class="note"><div><b>Поток работает</b>
+      Получено ${d.length} свечей EUR/USD, последняя цена ${last.c.toFixed(5)} в
+      ${new Date(last.t).toLocaleTimeString('ru',{hour:'2-digit',minute:'2-digit'})}.
+      Валютные пары и индексы теперь считаются отсюда.</div></div>`;
+    if(!REG.forex.some(a=>a.group==='synth'))addSynth();
+    renderPicker&&renderPicker();
+  }catch(e){
+    st.innerHTML=`<div class="note warn"><div><b>Поток не отвечает</b>${e.message}</div></div>`;
+  }
+}
+
+/* индексы волатильности в список активов */
+function addSynth(){
+  if(REG.forex.some(a=>a.group==='synth'))return;
+  SYNTH.forEach(([id,name])=>REG.forex.push({id,market:'forex',group:'synth',label:name}));
+}
+addSynth();
+
 /* Прямой запрос без кэша: OTC считается по базовой паре. */
 async function getCandlesRaw(id,tf,limit=200,endTime){
   if(id.endsWith('-OTC'))return getCandlesRaw(id.slice(0,-4),tf,limit,endTime);
-  return marketOf(id)==='forex' ? fxCandles(id,tf,limit) : klines(id,tf,limit,endTime);
+  if(marketOf(id)!=='forex')return klines(id,tf,limit,endTime);
+  // сначала прямой поток, затем резервный провайдер
+  try{ return await qsCandles(id,tf,limit) }catch(e){ var qsErr=e.message }
+  if(SYNTH_IDS.includes(id))throw new Error('индексы доступны только через поток: '+qsErr);
+  try{ return await fxCandles(id,tf,limit) }
+  catch(e){ throw new Error(e.message+' · поток: '+qsErr) }
 }
 
 /* Кэш живёт не дольше 20 секунд, чтобы лента видела свежие свечи. */
@@ -1803,7 +1926,7 @@ function pickerSwitch(t){
   if(t==='crypto'&&!cryptoLoaded)loadCrypto().then(renderPicker).catch(()=>renderPicker());
 }
 
-const GRP={major:'Основные пары',cross:'Кросс-курсы',exotic:'Экзотика и металлы'};
+const GRP={synth:'Индексы · работают круглосуточно',major:'Основные пары',cross:'Кросс-курсы',exotic:'Экзотика и металлы'};
 
 function renderPicker(){
   const q=(document.getElementById('pkSearch').value||'').trim().toUpperCase();
@@ -1827,6 +1950,10 @@ function renderPicker(){
     el.innerHTML=['major','cross','exotic'].map(g=>{
       const part=list.filter(a=>a.group===g); if(!part.length)return '';
       return `<div class="pkGrp">${GRP[g]} · ${part.length}</div>`+part.map(a=>{
+        if(a.group==='synth')
+          return `<div class="pkRow" data-id="${a.id}">${assetIcon(a)}
+            <div class="m"><b>${a.label}</b><div class="sub">синтетический индекс · круглосуточно</div></div>
+            <span class="chev">›</span></div>`;
         const [b,c]=fxParts(a.base||a.id);
         return `<div class="pkRow" data-id="${a.id}">${assetIcon(a)}
           <div class="m"><b>${a.label}</b><div class="sub">${curName(b)} → ${curName(c)}</div></div>
@@ -1852,7 +1979,7 @@ function setAsset(id){
     sigState.sig=null;
     setTimeout(()=>{
       if(typeof sigSyncHead==='function')sigSyncHead();
-      const t=document.getElementById('tab-signals');
+      const t=document.getElementById('tab-home');
       if(t&&t.classList.contains('on'))sigLoad(id,S.tf);
     },60);
   }
@@ -1866,9 +1993,8 @@ function setAsset(id){
   else if(TDKEY){
     nt.innerHTML=`<div class="note"><div><b>Источник подключён</b>Котировки ${a.market==='otc'?'базовой пары':'валютных пар'} идут через Twelve Data.</div></div>`;
   }else{
-    nt.innerHTML=`<div class="note warn"><div><b>Нужен ключ для валютных данных</b>
-      Binance валютных пар не даёт. Бесплатный ключ Twelve Data решает вопрос за минуту.
-      <button class="btn ghost" style="margin-top:10px" onclick="go('profile')">Перейти в профиль</button></div></div>`;
+    nt.innerHTML=`<div class="note"><div><b>Котировки идут напрямую по потоку</b>
+      Валютные пары и индексы берутся из прямого соединения. Проверить его можно в профиле.</div></div>`;
   }
 }
 
@@ -4025,6 +4151,21 @@ startLiveTimers();
 document.addEventListener('visibilitychange',()=>{ if(!document.hidden){pulseTick();sheetTick()} });
 
 
+let sigF='ALL';
+function renderAllSignals(){
+  const el=document.getElementById('sigListAll'); if(!el)return;
+  const list=signals.filter(s=>sigF==='ALL'||s.a.dir===sigF);
+  el.innerHTML=list.length
+    ? list.map((s,i)=>`<div class="row" onclick="openSig('${s.id}')">
+        <div class="av">${s.sym.replace('USDT','').slice(0,4)}</div>
+        <div class="mid"><b>${label(s.sym)}</b> <span class="tf">${s.tf}</span>
+          <div class="sub">${ago(s.ts)} · RSI ${s.a.rsi.toFixed(0)} · ATR ${s.a.atrPct.toFixed(2)}%</div></div>
+        <span class="tag ${s.a.dir==='CALL'?'up':s.a.dir==='PUT'?'down':'n'}">${s.a.dir}</span>
+        <div class="sc"><b style="color:${s.a.dir==='CALL'?'var(--up)':s.a.dir==='PUT'?'var(--down)':'var(--tx2)'}">${s.a.score.toFixed(1)}</b><s>/10</s></div>
+      </div>`).join('')
+    : '<div class="empty"><span>◎</span>Пока пусто. Нажмите «Сканировать» или посчитайте пару на главной.</div>';
+}
+
 /* ═══════════ ПОЛНЫЙ ДВИЖОК НА ЭКРАНЕ СИГНАЛОВ ═══════════ */
 let sigOv=null, sigShowMarks=true, sigFull=false, sigMtfData=null;
 
@@ -4363,7 +4504,7 @@ function renderSignals(){
   requestAnimationFrame(drawSigChart);
   clearInterval(sigState.chartTimer);
   sigState.chartTimer=setInterval(()=>{
-    const t=document.getElementById('tab-signals');
+    const t=document.getElementById('tab-home');
     if(t&&t.classList.contains('on')&&!document.hidden)sigLoad(sigState.sym,sigState.tf,true);
   },20000);
 }
@@ -4452,8 +4593,9 @@ function go(t,from){
   document.querySelectorAll('.nb').forEach(b=>b.classList.toggle('on',b.dataset.t===(t==='detail'?lastTab:t)));
   window.scrollTo(0,0); haptic();
   if(t==='market'){ mkPane==='pulse'?renderPulse():renderOverview(); } if(t==='history')renderHistory();
+  if(t==='home'){ sigSyncHead(); renderSignals(); if(!sigState.sig&&!sigState.busy)sigLoad(S.asset,S.tf); renderHome(); }
   if(t==='chart')mountPage('ifChart','pg-chart');
-  if(t==='signals'){ sigSyncHead(); renderSignals(); if(!sigState.sig&&!sigState.busy)sigLoad(S.asset,S.tf) }
+  if(t==='signals')renderAllSignals();
   if(t==='analytics'){renderAnalytics();if(anaPane==='auto')renderAuto();if(anaPane==='advice'){renderAdvice();renderDiscipline()}}
 }
 
@@ -4473,6 +4615,7 @@ pick('payouts','p',v=>{S.payout=+v;saveS();document.getElementById('beVal').text
 pick('mins','m',v=>{S.min=+v;saveS()});
 pick('anaNav','v',v=>anaGo(v));
 pick('mkNav','v',v=>mkGo(v));
+pick('sigFilter','f',v=>{sigF=v;renderAllSignals()});
 document.getElementById('sigMkt').addEventListener('click',e=>{
   const b=e.target.closest('button'); if(b)sigMarket(b.dataset.m)});
 const saveS=()=>LS.set('acs_settings',{payout:S.payout,min:S.min});
@@ -4494,8 +4637,9 @@ document.getElementById('runBtn').removeAttribute('onclick');
 document.getElementById('beVal').textContent=(100/(1+S.payout)).toFixed(1)+'%';
 document.querySelectorAll('#payouts .opt').forEach(o=>o.classList.toggle('on',+o.dataset.p===S.payout));
 document.querySelectorAll('#mins .opt').forEach(o=>o.classList.toggle('on',+o.dataset.m===S.min));
-renderHistory(); renderHome(); renderSess(); renderAuto(); renderLive(); renderStrat(); if(AUTO&&AUTO.on)autoLoop(); setLang.init();
+renderHistory(); renderHome(); renderSess(); renderAuto(); renderLive(); renderStrat(); sigSyncHead(); renderSignals(); sigLoad(S.asset,S.tf); if(AUTO&&AUTO.on)autoLoop(); setLang.init();
 if(TDKEY)document.getElementById('tdKey').value=TDKEY;
+document.getElementById('qsApp').value=QS_APP;
 if(AIKEY)document.getElementById('aiKey').value=AIKEY; resolvePending(); setInterval(resolvePending,30000);
 </script>
 
