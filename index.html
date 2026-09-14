@@ -609,6 +609,18 @@ nav{position:fixed;left:0;right:0;bottom:0;background:rgba(8,15,26,.94);
 .hrCol s{text-decoration:none;font-size:7.5px;color:var(--tx3);font-family:'JetBrains Mono',monospace}
 .hrCol.now i{outline:1px solid var(--gold)}
 .hrCol.now s{color:var(--gold);font-weight:700}
+
+/* живые анимации */
+.ndl{transition:transform .9s cubic-bezier(.22,1,.36,1)}
+.pBar i,.csTrack i,.mtfBar i,.volBar i,.bar i,.bar2 i{transition:width .6s ease,left .6s ease,background .4s}
+@keyframes flUp{0%{background:rgba(43,217,138,.35)}100%{background:transparent}}
+@keyframes flDn{0%{background:rgba(255,92,108,.35)}100%{background:transparent}}
+.flashUp{animation:flUp .9s ease-out;border-radius:6px}
+.flashDn{animation:flDn .9s ease-out;border-radius:6px}
+.pPx b,.pPx s{transition:color .3s}
+#shPx,#shPct{display:inline-block;padding:0 4px;border-radius:6px}
+#shVerd{transition:color .4s,border-color .4s,background .4s}
+@media (prefers-reduced-motion:reduce){.ndl{transition:none}.flashUp,.flashDn{animation:none}}
 .disc{font-size:11.5px;color:var(--tx3);line-height:1.5;padding:4px 4px 16px;text-align:center}
 
 /* вердикт над графиком */
@@ -871,19 +883,6 @@ nav{position:fixed;left:0;right:0;bottom:0;background:rgba(8,15,26,.94);
 
   <!-- ================= HOME ================= -->
   <section class="tab on" id="tab-home">
-    <div id="liveBox"></div>
-    <div id="activeCard"></div>
-    <div id="homeRows"></div>
-
-    <div class="rowHead"><b>Последние сигналы</b>
-      <button class="lnk" onclick="go('signals')">Все ›</button></div>
-    <div id="homeSigs"></div>
-
-    <div class="grid2" style="margin:14px 0">
-      <button class="miniCard" onclick="go('chart')"><span class="ic">📈</span><b>Живой график</b><s>свечи в реальном времени</s></button>
-      <button class="miniCard" onclick="openChat()"><span class="ic">◈</span><b>Помощник</b><s>объяснит сигнал</s></button>
-    </div>
-
     <div class="card">
       <div class="sect">НОВЫЙ АНАЛИЗ</div>
 
@@ -923,6 +922,21 @@ nav{position:fixed;left:0;right:0;bottom:0;background:rgba(8,15,26,.94);
 
       <div id="homeResult" style="display:none;margin-top:16px"></div>
     </div>
+
+    <div id="activeCard"></div>
+    <div id="homeRows"></div>
+
+    <div id="liveBox"></div>
+
+    <div class="rowHead"><b>Последние сигналы</b>
+      <button class="lnk" onclick="go('signals')">Все ›</button></div>
+    <div id="homeSigs"></div>
+
+    <div class="grid2" style="margin:14px 0">
+      <button class="miniCard" onclick="go('chart')"><span class="ic">📈</span><b>Живой график</b><s>свечи в реальном времени</s></button>
+      <button class="miniCard" onclick="openChat()"><span class="ic">◈</span><b>Помощник</b><s>объяснит сигнал</s></button>
+    </div>
+
 
     <div id="sessBox"></div>
 
@@ -990,7 +1004,8 @@ nav{position:fixed;left:0;right:0;bottom:0;background:rgba(8,15,26,.94);
   <section class="tab" id="tab-market">
     <div class="rowHead" style="margin:2px 0 12px">
       <div><div style="font-size:22px;font-weight:800" id="mkTitle">Пульс рынка</div>
-        <div class="sub2" id="pulseHead">считаю инструменты…</div></div>
+        <div class="sub2" id="pulseHead">считаю инструменты…</div>
+        <div class="sub2" id="pulseTick" style="color:var(--up)"></div></div>
       <button class="lnk" id="mkRefresh" onclick="PULSE=[];buildPulse()">Обновить</button>
     </div>
 
@@ -3201,24 +3216,32 @@ function verdictOf(v){
 }
 
 /* дуговой индикатор со стрелкой: v от -1 до 1 */
-function gaugeArc(v,size,thick){
+function gaugeArc(v,size,thick,id){
   const R=size/2-thick/2-4, cx=size/2, cy=size/2+size*0.06;
-  const ang=180*(v+1)/2;                       // 0..180
-  const rad=(180-ang)*Math.PI/180;
-  const nx=cx+Math.cos(rad)*(R-thick*0.9), ny=cy-Math.sin(rad)*(R-thick*0.9);
+  const deg=90*(isFinite(v)?Math.max(-1,Math.min(1,v)):0);   // -90..90
   const seg=(a1,a2,col)=>{
-    const p=(a)=>[cx+R*Math.cos((180-a)*Math.PI/180), cy-R*Math.sin((180-a)*Math.PI/180)];
+    const p=a=>[cx+R*Math.cos((180-a)*Math.PI/180), cy-R*Math.sin((180-a)*Math.PI/180)];
     const [x1,y1]=p(a1),[x2,y2]=p(a2);
     return `<path d="M${x1} ${y1} A${R} ${R} 0 0 1 ${x2} ${y2}" stroke="${col}"
-      stroke-width="${thick}" fill="none" stroke-linecap="butt"/>`;
+      stroke-width="${thick}" fill="none"/>`;
   };
   return `<svg viewBox="0 0 ${size} ${size*0.72}" style="width:100%;display:block">
     ${seg(0,36,'#FF5C6C')}${seg(37,72,'#FF9F43')}${seg(73,107,'#8FA3BF')}
     ${seg(108,143,'#5AC8E8')}${seg(144,180,'#2BD98A')}
-    <line x1="${cx}" y1="${cy}" x2="${nx}" y2="${ny}" stroke="#E9F0FA" stroke-width="3"
-      stroke-linecap="round"/>
+    <g class="ndl" ${id?`id="${id}"`:''} style="transform:rotate(${deg}deg);
+        transform-origin:${cx}px ${cy}px">
+      <line x1="${cx}" y1="${cy}" x2="${cx}" y2="${cy-(R-thick*0.9)}"
+        stroke="#E9F0FA" stroke-width="3" stroke-linecap="round"/>
+    </g>
     <circle cx="${cx}" cy="${cy}" r="${thick*0.42}" fill="#E9F0FA"/>
   </svg>`;
+}
+
+/* плавный поворот уже отрисованной стрелки */
+function setNeedle(id,v){
+  const g=document.getElementById(id); if(!g)return;
+  const deg=90*Math.max(-1,Math.min(1,v||0));
+  g.style.transform=`rotate(${deg}deg)`;
 }
 
 let PULSE=[], pulseBusy=false, pulseSym=null;
@@ -3302,8 +3325,8 @@ function openPulse(id){
   <div class="shBody">
     <div class="grid2" style="gap:10px;margin-bottom:14px">
       <div class="card tight" style="margin:0"><div class="lbl2">ЦЕНА</div>
-        <b class="mono" style="font-size:22px">${fmtP(a.price)}</b>
-        <div class="sub2">ATR ${a.atrPct.toFixed(2)}% · ${riskOf(a)[0].toLowerCase()} риск</div></div>
+        <b class="mono" id="shPx" style="font-size:22px">${fmtP(a.price)}</b>
+        <div class="sub2" id="shTime">обновляется каждые 15 секунд</div></div>
       <div class="card tight" style="margin:0"><div class="lbl2">ДАННЫЕ</div>
         <b style="color:var(--up);font-size:19px">ЖИВЫЕ</b>
         <div class="sub2">${a.k.length} свечей проанализировано</div></div>
@@ -3313,13 +3336,13 @@ function openPulse(id){
       <div style="display:flex;align-items:flex-start">
         <div style="flex:1"><b style="font-size:17px">Сводный перевес</b>
           <div class="sub2">пятнадцать факторов вместе</div></div>
-        <div style="text-align:right"><b class="mono" style="font-size:26px">${conf}%</b>
+        <div style="text-align:right"><b class="mono" id="shPct" style="font-size:26px">${conf}%</b>
           <div class="lbl2">ПЕРЕВЕС</div></div>
       </div>
-      ${gaugeArc(p.v,320,26)}
+      ${gaugeArc(p.v,320,26,'ndlMain')}
       <div class="gScale"><span>активно продавать</span><span>активно покупать</span></div>
-      <div class="gVerd" style="color:${col};border-color:${col};background:${col==='var(--up)'?'rgba(43,217,138,.1)':col==='var(--down)'?'rgba(255,92,108,.1)':'rgba(255,255,255,.05)'}">${verd}</div>
-      <div class="sub2" style="text-align:center;margin-top:10px">
+      <div class="gVerd" id="shVerd" style="color:${col};border-color:${col};background:${col==='var(--up)'?'rgba(43,217,138,.1)':col==='var(--down)'?'rgba(255,92,108,.1)':'rgba(255,255,255,.05)'}">${verd}</div>
+      <div class="sub2" id="shW" style="text-align:center;margin-top:10px">
         ${a.up.toFixed(1)} веса за рост · ${a.dn.toFixed(1)} за падение</div>
     </div>
 
@@ -3327,24 +3350,24 @@ function openPulse(id){
       <div class="card" style="margin:0">
         <div class="lbl2">ОСЦИЛЛЯТОРЫ</div>
         <div class="sub2" style="margin-bottom:6px">RSI, стохастик, MACD, Боллинджер, VWAP, объём, дивергенция</div>
-        ${gaugeArc(osc.norm,150,15)}
-        <div class="gVerd sm" style="color:${verdictOf(osc.norm)[1]};border-color:${verdictOf(osc.norm)[1]}">${vo}</div>
-        <div class="sub2" style="text-align:center">${osc.votes} из ${osc.total} голосуют</div>
+        ${gaugeArc(osc.norm,150,15,'ndlOsc')}
+        <div class="gVerd sm" id="shOscV" style="color:${verdictOf(osc.norm)[1]};border-color:${verdictOf(osc.norm)[1]}">${vo}</div>
+        <div class="sub2" id="shOscN" style="text-align:center">${osc.votes} из ${osc.total} голосуют</div>
       </div>
       <div class="card" style="margin:0">
         <div class="lbl2">ТРЕНДОВЫЕ</div>
         <div class="sub2" style="margin-bottom:6px">EMA, Supertrend, ADX, старший ТФ, фигуры, свечи, уровни</div>
-        ${gaugeArc(trn.norm,150,15)}
-        <div class="gVerd sm" style="color:${verdictOf(trn.norm)[1]};border-color:${verdictOf(trn.norm)[1]}">${vt}</div>
-        <div class="sub2" style="text-align:center">${trn.votes} из ${trn.total} голосуют</div>
+        ${gaugeArc(trn.norm,150,15,'ndlTrn')}
+        <div class="gVerd sm" id="shTrnV" style="color:${verdictOf(trn.norm)[1]};border-color:${verdictOf(trn.norm)[1]}">${vt}</div>
+        <div class="sub2" id="shTrnN" style="text-align:center">${trn.votes} из ${trn.total} голосуют</div>
       </div>
     </div>
 
     <div class="card">
       <div class="lbl2" style="margin-bottom:6px">ТЕКУЩИЕ ЗНАЧЕНИЯ</div>
-      <div class="kv"><span>RSI (14)</span><b class="mono">${a.rsi.toFixed(2)}</b></div>
-      <div class="kv"><span>MACD (12, 26)</span><b class="mono">${md.h[n].toFixed(5)}</b></div>
-      <div class="kv"><span>Стохастик (14, 3)</span><b class="mono">${st.k[n].toFixed(2)}</b></div>
+      <div class="kv"><span>RSI (14)</span><b class="mono" id="shRsi">${a.rsi.toFixed(2)}</b></div>
+      <div class="kv"><span>MACD (12, 26)</span><b class="mono" id="shMacd">${md.h[n].toFixed(5)}</b></div>
+      <div class="kv"><span>Стохастик (14, 3)</span><b class="mono" id="shStoch">${st.k[n].toFixed(2)}</b></div>
       <div class="kv"><span>ADX (14)</span><b class="mono">${(ad.adx[n]||0).toFixed(2)}</b></div>
       <div class="kv"><span>Старший таймфрейм</span><b>${a.mtf}</b></div>
     </div>
@@ -3360,9 +3383,10 @@ function openPulse(id){
     <div class="disc">Сводный перевес — сумма весов индикаторов, а не вероятность исхода.</div>
   </div>`;
   document.getElementById('pulseWrap').classList.add('on');
+  setTimeout(sheetTick,1200);
 }
 
-function closePulse(){document.getElementById('pulseWrap').classList.remove('on');haptic()}
+function closePulse(){document.getElementById('pulseWrap').classList.remove('on');pulseSym=null;haptic()}
 
 async function pulseToSignal(id){
   closePulse();
@@ -3803,6 +3827,98 @@ async function renderOverview(){
   try{ await buildStrength(); await buildMTF(); await buildVol(); await buildHours(); }
   finally{ overBusy=false }
 }
+
+
+/* ═══════════ ЖИВОЕ ОБНОВЛЕНИЕ ═══════════ */
+let tickTimer=null, sheetTimer=null;
+
+function flash(el,up){
+  if(!el)return;
+  el.classList.remove('flashUp','flashDn');
+  void el.offsetWidth;                    // перезапуск анимации
+  el.classList.add(up?'flashUp':'flashDn');
+}
+
+/* цены по всем видимым парам пульса: крипта одним запросом */
+async function pulseTick(){
+  if(!PULSE.length)return;
+  if(document.hidden)return;
+  const mk=document.getElementById('tab-market');
+  if(!mk||!mk.classList.contains('on'))return;
+  if(mkPane!=='pulse')return;
+
+  const crypto=PULSE.filter(x=>marketOf(x.id)==='crypto').map(x=>x.id);
+  if(!crypto.length)return;
+  try{
+    const d=await jget(`${API}/ticker/price?symbols=${encodeURIComponent(JSON.stringify(crypto))}`,8000);
+    (Array.isArray(d)?d:[]).forEach(t=>{
+      const row=PULSE.find(x=>x.id===t.symbol); if(!row)return;
+      const px=+t.price, prev=row.last??row.a.price;
+      row.last=px;
+      const el=document.querySelector(`#pr-${t.symbol} .pPx b`);
+      const ch=document.querySelector(`#pr-${t.symbol} .pPx s`);
+      if(el){ el.textContent=fmtP(px); if(px!==prev)flash(el,px>prev) }
+      if(ch){
+        const base=row.a.price, dp=(px-base)/base*100;
+        ch.textContent=(dp>=0?'+':'')+dp.toFixed(3)+'%';
+        ch.style.color=dp>=0?'var(--up)':'var(--down)';
+      }
+    });
+    const st=document.getElementById('pulseTick');
+    if(st)st.textContent='обновлено только что';
+  }catch{}
+}
+
+/* пересчёт открытой шторки: стрелки плавно доезжают */
+async function sheetTick(){
+  if(!pulseSym||document.hidden)return;
+  if(!document.getElementById('pulseWrap').classList.contains('on'))return;
+  try{
+    const [k,h]=await Promise.all([getCandlesRaw(pulseSym,S.tf,200),
+                                   getCandlesRaw(pulseSym,HTF[S.tf]||S.tf,120)]);
+    const a=analyze(k,h);
+    const osc=groupScore(a,OSC), trn=groupScore(a,TRN), all=groupScore(a,[...OSC,...TRN]);
+    const row=PULSE.find(x=>x.id===pulseSym);
+    if(row){ row.a=a; row.v=all.norm; row.k=k }
+    setNeedle('ndlMain',all.norm); setNeedle('ndlOsc',osc.norm); setNeedle('ndlTrn',trn.norm);
+    const pc=document.getElementById('shPct');
+    if(pc){ const v=Math.round(Math.abs(all.norm)*100);
+      if(pc.textContent!==v+'%'){ pc.textContent=v+'%'; flash(pc,all.norm>=0) } }
+    const px=document.getElementById('shPx');
+    if(px){ const prev=parseFloat(px.textContent.replace(/[^\d.-]/g,''));
+      px.textContent=fmtP(a.price); if(isFinite(prev)&&prev!==a.price)flash(px,a.price>prev) }
+    const vd=document.getElementById('shVerd');
+    if(vd){ const [t,c]=verdictOf(all.norm); vd.textContent=t; vd.style.color=c; vd.style.borderColor=c }
+    const w=document.getElementById('shW');
+    if(w)w.textContent=`${a.up.toFixed(1)} веса за рост · ${a.dn.toFixed(1)} за падение`;
+    const setV=(idV,idN,g)=>{
+      const [t,c]=verdictOf(g.norm);
+      const v=document.getElementById(idV);
+      if(v){ v.textContent=t; v.style.color=c; v.style.borderColor=c }
+      const nn=document.getElementById(idN);
+      if(nn)nn.textContent=`${g.votes} из ${g.total} голосуют`;
+    };
+    setV('shOscV','shOscN',osc); setV('shTrnV','shTrnN',trn);
+    const cls=k.map(c=>c.c), nn=cls.length-1;
+    const md=MACD(cls), stc=STOCH(k);
+    const put=(id,val)=>{const e=document.getElementById(id);
+      if(e&&e.textContent!==val){ const up=parseFloat(val)>parseFloat(e.textContent);
+        e.textContent=val; flash(e,up) }};
+    put('shRsi',a.rsi.toFixed(2));
+    put('shMacd',md.h[nn].toFixed(5));
+    put('shStoch',stc.k[nn].toFixed(2));
+    const ts=document.getElementById('shTime');
+    if(ts)ts.textContent='обновлено '+new Date().toLocaleTimeString('ru',{hour:'2-digit',minute:'2-digit',second:'2-digit'});
+  }catch{}
+}
+
+function startLiveTimers(){
+  clearInterval(tickTimer); clearInterval(sheetTimer);
+  tickTimer=setInterval(pulseTick,10000);
+  sheetTimer=setInterval(sheetTick,15000);
+}
+startLiveTimers();
+document.addEventListener('visibilitychange',()=>{ if(!document.hidden){pulseTick();sheetTick()} });
 
 /* ─────────────── nav & settings ─────────────── */
 function go(t,from){
