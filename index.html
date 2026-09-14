@@ -621,6 +621,111 @@ nav{position:fixed;left:0;right:0;bottom:0;background:rgba(8,15,26,.94);
 #shPx,#shPct{display:inline-block;padding:0 4px;border-radius:6px}
 #shVerd{transition:color .4s,border-color .4s,background .4s}
 @media (prefers-reduced-motion:reduce){.ndl{transition:none}.flashUp,.flashDn{animation:none}}
+
+/* ═══ тема экрана сигналов ═══ */
+.sigTheme{--acc:#2BD98A}
+.sigNav{display:grid;grid-template-columns:repeat(4,1fr);gap:7px;margin:4px 0 14px}
+.sigNav .opt{padding:11px 4px;font-size:12.5px}
+.sigNav .opt.on{background:rgba(43,217,138,.12);border-color:rgba(43,217,138,.4);color:var(--up)}
+.sigStat{display:flex;align-items:center;gap:12px;background:linear-gradient(120deg,rgba(43,217,138,.09),var(--card) 62%);
+  border:1px solid rgba(43,217,138,.28);border-radius:18px;padding:14px;margin-bottom:14px}
+.sigStat.ошибка{background:rgba(255,92,108,.08);border-color:rgba(255,92,108,.3)}
+.sigStat b{font-size:15.5px;font-weight:800}
+.sigBot{width:44px;height:44px;border-radius:14px;display:grid;place-items:center;font-size:20px;
+  border:1px solid;flex:none}
+.sigCard{background:linear-gradient(165deg,#0E1A24,#0A1118);border:1px solid rgba(43,217,138,.22);
+  border-radius:22px;padding:15px;margin-bottom:12px}
+.sigCard.PUT{border-color:rgba(255,92,108,.24)}
+.sigCard.WAIT{border-color:var(--line2)}
+.sigTop{display:flex;align-items:center;gap:12px;padding-bottom:13px;border-bottom:1px solid var(--line2)}
+.sigPair{display:flex;align-items:center;gap:10px;flex:1;min-width:0}
+.sigPair b{font-size:16px;font-weight:800;display:block}
+.sigPair s{text-decoration:none;font-size:10.5px;color:var(--tx3)}
+.sigDir{display:flex;align-items:center;gap:9px}
+.sigDir b{font-size:15px;font-weight:800;display:block;line-height:1.1}
+.sigDir s{text-decoration:none;font-size:10px;color:var(--tx3)}
+.sigArrow{width:42px;height:42px;border-radius:50%;display:grid;place-items:center;font-size:19px;font-weight:800}
+.sigDir.CALL .sigArrow{background:rgba(43,217,138,.16);color:var(--up);border:1px solid rgba(43,217,138,.4)}
+.sigDir.CALL b{color:var(--up)}
+.sigDir.PUT .sigArrow{background:rgba(255,92,108,.16);color:var(--down);border:1px solid rgba(255,92,108,.4)}
+.sigDir.PUT b{color:var(--down)}
+.sigDir.WAIT .sigArrow{background:rgba(255,255,255,.05);color:var(--tx2);border:1px solid var(--line2)}
+.sigExp{text-align:right;flex:none}
+.sigExp s{text-decoration:none;display:block;font-size:10px;color:var(--tx3)}
+.sigExp b{font-size:15px;font-weight:800}
+.sigRow3{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;padding:13px 0;border-bottom:1px solid var(--line2)}
+.sigRow3 s{text-decoration:none;display:block;font-size:10px;color:var(--tx3);margin-bottom:3px}
+.sigRow3 b{font-size:14.5px;font-weight:800}
+.dots{display:flex;gap:3px;margin-top:5px}
+.dots i{width:100%;height:4px;border-radius:2px;background:rgba(255,255,255,.1);transition:background .4s}
+.dots i.on{background:var(--up)}
+.sigTfs{display:flex;gap:6px;margin:13px 0 10px}
+.sigTf{flex:1;background:var(--card2);border:1px solid var(--line2);color:var(--tx2);border-radius:10px;
+  padding:9px 0;font:700 11.5px 'JetBrains Mono',monospace;cursor:pointer;transition:.16s}
+.sigTf.on{background:rgba(43,217,138,.14);border-color:rgba(43,217,138,.45);color:var(--up)}
+.sigChartBox{background:rgba(0,0,0,.3);border:1px solid var(--line2);border-radius:14px;padding:6px}
+.sigInd{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:12px}
+.sigInd s{text-decoration:none;display:block;font-size:9.5px;color:var(--tx3);letter-spacing:.05em;text-transform:uppercase}
+.sigInd b{font-size:13px;font-weight:700}
+.why .whyHead{display:flex;align-items:center;gap:9px;margin-bottom:12px}
+.why .whyHead b{font-size:15.5px;font-weight:800}
+.whyRow{display:flex;gap:10px;align-items:flex-start;padding:8px 0}
+.whyIc{width:20px;height:20px;border-radius:7px;display:grid;place-items:center;font-size:11px;font-weight:800;flex:none;margin-top:2px}
+.whyIc.ok{background:rgba(43,217,138,.15);color:var(--up)}
+.whyIc.no{background:rgba(255,92,108,.15);color:var(--down)}
+.whyRow b{font-size:13.5px;font-weight:700;display:block}
+.whyRow p{margin:2px 0 0;font-size:12px;color:var(--tx2);line-height:1.45}
+.whyBt{margin-top:12px;padding:11px 13px;border-radius:12px;background:var(--card2);
+  border:1px solid var(--line2);font-size:12.5px;color:var(--tx2)}
+.sigAct{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.actBtn{border-radius:16px;padding:14px 10px;cursor:pointer;font-family:inherit;text-align:center;border:1px solid}
+.actBtn span{font-size:19px;display:block;margin-bottom:4px}
+.actBtn b{display:block;font-size:13.5px;font-weight:800}
+.actBtn s{text-decoration:none;font-size:10.5px;opacity:.75}
+.actBtn.main{background:var(--up);border-color:var(--up);color:#04140C}
+.actBtn.main.red{background:var(--down);border-color:var(--down);color:#1A0508}
+.actBtn.dim{background:var(--card2);border-color:var(--line2);color:var(--tx2)}
+.actBtn:active{transform:scale(.985)}
+.listHead{display:flex;align-items:center;gap:9px;margin-bottom:10px}
+.listHead b{font-size:14.5px;font-weight:800}
+.listHead .cnt{margin-left:auto;background:rgba(43,217,138,.14);color:var(--up);border-radius:8px;
+  padding:3px 9px;font-size:11.5px;font-weight:800}
+.actRow,.resRow{display:flex;align-items:center;gap:9px;padding:10px 0;border-bottom:1px solid var(--line2);cursor:pointer}
+.actRow:last-child,.resRow:last-child{border-bottom:0}
+.actRow b,.resRow b{font-size:13.5px;font-weight:700}
+.actTime{margin-left:auto;text-align:right}
+.actTime b{font-size:14px;font-weight:800}
+.actTime s{text-decoration:none;display:block;font-size:9.5px;color:var(--tx3)}
+.resV{margin-left:auto;font-size:12px;font-weight:800}
+.resV.w{color:var(--up)} .resV.l{color:var(--down)}
+.btn.ok{background:var(--up);color:#04140C}
+
+.sigPick{display:flex;flex-direction:column;gap:9px;margin-bottom:12px}
+.mkTabs{display:grid;grid-template-columns:repeat(3,1fr);gap:7px}
+.mkTabs button{background:var(--card2);border:1px solid var(--line2);color:var(--tx2);border-radius:12px;
+  padding:10px 0;font:700 12.5px Manrope,sans-serif;cursor:pointer;transition:.16s}
+.mkTabs button.on{background:rgba(43,217,138,.13);border-color:rgba(43,217,138,.42);color:var(--up)}
+.sigAsset{display:flex;align-items:center;gap:11px;width:100%;background:var(--card);
+  border:1px solid var(--line2);border-radius:14px;padding:11px 13px;cursor:pointer;
+  font-family:inherit;color:var(--tx);text-align:left}
+.saT b{display:block;font-size:15px;font-weight:800}
+.saT s{text-decoration:none;font-size:11px;color:var(--tx3)}
+
+.chartHead{display:flex;align-items:center;gap:9px;margin:2px 0 8px}
+.chartHead b{font-size:12.5px;color:var(--tx2);font-weight:700}
+.mkBtn{margin-left:auto;background:var(--card2);border:1px solid var(--line2);color:var(--tx3);
+  border-radius:9px;padding:6px 11px;font:700 11px Manrope,sans-serif;cursor:pointer}
+.mkBtn.on{background:rgba(43,217,138,.12);border-color:rgba(43,217,138,.4);color:var(--up)}
+.fRow{display:flex;gap:10px;align-items:flex-start;padding:8px 0;border-bottom:1px solid var(--line2)}
+.fRow:last-of-type{border-bottom:0}
+.fRow b{font-size:13.5px;font-weight:700;display:block}
+.fRow p{margin:2px 0 0;font-size:11.5px;color:var(--tx2);line-height:1.45}
+.fDot{width:7px;height:7px;border-radius:50%;background:var(--tx3);margin-top:6px;flex:none}
+.fDot.u{background:var(--up)} .fDot.d{background:var(--down)}
+.fW{font:700 12px 'JetBrains Mono',monospace;color:var(--tx3);white-space:nowrap;margin-top:2px}
+.fW.u{color:var(--up)} .fW.d{color:var(--down)}
+.btn.qt2{background:var(--card2);border:1px solid var(--line2);color:var(--tx);
+  border-radius:13px;padding:12px;font:700 13px Manrope,sans-serif;width:100%;margin-top:12px;cursor:pointer}
 .disc{font-size:11.5px;color:var(--tx3);line-height:1.5;padding:4px 4px 16px;text-align:center}
 
 /* вердикт над графиком */
@@ -944,14 +1049,24 @@ nav{position:fixed;left:0;right:0;bottom:0;background:rgba(8,15,26,.94);
   </section>
 
   <!-- ================= SIGNALS ================= -->
-  <section class="tab" id="tab-signals">
-    <div class="sect">AI SIGNAL RADAR</div>
-    <div id="radar"></div>
-    <div style="display:flex;align-items:center;margin:18px 0 12px">
-      <div style="font-size:12px;letter-spacing:1.4px;color:var(--tx2);font-weight:700">ПОСЛЕДНИЕ СИГНАЛЫ</div>
-      <button class="back" style="margin-left:auto;padding:0" onclick="scanAll()">Обновить</button>
+  <section class="tab sigTheme" id="tab-signals">
+    <div class="sigNav" id="sigNav">
+      <div class="opt on" data-v="sig"><b>Сигналы</b></div>
+      <div class="opt" data-v="hist" onclick="go('history')"><b>История</b></div>
+      <div class="opt" data-v="ana" onclick="go('analytics')"><b>Аналитика</b></div>
+      <div class="opt" data-v="prof" onclick="go('profile')"><b>Настройки</b></div>
     </div>
-    <div id="sigList"><div class="empty"><span>📡</span>Нажмите «Обновить», чтобы просканировать рынок</div></div>
+    <div class="sigPick">
+      <div class="mkTabs" id="sigMkt">
+        <button data-m="crypto">Крипто</button>
+        <button data-m="forex">Форекс</button>
+        <button data-m="otc">OTC</button>
+      </div>
+      <button class="sigAsset" id="sigAsset" onclick="sigPickAsset()"></button>
+    </div>
+    <div class="sigStat" id="sigStatus"></div>
+    <div id="sigWrap"></div>
+    <div id="sigLists"></div>
   </section>
 
   <!-- ================= DETAIL ================= -->
@@ -1733,6 +1848,14 @@ function retryCrypto(){
 }
 
 function setAsset(id){
+  if(typeof sigState!=='undefined'){
+    sigState.sig=null;
+    setTimeout(()=>{
+      if(typeof sigSyncHead==='function')sigSyncHead();
+      const t=document.getElementById('tab-signals');
+      if(t&&t.classList.contains('on'))sigLoad(id,S.tf);
+    },60);
+  }
   S.asset=id; S.cat=marketOf(id);
   const a=REG[S.cat].find(x=>x.id===id)||{id,market:S.cat,label:label(id),base:id.slice(0,-4)};
   document.getElementById('assetBtn').innerHTML=
@@ -2085,25 +2208,6 @@ async function scanAll(){
   }catch(e){ list.innerHTML='<div class="empty"><span>⚠️</span>'+e.message+'</div>' }
 }
 
-function renderSignals(){
-  const top=signals[0];
-  document.getElementById('radar').innerHTML = !top ? '' : `
-    <div class="sigcard">
-      <div class="sighead"><h2>${label(top.sym)}</h2><span class="tf">${top.tf}</span>
-        <span class="verdict v-${top.a.dir}">${top.a.dir==='CALL'?'↗ CALL':top.a.dir==='PUT'?'↘ PUT':'◷ WAIT'}</span></div>
-      <div class="gaugeRow">${gauge(top.a.score)}
-        <div class="pills">
-          <div class="pill"><s>Тренд</s><b>${top.a.trend}</b></div>
-          <div class="pill"><s>Импульс</s><b>${top.a.momentum}</b></div>
-          <div class="pill"><s>Ст. ТФ</s><b>${top.a.mtf}</b></div>
-          <div class="pill"><s>Структура</s><b>${top.a.structure}</b></div>
-        </div></div>
-      <button class="btn ghost" style="margin-top:14px" onclick="openSig('${top.id}')">Просмотреть анализ</button>
-    </div>`;
-  document.getElementById('sigList').innerHTML = !signals.length
-    ? '<div class="empty"><span>📡</span>Пока пусто</div>'
-    : signals.map(s=>rowHTML(s)).join('');
-}
 
 function rowHTML(s,showRes){
   const a=s.a, res=s.result;
@@ -3920,6 +4024,427 @@ function startLiveTimers(){
 startLiveTimers();
 document.addEventListener('visibilitychange',()=>{ if(!document.hidden){pulseTick();sheetTick()} });
 
+
+/* ═══════════ ПОЛНЫЙ ДВИЖОК НА ЭКРАНЕ СИГНАЛОВ ═══════════ */
+let sigOv=null, sigShowMarks=true, sigFull=false, sigMtfData=null;
+
+function sigToggleMarks(){ sigShowMarks=!sigShowMarks; haptic();
+  document.getElementById('mkBtn').classList.toggle('on',sigShowMarks); drawSigChart() }
+function sigToggleFull(){ sigFull=!sigFull; haptic(); renderSignals();
+  setTimeout(()=>document.getElementById('sigFullBox')?.scrollIntoView({behavior:'smooth',block:'start'}),80) }
+
+function sigExtras(sig){
+  const a=sig.a, k=a.k;
+  const at=ATR(k)[k.length-1];
+  let lv={},fg=null,cp=[],dv=null;
+  try{ lv=levels(k,at) }catch{}
+  try{ fg=figure(k) }catch{}
+  try{ cp=candlePatterns(k) }catch{}
+  try{ dv=divergence(k) }catch{}
+  sigOv={lv,fig:fg};
+  const osc=groupScore(a,OSC), trn=groupScore(a,TRN), all=groupScore(a,[...OSC,...TRN]);
+  const votes=a.factors.filter(f=>f.dir!=='flat').length;
+  const be=1/(1+S.payout);
+
+  return `
+  <div class="grid2" style="gap:10px;margin-bottom:12px">
+    <div class="card" style="margin:0">
+      <div class="lbl2">ОСЦИЛЛЯТОРЫ</div>
+      ${gaugeArc(osc.norm,150,15,'sgOsc')}
+      <div class="gVerd sm" style="color:${verdictOf(osc.norm)[1]};border-color:${verdictOf(osc.norm)[1]}">${verdictOf(osc.norm)[0]}</div>
+      <div class="sub2" style="text-align:center">${osc.votes} из ${osc.total} голосуют</div>
+    </div>
+    <div class="card" style="margin:0">
+      <div class="lbl2">ТРЕНДОВЫЕ</div>
+      ${gaugeArc(trn.norm,150,15,'sgTrn')}
+      <div class="gVerd sm" style="color:${verdictOf(trn.norm)[1]};border-color:${verdictOf(trn.norm)[1]}">${verdictOf(trn.norm)[0]}</div>
+      <div class="sub2" style="text-align:center">${trn.votes} из ${trn.total} голосуют</div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="listHead"><span>📐</span><b>Структура рынка</b></div>
+    ${fg?`<div class="kv"><span>Фигура</span><b>${fg.name}</b></div>`:'<div class="kv"><span>Фигура</span><b>не определена</b></div>'}
+    ${lv.res?`<div class="kv"><span>Сопротивление · ${lv.res.n} касаний</span>
+      <b class="mono" style="color:var(--down)">${fmtP(lv.res.p)}</b></div>`:''}
+    ${lv.sup?`<div class="kv"><span>Поддержка · ${lv.sup.n} касаний</span>
+      <b class="mono" style="color:var(--up)">${fmtP(lv.sup.p)}</b></div>`:''}
+    ${lv.res&&lv.sup?`<div class="kv"><span>Положение цены</span>
+      <b>${(((a.price-lv.sup.p)/(lv.res.p-lv.sup.p))*100).toFixed(0)}% от дна диапазона</b></div>`:''}
+    <div class="kv"><span>Свечная формация</span><b>${cp.length?cp[0].n:'нет'}</b></div>
+    <div class="kv"><span>Дивергенция</span><b style="color:${dv?(dv.d==='up'?'var(--up)':'var(--down)'):'var(--tx2)'}">${dv?dv.n:'нет'}</b></div>
+  </div>
+
+  <div class="card">
+    <div class="listHead"><span>🧮</span><b>Все факторы</b>
+      <span class="cnt">${votes} из ${a.factors.length}</span></div>
+    ${sigFull?a.factors.map(f=>`<div class="fRow">
+        <span class="fDot ${f.dir==='up'?'u':f.dir==='down'?'d':''}"></span>
+        <div style="flex:1"><b>${f.name}</b><p>${f.text}</p></div>
+        <span class="fW ${f.dir==='up'?'u':f.dir==='down'?'d':''}">${f.dir==='flat'?'—':(f.dir==='up'?'+':'−')+f.w.toFixed(1)}</span>
+      </div>`).join('')
+      :a.factors.filter(f=>f.dir!=='flat').slice(0,5).map(f=>`<div class="fRow">
+        <span class="fDot ${f.dir==='up'?'u':'d'}"></span>
+        <div style="flex:1"><b>${f.name}</b></div>
+        <span class="fW ${f.dir==='up'?'u':'d'}">${(f.dir==='up'?'+':'−')+f.w.toFixed(1)}</span>
+      </div>`).join('')}
+    <div class="kv" style="margin-top:8px"><span>Сумма голосов</span>
+      <b>${a.up.toFixed(1)} за рост · ${a.dn.toFixed(1)} за падение</b></div>
+    <button class="btn qt2" onclick="sigToggleFull()">${sigFull?'Свернуть':'Показать все '+a.factors.length}</button>
+  </div>
+
+  <div class="card" id="sigFullBox">
+    <div class="listHead"><span>🔬</span><b>Проверка на истории</b></div>
+    ${sig.bt.t>=15?`
+      <div class="kv"><span>Сигналов проверено</span><b class="mono">${sig.bt.t}</b></div>
+      <div class="kv"><span>Совпало</span><b class="mono">${sig.bt.w} / ${sig.bt.t} = ${(sig.bt.wr*100).toFixed(1)}%</b></div>
+      <div class="kv"><span>Нужно для нуля</span><b class="mono">${(be*100).toFixed(1)}%</b></div>
+      <div class="kv"><span>Матожидание ставки</span>
+        <b class="mono" style="color:${sig.bt.ev>0?'var(--up)':'var(--down)'}">${(sig.bt.ev*100>0?'+':'')}${(sig.bt.ev*100).toFixed(1)}%</b></div>`
+     :`<div class="hint">Сделок в выборке мало (${sig.bt.t}) — статистика недостоверна.</div>`}
+  </div>
+
+  <div class="card">
+    <div class="listHead"><span>⏱</span><b>Согласие таймфреймов</b>
+      <button class="lnk" style="margin-left:auto" onclick="sigMTF()">Посчитать</button></div>
+    <div id="sigMtfBox">${sigMtfData?sigMtfHTML():'<div class="hint">Проверит эту же пару на 5m, 15m и 1h — видно, идут ли младшие сроки против старших.</div>'}</div>
+  </div>
+
+  <div class="card">
+    <div class="listHead"><span>⚙️</span><b>Настройки расчёта</b></div>
+    <div class="lbl2" style="margin-bottom:7px">СТРАТЕГИЧЕСКИЙ ПРОФИЛЬ</div>
+    <div class="mkTabs" style="margin-bottom:12px">
+      ${Object.entries(STRATS).map(([k,v])=>
+        `<button class="${k===STRAT?'on':''}" onclick="setStrat('${k}');sigState.sig=null;sigLoad(S.asset,S.tf)">${v.name}</button>`).join('')}
+    </div>
+    <div class="lbl2" style="margin-bottom:7px">ПОРОГ СИЛЫ · сейчас ${S.min}</div>
+    <div class="mkTabs" style="grid-template-columns:repeat(4,1fr)">
+      ${[4,5.5,6.5,7.5].map(m=>`<button class="${m===S.min?'on':''}"
+        onclick="S.min=${m};saveS();document.querySelectorAll('#mins .opt').forEach(o=>o.classList.toggle('on',+o.dataset.m===${m}));sigState.sig=null;sigLoad(S.asset,S.tf)">${m}</button>`).join('')}
+    </div>
+    <div class="hint" style="margin-top:10px">Профиль меняет веса факторов, порог — с какой силы сигнал перестаёт быть WAIT.</div>
+  </div>
+
+  <div class="grid2" style="gap:10px">
+    <button class="btn qt2" style="margin:0" onclick="LIVE.on?liveStop():liveStart();renderSignals()">
+      ${LIVE.on?'Остановить бота':'Запустить бота'}</button>
+    <button class="btn qt2" style="margin:0" onclick="openChat();setTimeout(()=>ask('Объясни текущий сигнал простыми словами'),300)">
+      Объяснить словами</button>
+  </div>`;
+}
+
+function sigMtfHTML(){
+  const d=sigMtfData; if(!d)return '';
+  const agree=Math.max(d.filter(r=>r.v>0.18).length,d.filter(r=>r.v<-0.18).length);
+  return `${d.map(r=>r.err?`<div class="mtfRow"><span class="mtfTf">${r.tf}</span>
+      <span class="sub2" style="flex:1">нет данных</span></div>`
+    :`<div class="mtfRow"><span class="mtfTf">${r.tf}</span>
+      <div class="mtfBar"><span class="csMid"></span>
+        <i style="left:${r.v>=0?50:50+r.v*50}%;width:${Math.abs(r.v)*50}%;
+           background:${r.v>=0?'var(--up)':'var(--down)'}"></i></div>
+      <span class="mtfV" style="color:${r.dir==='CALL'?'var(--up)':r.dir==='PUT'?'var(--down)':'var(--tx3)'}">${r.dir}</span>
+      <span class="mtfS mono">${r.score.toFixed(1)}</span></div>`).join('')}
+    <div class="whyBt" style="margin-top:10px">Согласны ${agree} из ${d.filter(r=>!r.err).length} сроков.
+      ${agree>=3?'Младшие и старшие смотрят одинаково.':'Сроки расходятся — вход рискованнее обычного.'}</div>`;
+}
+
+async function sigMTF(){
+  const box=document.getElementById('sigMtfBox'); if(!box||!sigState.sym)return;
+  box.innerHTML='<div class="hint">Считаю 5m, 15m и 1h…</div>';
+  const out=[];
+  for(const tf of ['5m','15m','1h']){
+    try{
+      const [k,h]=await Promise.all([getCandles(sigState.sym,tf,200),
+                                     getCandles(sigState.sym,HTF[tf]||tf,120)]);
+      const a=analyze(k,h), g=groupScore(a,[...OSC,...TRN]);
+      out.push({tf,dir:a.dir,score:a.score,v:g.norm});
+    }catch(e){ out.push({tf,err:1}) }
+  }
+  sigMtfData=out; box.innerHTML=sigMtfHTML(); haptic();
+}
+
+/* ═══════════ ЭКРАН СИГНАЛОВ ═══════════ */
+const SIG_TFS=['1m','5m','15m','30m','1h'];
+let sigState={sym:null,tf:null,sig:null,busy:false,chartTimer:null};
+
+async function sigLoad(sym,tf,quiet){
+  if(sigState.busy)return;
+  sigState.busy=true;
+  if(!quiet)sigStatus('считаю',`${label(sym)} · ${tf}`);
+  try{
+    const sig=await buildSignal(sym,tf);
+    sigState.sym=sym; sigState.tf=tf; sigState.sig=sig;
+    const exists=signals.find(x=>x.sym===sym&&x.tf===tf&&Math.abs(x.ts-Date.now())<MS[tf]/2);
+    if(!exists){ signals.unshift(sig); signals=signals.slice(0,20) }
+    renderSignals();
+  }catch(e){
+    sigStatus('ошибка',e.message);
+  }
+  sigState.busy=false;
+}
+
+function sigStatus(kind,text){
+  const el=document.getElementById('sigStatus'); if(!el)return;
+  const map={'считаю':['◷','var(--gold)','Считаю сигнал'],
+             'готов':['✓','var(--up)','Сигнал готов'],
+             'ждать':['◷','var(--tx2)','Перевеса нет'],
+             'ошибка':['⚠','var(--down)','Данные не пришли']};
+  const [ic,col,title]=map[kind]||map['ждать'];
+  el.className='sigStat '+kind;
+  el.innerHTML=`<div class="sigBot" style="color:${col};border-color:${col}33;background:${col}14">${ic}</div>
+    <div style="flex:1"><b>${title}</b><div class="sub2">${text}</div></div>`;
+}
+
+function drawSigChart(){
+  const cv=document.getElementById('sigChart'); if(!cv||!sigState.sig)return;
+  const k=sigState.sig.a.k; if(!k||!k.length)return;
+  const dpr=devicePixelRatio||1,W=cv.clientWidth,H=230;
+  cv.width=W*dpr;cv.height=H*dpr;cv.style.height=H+'px';
+  const x=cv.getContext('2d');x.setTransform(dpr,0,0,dpr,0,0);x.clearRect(0,0,W,H);
+  const N=Math.min(k.length,64), d=k.slice(-N);
+  const hi=Math.max(...d.map(c=>c.h)), lo=Math.min(...d.map(c=>c.l)), rg=(hi-lo)||1;
+  const padR=62, padB=20, cw=(W-8-padR)/N;
+  const X=i=>6+i*cw+cw/2, Y=v=>10+(1-(v-lo)/rg)*(H-padB-16);
+
+  // сетка и шкала цены
+  x.font='9.5px JetBrains Mono, monospace'; x.textBaseline='middle';
+  for(let i=0;i<=4;i++){
+    const v=lo+rg*i/4, y=Y(v);
+    x.strokeStyle='rgba(255,255,255,.045)';
+    x.beginPath();x.moveTo(0,y);x.lineTo(W-padR,y);x.stroke();
+    x.fillStyle='#61748C'; x.fillText(fmtP(v),W-padR+7,y);
+  }
+  // свечи
+  d.forEach((c,i)=>{
+    const up=c.c>=c.o, col=up?'#2BD98A':'#FF5C6C';
+    x.strokeStyle=col; x.fillStyle=col; x.lineWidth=1;
+    x.beginPath();x.moveTo(X(i),Y(c.h));x.lineTo(X(i),Y(c.l));x.stroke();
+    x.fillRect(X(i)-Math.max(1.2,cw*.28),Math.min(Y(c.o),Y(c.c)),
+               Math.max(2.4,cw*.56),Math.max(1.4,Math.abs(Y(c.o)-Y(c.c))));
+  });
+  // уровни и границы фигуры
+  if(sigShowMarks&&sigOv){
+    if(sigOv.fig){
+      x.lineWidth=1.8; x.strokeStyle='rgba(255,92,108,.75)';
+      [sigOv.fig.up,sigOv.fig.dn].forEach(l=>{
+        try{ x.beginPath(); x.moveTo(X(0),Y(l.at(0))); x.lineTo(X(N-1),Y(l.at(N-1))); x.stroke() }catch{}
+      });
+    }
+    x.setLineDash([4,4]); x.lineWidth=1; x.font='700 9px JetBrains Mono, monospace';
+    [[sigOv.lv?.res,'#FF5C6C','R'],[sigOv.lv?.sup,'#2BD98A','S']].forEach(([l,c,t])=>{
+      if(!l)return; const yy=Y(l.p);
+      if(yy<6||yy>H-padB)return;
+      x.strokeStyle=c; x.beginPath(); x.moveTo(0,yy); x.lineTo(W-padR,yy); x.stroke();
+      x.fillStyle=c; x.fillText(`${t} ${fmtP(l.p)}`,6,yy-7);
+    });
+    x.setLineDash([]);
+  }
+
+  // EMA 21 — читаемая линия с подписью
+  const e=EMA(d.map(c=>c.c),21);
+  x.strokeStyle='#2BD98A'; x.lineWidth=2; x.globalAlpha=.85;
+  x.beginPath(); e.forEach((v,i)=>i?x.lineTo(X(i),Y(v)):x.moveTo(X(i),Y(v))); x.stroke();
+  x.globalAlpha=1;
+  x.fillStyle='rgba(43,217,138,.85)'; x.font='700 9.5px Manrope, sans-serif';
+  x.fillText('EMA 21',10,Y(e[Math.floor(N*0.12)])-12);
+
+  // текущая цена — пунктир и плашка
+  const last=d[d.length-1], y=Y(last.c);
+  x.setLineDash([5,4]); x.strokeStyle='rgba(43,217,138,.7)'; x.lineWidth=1;
+  x.beginPath();x.moveTo(0,y);x.lineTo(W-padR,y);x.stroke();x.setLineDash([]);
+  x.fillStyle='#2BD98A';
+  const pw=padR-6;
+  x.beginPath(); x.roundRect?.(W-padR+2,y-11,pw,22,7); x.fill();
+  if(!x.roundRect)x.fillRect(W-padR+2,y-11,pw,22);
+  x.fillStyle='#041610'; x.font='700 10px JetBrains Mono, monospace';
+  x.fillText(fmtP(last.c),W-padR+8,y);
+
+  // время снизу
+  x.fillStyle='#61748C'; x.font='9px JetBrains Mono, monospace';
+  [0,Math.floor(N/3),Math.floor(2*N/3),N-1].forEach(i=>{
+    const t=new Date(d[i].t).toLocaleTimeString('ru',{hour:'2-digit',minute:'2-digit'});
+    x.fillText(t,Math.min(W-padR-28,Math.max(2,X(i)-14)),H-8);
+  });
+}
+
+function sigWhy(a){
+  const want=a.dir==='PUT'?'down':'up';
+  const pro=a.factors.filter(f=>f.dir===want).sort((x,y)=>y.w-x.w).slice(0,4);
+  const con=a.factors.filter(f=>f.dir!=='flat'&&f.dir!==want).sort((x,y)=>y.w-x.w)[0];
+  return `${pro.map(f=>`<div class="whyRow"><span class="whyIc ok">✓</span>
+      <div><b>${f.name}</b><p>${f.text}</p></div></div>`).join('')}
+    ${con?`<div class="whyRow"><span class="whyIc no">!</span>
+      <div><b>Против: ${con.name}</b><p>${con.text}</p></div></div>`:''}`;
+}
+
+function renderSignals(){
+  const wrap=document.getElementById('sigWrap'); if(!wrap)return;
+  const sig=sigState.sig;
+  const active=history.filter(h=>h.result===null&&h.expiry>Date.now())
+                      .sort((a,b)=>a.expiry-b.expiry).slice(0,4);
+  const recent=history.filter(h=>h.result==='win'||h.result==='loss').slice(0,6);
+
+  if(!sig){
+    sigStatus('ждать','выберите пару и срок ниже');
+    wrap.innerHTML=`<div class="card" style="text-align:center;padding:26px 18px">
+      <div class="sub2" style="margin-bottom:14px">Сигнал ещё не рассчитан</div>
+      <button class="btn ok" onclick="sigLoad(S.asset,S.tf)">Рассчитать ${label(S.asset)} · ${S.tf}</button>
+    </div>`;
+    renderSigLists(active,recent);
+    return;
+  }
+
+  const a=sig.a, conf=Math.round(a.score*10);
+  const up=a.dir==='CALL', wait=a.dir==='WAIT';
+  sigStatus(wait?'ждать':'готов', wait
+    ? `индикаторы разошлись · ${label(sig.sym)} ${sig.tf}`
+    : `на основе пятнадцати факторов · ${label(sig.sym)} ${sig.tf}`);
+
+  wrap.innerHTML=`
+  <div class="sigCard ${a.dir}">
+    <div class="sigTop">
+      <div class="sigPair">${assetIcon(REG[marketOf(sig.sym)]?.find(x=>x.id===sig.sym)
+        ||{id:sig.sym,market:marketOf(sig.sym),base:sig.sym.replace('USDT','')})}
+        <div><b>${label(sig.sym)}</b><s>${marketOf(sig.sym)==='crypto'?'криптовалюта':'бинарные опционы'}</s></div>
+      </div>
+      <div class="sigDir ${a.dir}">
+        <span class="sigArrow">${up?'↑':wait?'◷':'↓'}</span>
+        <div><b>${up?'ВЫШЕ':wait?'ЖДАТЬ':'НИЖЕ'}</b><s>${up?'CALL':wait?'WAIT':'PUT'}</s></div>
+      </div>
+      <div class="sigExp"><s>Экспирация</s><b>${sig.tf}</b></div>
+    </div>
+
+    <div class="sigRow3">
+      <div><s>Время сигнала</s><b>${new Date(sig.ts).toLocaleTimeString('ru',{hour:'2-digit',minute:'2-digit'})}</b></div>
+      <div><s>Текущая цена</s><b class="mono" id="sigPx">${fmtP(a.price)}</b></div>
+      <div><s>Согласие</s><b id="sigConf">${conf}%</b>
+        <div class="dots">${Array.from({length:8},(_,i)=>
+          `<i class="${i<Math.round(conf/12.5)?'on':''}"></i>`).join('')}</div></div>
+    </div>
+
+    <div class="sigTfs">${SIG_TFS.map(t=>
+      `<button class="sigTf ${t===sig.tf?'on':''}" onclick="sigLoad('${sig.sym}','${t}')">${t.toUpperCase()}</button>`).join('')}</div>
+
+    <div class="chartHead">
+      <b>График ${sig.tf}</b>
+      <button class="mkBtn on" id="mkBtn" onclick="sigToggleMarks()">разметка</button>
+    </div>
+    <div class="sigChartBox"><canvas id="sigChart"></canvas></div>
+
+    <div class="sigInd">
+      <div><s>RSI</s><b style="color:${a.rsi>70?'var(--down)':a.rsi<30?'var(--up)':'var(--tx)'}">${a.rsi.toFixed(1)}</b></div>
+      <div><s>ATR</s><b>${a.atrPct.toFixed(2)}%</b></div>
+      <div><s>Тренд</s><b>${a.trend}</b></div>
+      <div><s>Ст. ТФ</s><b style="color:${a.mtf==='Согласован'?'var(--up)':'var(--down)'}">${a.mtf}</b></div>
+    </div>
+  </div>
+
+  <div class="card why">
+    <div class="whyHead"><span class="whyBulb">💡</span><b>Почему этот сигнал?</b>
+      <button class="lnk" style="margin-left:auto" onclick="openSig('${sig.id}')">Подробнее ›</button></div>
+    ${sigWhy(a)}
+    ${sig.bt.t>=15?`<div class="whyBt">На истории такая связка дала
+      <b style="color:${sig.bt.wr>=sig.bt.be?'var(--up)':'var(--down)'}">${(sig.bt.wr*100).toFixed(1)}%</b>
+      совпадений при нужных ${(sig.bt.be*100).toFixed(1)}%</div>`:''}
+  </div>
+
+  ${wait?`<div class="note warn"><div><b>Входить сейчас не по чему</b>
+     Сила ${a.score.toFixed(1)} при пороге ${S.min}: факторы не согласны между собой.</div></div>`
+   :`<div class="sigAct">
+      <button class="actBtn ${up?'main':'dim'}" onclick="sigMark('${sig.id}',true)">
+        <span>${up?'↑':'↑'}</span><b>ВЫШЕ (CALL)</b><s>${up?'отметить вход':'против сигнала'}</s></button>
+      <button class="actBtn ${!up?'main red':'dim'}" onclick="sigMark('${sig.id}',false)">
+        <span>↓</span><b>НИЖЕ (PUT)</b><s>${!up?'отметить вход':'против сигнала'}</s></button>
+    </div>
+    <div class="disc" style="padding:10px 4px 0">Кнопки отмечают ваше решение в журнале. Приложение не подключено к брокеру и ордера не отправляет.</div>`}
+  `;
+  document.getElementById('sigWrap').insertAdjacentHTML('beforeend',sigExtras(sig));
+  renderSigLists(active,recent);
+  requestAnimationFrame(drawSigChart);
+  clearInterval(sigState.chartTimer);
+  sigState.chartTimer=setInterval(()=>{
+    const t=document.getElementById('tab-signals');
+    if(t&&t.classList.contains('on')&&!document.hidden)sigLoad(sigState.sym,sigState.tf,true);
+  },20000);
+}
+
+function sigMark(id,upSide){
+  const s=signals.find(x=>x.id===id)||history.find(x=>x.id===id); if(!s)return;
+  const agree=(s.a.dir==='CALL')===upSide;
+  if(!history.find(x=>x.id===id)){history.unshift(s);}
+  s.taken=agree;
+  saveHistory(); haptic('medium'); renderHistory(); renderSignals();
+  toast(agree?'Вход отмечен':'Отмечено решение против сигнала',
+    agree?'Результат проставится после экспирации.'
+         :'Вы пошли против расчёта — в разделе «Что менять» будет видно, чей отбор точнее.',agree);
+}
+
+function renderSigLists(active,recent){
+  const el=document.getElementById('sigLists'); if(!el)return;
+  el.innerHTML=`
+  ${active.length?`<div class="card">
+    <div class="listHead"><span>🚀</span><b>Активные сигналы</b><span class="cnt">${active.length}</span></div>
+    ${active.map(s=>`<div class="actRow" onclick="openSig('${s.id}')">
+      ${assetIcon(REG[marketOf(s.sym)]?.find(x=>x.id===s.sym)||{id:s.sym,market:marketOf(s.sym),base:s.sym.replace('USDT','')})}
+      <b>${label(s.sym)}</b>
+      <span class="tag ${s.a.dir==='CALL'?'up':'down'}">${s.a.dir}</span>
+      <span class="sub2">${s.tf}</span>
+      <div class="actTime"><b class="mono" data-exp="${s.expiry}">—</b><s>до экспирации</s></div>
+    </div>`).join('')}
+  </div>`:''}
+
+  ${recent.length?`<div class="card">
+    <div class="listHead"><span>🕘</span><b>Последние результаты</b></div>
+    ${recent.map(s=>{
+      const win=s.result==='win';
+      return `<div class="resRow" onclick="openSig('${s.id}')">
+        ${assetIcon(REG[marketOf(s.sym)]?.find(x=>x.id===s.sym)||{id:s.sym,market:marketOf(s.sym),base:s.sym.replace('USDT','')})}
+        <b>${label(s.sym)}</b>
+        <span class="tag ${s.a.dir==='CALL'?'up':'down'}">${s.a.dir}</span>
+        <span class="sub2">${s.tf}</span>
+        <span class="resV ${win?'w':'l'}">${win?'✓ сбылся':'✕ мимо'}</span>
+        <span class="sub2">${new Date(s.ts).toLocaleTimeString('ru',{hour:'2-digit',minute:'2-digit'})}</span>
+      </div>`}).join('')}
+    <div class="hint" style="margin-top:10px">Результат ставится автоматически по реальной цене после экспирации.</div>
+  </div>`:''}`;
+}
+
+/* отсчёт в списке активных */
+setInterval(()=>{
+  document.querySelectorAll('.actTime b[data-exp]').forEach(el=>{
+    const ms=+el.dataset.exp-Date.now();
+    if(ms<=0){el.textContent='00:00';el.style.color='var(--tx3)';return}
+    const s=Math.floor(ms/1000);
+    el.textContent=`${String(Math.floor(s/60)).padStart(2,'0')}:${String(s%60).padStart(2,'0')}`;
+    el.style.color=s<20?'var(--down)':'var(--gold)';
+  });
+},1000);
+
+function sigPickAsset(){ pickerTab=S.cat==='otc'?'otc':S.cat; openPicker() }
+
+function sigMarket(m){
+  S.cat=m; PULSE=[]; sigState.sig=null;
+  const first=(REG[m]||[])[0];
+  if(m==='crypto'){
+    const id=(cryptoLoaded&&REG.crypto[0]?REG.crypto[0].id:'BTCUSDT');
+    setAsset(id);
+  } else if(first) setAsset(first.id);
+  document.querySelectorAll('#cats .opt').forEach(o=>o.classList.toggle('on',o.dataset.cat===m));
+  catNote(); sigSyncHead(); haptic('medium');
+  sigLoad(S.asset,S.tf);
+}
+
+function sigSyncHead(){
+  document.querySelectorAll('#sigMkt button').forEach(b=>
+    b.classList.toggle('on',b.dataset.m===S.cat));
+  const el=document.getElementById('sigAsset'); if(!el)return;
+  const a=(REG[S.cat]||[]).find(x=>x.id===S.asset)
+    ||{id:S.asset,market:S.cat,base:S.asset.replace('USDT',''),label:label(S.asset)};
+  el.innerHTML=`${assetIcon(a)}<span class="saT"><b>${label(S.asset)}</b>
+    <s>${S.cat==='crypto'?'криптовалюта':S.cat==='otc'?'OTC · по базовой паре':'валютная пара'}</s></span>
+    <span class="chev">›</span>`;
+}
+
 /* ─────────────── nav & settings ─────────────── */
 function go(t,from){
   if(from)lastTab=from; else if(t!=='detail')lastTab=t;
@@ -3928,6 +4453,7 @@ function go(t,from){
   window.scrollTo(0,0); haptic();
   if(t==='market'){ mkPane==='pulse'?renderPulse():renderOverview(); } if(t==='history')renderHistory();
   if(t==='chart')mountPage('ifChart','pg-chart');
+  if(t==='signals'){ sigSyncHead(); renderSignals(); if(!sigState.sig&&!sigState.busy)sigLoad(S.asset,S.tf) }
   if(t==='analytics'){renderAnalytics();if(anaPane==='auto')renderAuto();if(anaPane==='advice'){renderAdvice();renderDiscipline()}}
 }
 
@@ -3939,7 +4465,7 @@ function pick(container,attr,fn){
   });
 }
 pick('cats','cat',v=>{S.cat=v;PULSE=[];LIVE.i=0;LIVE.found=[];if(LIVE.on)liveStart();catNote();if(v!=='otc'){pickerTab=v;openPicker()}});
-pick('tfs','tf',v=>{S.tf=v;document.getElementById('runTf').textContent=v;PULSE=[];
+pick('tfs','tf',v=>{S.tf=v;document.getElementById('runTf').textContent=v;PULSE=[];sigState.sig=null;
   document.getElementById('tfNote').innerHTML = ['1m','3m'].includes(v)
     ? 'На минутных свечах шум сильнее сигнала: индикаторы часто меняют сторону внутри одной свечи. Проверьте статистику по этому сроку в разделе «Итоги».'
     : ['1d'].includes(v) ? 'Суточные свечи для бинарных опционов подходят редко — экспирация наступит через сутки.' : '';LIVE.i=0});
@@ -3947,6 +4473,8 @@ pick('payouts','p',v=>{S.payout=+v;saveS();document.getElementById('beVal').text
 pick('mins','m',v=>{S.min=+v;saveS()});
 pick('anaNav','v',v=>anaGo(v));
 pick('mkNav','v',v=>mkGo(v));
+document.getElementById('sigMkt').addEventListener('click',e=>{
+  const b=e.target.closest('button'); if(b)sigMarket(b.dataset.m)});
 const saveS=()=>LS.set('acs_settings',{payout:S.payout,min:S.min});
 
 function catNote(){
