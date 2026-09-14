@@ -115,14 +115,19 @@ select,.sel{width:100%;background:var(--card2);border:1px solid var(--line2);col
 .v-PUT{color:var(--down);border-color:rgba(255,92,108,.4);background:rgba(255,92,108,.10)}
 .v-WAIT{color:var(--wait);border-color:rgba(143,163,191,.35);background:rgba(143,163,191,.08)}
 
-.gaugeRow{display:flex;gap:16px;align-items:center}
-.gauge{position:relative;width:104px;height:104px;flex:none}
+.gaugeRow{display:flex;gap:13px;align-items:center;min-width:0}
+.gauge{position:relative;width:92px;height:92px;flex:none}
 .gauge .val{position:absolute;inset:0;display:grid;place-content:center;text-align:center}
 .gauge .val b{font-size:27px;font-weight:800;line-height:1}
 .gauge .val s{text-decoration:none;font-size:12px;color:var(--tx3)}
-.pills{flex:1;display:grid;grid-template-columns:1fr 1fr;gap:12px 10px}
-.pill s{text-decoration:none;display:block;font-size:11px;color:var(--tx3);margin-bottom:2px}
-.pill b{font-size:14px;font-weight:700}
+.pills{flex:1;min-width:0;display:grid;grid-template-columns:1fr 1fr;gap:9px 8px}
+.pill{min-width:0;background:rgba(255,255,255,.035);border:1px solid var(--line2);
+  border-radius:11px;padding:8px 10px;overflow:hidden}
+.pill s{text-decoration:none;display:block;font-size:9.5px;letter-spacing:.06em;
+  text-transform:uppercase;color:var(--tx3);margin-bottom:3px;white-space:nowrap;
+  overflow:hidden;text-overflow:ellipsis}
+.pill b{font-size:13px;font-weight:700;display:block;white-space:nowrap;
+  overflow:hidden;text-overflow:ellipsis}
 
 canvas{width:100%;display:block;border-radius:12px}
 .chartBox{margin-top:14px;background:rgba(0,0,0,.22);border:1px solid var(--line2);border-radius:12px;padding:8px}
@@ -369,6 +374,19 @@ nav{position:fixed;left:0;right:0;bottom:0;background:rgba(8,15,26,.94);
 .sigRow .m b{font-size:14px;font-weight:700}
 .sigRow .sub{font-size:11px;color:var(--tx3);margin-top:2px}
 .sigRow .mini{width:72px;flex:none}
+#langMenu{position:absolute;top:62px;right:14px;z-index:130;display:none;min-width:186px;
+  background:var(--card);border:1px solid var(--line);border-radius:16px;padding:6px;
+  box-shadow:0 18px 44px rgba(0,0,0,.6)}
+#langMenu.on{display:block}
+.lrow{display:flex;align-items:center;gap:11px;padding:11px 12px;border-radius:11px;cursor:pointer}
+.lrow:active{background:var(--card2)}
+.lrow .lf{font-size:17px}
+.lrow b{font-size:14px;font-weight:700}
+#langBtn{cursor:pointer;font-size:17px;font-family:inherit;color:var(--tx)}
+.langPick{display:grid;grid-template-columns:1fr 1fr;gap:9px;width:100%;max-width:330px;margin-top:26px}
+.langPick button{display:flex;align-items:center;gap:9px;background:var(--card);color:var(--tx);
+  border:1px solid var(--line2);border-radius:14px;padding:13px;font:700 13.5px Manrope,sans-serif;cursor:pointer}
+.langPick button span{font-size:17px}
 .disc{font-size:11.5px;color:var(--tx3);line-height:1.5;padding:4px 4px 16px;text-align:center}
 
 /* вердикт над графиком */
@@ -485,6 +503,16 @@ nav{position:fixed;left:0;right:0;bottom:0;background:rgba(8,15,26,.94);
     <div class="bBar"><i id="bProg"></i></div>
   </div>
 
+  <!-- 1.5 выбор языка -->
+  <div class="stage" id="bLang">
+    <div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center">
+      <div class="bIco" style="margin-bottom:18px">🌐</div>
+      <h2 style="font-size:23px;font-weight:800;margin:0 0 6px">Выберите язык</h2>
+      <p style="color:var(--tx2);margin:0;font-size:14px">Choose your language</p>
+      <div class="langPick" id="bLangList"></div>
+    </div>
+  </div>
+
   <!-- 2. онбординг -->
   <div class="stage" id="bTour">
     <div class="bTop">
@@ -494,7 +522,7 @@ nav{position:fixed;left:0;right:0;bottom:0;background:rgba(8,15,26,.94);
 
     <div class="bSlide" data-i="0">
       <div class="bIco">📡</div>
-      <h2>Читает рынок, а не гадает</h2>
+      <h2>Работает на реальных данных</h2>
       <p>Приложение берёт настоящие свечи с биржи Binance и считает по ним семь классических индикаторов — тренд, импульс, перекупленность, объём и старший таймфрейм.</p>
       <p>На выходе одно из трёх: CALL, PUT или WAIT. Никаких скрытых формул: каждый фактор показан отдельно, с его весом.</p>
     </div>
@@ -512,9 +540,9 @@ nav{position:fixed;left:0;right:0;bottom:0;background:rgba(8,15,26,.94);
 
     <div class="bSlide hide" data-i="2">
       <div class="bIco">🗂</div>
-      <h2>Проверяет сам себя</h2>
-      <p>Каждый сигнал уходит в журнал. Через время экспирации приложение подтягивает реальную цену и отмечает, угадал он или нет. Никто не правит статистику вручную.</p>
-      <p>Так через неделю вы будете знать свой настоящий процент попаданий — а не тот, что нарисован в рекламе.</p>
+      <h2>Фиксирует результат</h2>
+      <p>Каждый сигнал уходит в журнал. Через время экспирации приложение подтягивает реальную цену и отмечает результат. Никто не правит статистику вручную.</p>
+      <p>Так через неделю вы будете знать свой настоящий процент совпадений — по фактическим результатам.</p>
     </div>
 
     <div class="bSlide hide" data-i="3">
@@ -523,9 +551,9 @@ nav{position:fixed;left:0;right:0;bottom:0;background:rgba(8,15,26,.94);
       <div class="bNums">
         <div class="bNum"><b>80%</b><s>выплата<br>при выигрыше</s></div>
         <div class="bNum"><b>100%</b><s>потеря<br>при проигрыше</s></div>
-        <div class="bNum"><b>55.6%</b><s>нужно угадывать<br>ради нуля</s></div>
+        <div class="bNum"><b>55.6%</b><s>нужная точность<br>ради нуля</s></div>
       </div>
-      <p style="margin-top:18px">Выигрыш и проигрыш стоят по-разному, поэтому угадывать половину недостаточно. Приложение всегда показывает эту границу рядом с вашим винрейтом.</p>
+      <p style="margin-top:18px">Выигрыш и проигрыш стоят по-разному, поэтому половины совпадений недостаточно. Приложение всегда показывает эту границу рядом с вашим винрейтом.</p>
       <div class="bWarn"><b>Это инструмент анализа, а не советник</b>Приложение не подключено к брокеру и не гарантирует результат. Решение о сделке всегда ваше.</div>
     </div>
 
@@ -549,8 +577,21 @@ nav{position:fixed;left:0;right:0;bottom:0;background:rgba(8,15,26,.94);
   // прогресс заставки
   let p=0; const bar=document.getElementById('bProg');
   const t=setInterval(()=>{p=Math.min(100,p+Math.random()*22+8);bar.style.width=p+'%';
-    if(p>=100){clearInterval(t);setTimeout(()=>seen?warm():stage('bTour'),260)}},170);
+    if(p>=100){clearInterval(t);setTimeout(()=>{
+      if(seen)return warm();
+      const L=[['ru','Русский','🇷🇺'],['uk','Українська','🇺🇦'],['en','English','🇬🇧'],
+               ['es','Español','🇪🇸'],['de','Deutsch','🇩🇪']];
+      document.getElementById('bLangList').innerHTML=L.map(l=>
+        `<button onclick="bootLang('${l[0]}')"><span>${l[2]}</span>${l[1]}</button>`).join('');
+      stage('bLang');
+    },260)}},170);
 
+  window.bootLang=function(code){
+    try{localStorage.setItem('acs_lang',code)}catch{}
+    if(typeof setLang==='function'&&code!=='ru')setLang(code);
+    stage('bTour');
+    window.Telegram?.WebApp?.HapticFeedback?.impactOccurred?.('medium');
+  };
   window.bootNext=function(){
     const slides=document.querySelectorAll('.bSlide');
     if(step>=slides.length-1)return warm();
@@ -1041,24 +1082,40 @@ function assetIcon(a){
 const YTF={'1m':'1m','5m':'5m','15m':'15m','1h':'60m','4h':'1h','1d':'1d'};
 const YRANGE={'1m':'1d','5m':'5d','15m':'5d','60m':'1mo','1h':'1mo','1d':'1y'};
 
-async function fxCandles(pair,tf,limit){
-  const iv=YTF[tf]||'5m';
-  const url=`https://query1.finance.yahoo.com/v8/finance/chart/${pair}=X`
-    +`?interval=${iv}&range=${YRANGE[iv]||'5d'}`;
-  let j;
-  try{ j=await jget(url) }
-  catch(e){ throw new Error('котировки форекса недоступны: '+e.message
-    +'. Yahoo часто блокирует запросы прямо из браузера — для форекса нужен свой прокси или API-ключ провайдера') }
-  const r=j?.chart?.result?.[0]; const q=r?.indicators?.quote?.[0];
-  if(!r||!q)throw new Error('пара '+pair+' не найдена у источника');
+const FXPROXY=[
+  u=>u,                                                    // напрямую
+  u=>'https://api.allorigins.win/raw?url='+encodeURIComponent(u),
+  u=>'https://corsproxy.io/?url='+encodeURIComponent(u),
+  u=>'https://thingproxy.freeboard.io/fetch/'+u,
+];
+
+function yahooParse(j,tf,limit){
+  const r=j?.chart?.result?.[0], q=r?.indicators?.quote?.[0];
+  if(!r||!q||!r.timestamp)return null;
   const out=[];
   r.timestamp.forEach((t,i)=>{
     if(q.open[i]==null||q.close[i]==null)return;
-    out.push({t:t*1000,o:q.open[i],h:q.high[i],l:q.low[i],c:q.close[i],v:q.volume?.[i]||0,
-      ct:t*1000+(MS[tf]||3e5)});
+    out.push({t:t*1000,o:q.open[i],h:q.high[i],l:q.low[i],c:q.close[i],
+      v:q.volume?.[i]||0,ct:t*1000+(MS[tf]||3e5)});
   });
-  if(out.length<60)throw new Error('источник вернул только '+out.length+' свечей — мало для анализа');
-  return out.slice(-limit);
+  return out.length?out.slice(-limit):null;
+}
+
+async function fxCandles(pair,tf,limit){
+  const iv=YTF[tf]||'5m';
+  const base=`https://query1.finance.yahoo.com/v8/finance/chart/${pair}=X`
+    +`?interval=${iv}&range=${YRANGE[iv]||'5d'}`;
+  let lastErr='';
+  for(const wrap of FXPROXY){
+    try{
+      const j=await jget(wrap(base),12000);
+      const out=yahooParse(j,tf,limit);
+      if(out&&out.length>=40)return out;
+      lastErr='источник вернул мало свечей';
+    }catch(e){ lastErr=e.message }
+  }
+  throw new Error('котировки '+pair+' недоступны ('+lastErr
+    +'). Проверьте, идёт ли сейчас торговая сессия: в выходные валютный рынок закрыт и свечей нет.');
 }
 
 async function getCandles(id,tf,limit=200,endTime){
@@ -1397,7 +1454,7 @@ function renderDetail(sig){
       <div class="sect">ПРОВЕРКА НА ИСТОРИИ</div>
       ${bt.t<15?`<div class="hint">Сделок в выборке мало (${bt.t}) — статистика недостоверна.</div>`:`
       <div class="kv"><span>Сигналов проверено</span><b>${bt.t}</b></div>
-      <div class="kv"><span>Угадано</span><b class="mono">${bt.w} / ${bt.t} = ${(bt.wr*100).toFixed(1)}%</b></div>
+      <div class="kv"><span>Совпало</span><b class="mono">${bt.w} / ${bt.t} = ${(bt.wr*100).toFixed(1)}%</b></div>
       <div class="kv"><span>Нужно для нуля</span><b class="mono">${(bt.be*100).toFixed(1)}%</b></div>
       <div class="kv"><span>Матожидание ставки</span><b class="mono" style="color:${bt.ev>0?'var(--up)':'var(--down)'}">${(bt.ev*100>0?'+':'')}${(bt.ev*100).toFixed(1)}%</b></div>`}
       <div class="note ${bt.ev>0?'':'warn'}" style="margin-top:14px"><div>
@@ -1481,7 +1538,7 @@ function rowHTML(s,showRes){
       <b>${label(s.sym)}</b> <span class="tf">${s.tf}</span>
       <span class="tag ${a.dir==='CALL'?'up':a.dir==='PUT'?'down':'n'}">${a.dir}</span>
       <div class="sub">${ago(s.ts)} · RSI ${a.rsi.toFixed(0)} · ATR ${a.atrPct.toFixed(2)}% · MTF ${a.mtf}</div>
-      ${showRes?`<div class="sub" style="margin-top:5px">${res===null?'⏳ ждём экспирации':res==='win'?'<span style="color:var(--up)">✓ угадан</span>':res==='loss'?'<span style="color:var(--down)">✕ не угадан</span>':'= без изменений'}</div>`:''}
+      ${showRes?`<div class="sub" style="margin-top:5px">${res===null?'⏳ ждём экспирации':res==='win'?'<span style="color:var(--up)">✓ сбылся</span>':res==='loss'?'<span style="color:var(--down)">✕ не сбылся</span>':'= без изменений'}</div>`:''}
     </div>
     <div class="sc"><b style="color:${a.score>=7?'var(--up)':a.score>=5?'var(--gold)':'var(--tx2)'}">${a.score.toFixed(1)}</b><s>/10</s></div>
   </div>`;
@@ -1699,7 +1756,7 @@ function renderAnalytics(){
   document.getElementById('anaTop').innerHTML=`
     <div class="anaNums">
       <div><s>Сигналов</s><b>${all.length}</b></div>
-      <div><s>Угадано</s><b style="color:var(--up)">${w}</b></div>
+      <div><s>Совпало</s><b style="color:var(--up)">${w}</b></div>
       <div><s>Мимо</s><b style="color:var(--down)">${t-w}</b></div>
     </div>
     <div class="anaRing">${ring(wr,86,t?(wr>=be?'#2BD98A':'#FF5C6C'):'#3A4658')}
@@ -1761,13 +1818,13 @@ function explainSignal(sig){
       Сила ${a.score.toFixed(1)} из 10, порог входа ${S.min}. Индикаторы разошлись:
       ${a.up.toFixed(1)} голоса за рост против ${a.dn.toFixed(1)} за падение.
       <ul>${a.factors.filter(f=>f.dir!=='flat').map(f=>`<li>${f.text}</li>`).join('')||'<li>ни один фактор не даёт чёткого сигнала</li>'}</ul>
-      Молчащих факторов: ${neut.length} из 7. Когда согласия нет, вход — это ставка на монетку с выплатой ${(S.payout*100).toFixed(0)}%, а такая монетка в среднем убыточна.`;
+      Молчащих факторов: ${neut.length} из 7. Когда согласия нет, вероятность близка к случайной при выплате ${(S.payout*100).toFixed(0)}%, что даёт отрицательное матожидание.`;
   }
   return `<b>${label(sig.sym)} · ${sig.tf} — ${a.dir}</b>
     Сила ${a.score.toFixed(1)} из 10. За направление: ${a.up>a.dn?a.up.toFixed(1):a.dn.toFixed(1)} веса, против: ${a.up>a.dn?a.dn.toFixed(1):a.up.toFixed(1)}.
     <ul>${pro.map(f=>`<li>${f.text}</li>`).join('')}</ul>
     ${con.length?`Против сигнала: <ul>${con.map(f=>`<li>${f.text}</li>`).join('')}</ul>`:''}
-    На истории такая связка дала ${sig.bt.t>=15?(sig.bt.wr*100).toFixed(1)+'% попаданий при нужных '+(be*100).toFixed(1)+'%':'слишком мало сделок для оценки'}.`;
+    На истории такая связка дала ${sig.bt.t>=15?(sig.bt.wr*100).toFixed(1)+'% совпадений при нужных '+(be*100).toFixed(1)+'%':'слишком мало сделок для оценки'}.`;
 }
 
 async function ask(q){
@@ -1801,12 +1858,12 @@ async function ask(q){
     const w=done.filter(h=>h.result==='win').length, be=1/(1+S.payout);
     if(!done.length)return push('bot','В журнале ещё нет закрытых сделок. Результат проставляется автоматически после экспирации.');
     const wr=w/done.length;
-    return push('bot',`Закрыто ${done.length} сделок, угадано ${w}. Это ${(wr*100).toFixed(1)}% при нужных ${(be*100).toFixed(1)}% для нуля.
+    return push('bot',`Закрыто ${done.length} сделок, совпало ${w}. Это ${(wr*100).toFixed(1)}% при нужных ${(be*100).toFixed(1)}% для нуля.
       ${wr>=be?'Пока выше границы, но выборка маленькая.':'Ниже границы — по такой статистике торговля в минус.'}`);
   }
   if(/безубыт|выплат|математ/.test(Q)){
     const be=1/(1+S.payout);
-    return push('bot',`При выплате ${(S.payout*100).toFixed(0)}% выигрыш приносит ${(S.payout*100).toFixed(0)}% ставки, а проигрыш забирает все 100%. Поэтому ноль наступает не на 50%, а на <b>${(be*100).toFixed(1)}%</b> попаданий. Всё, что ниже, — медленная потеря депозита.`);
+    return push('bot',`При выплате ${(S.payout*100).toFixed(0)}% выигрыш приносит ${(S.payout*100).toFixed(0)}% ставки, а проигрыш забирает все 100%. Поэтому ноль наступает не на 50%, а на <b>${(be*100).toFixed(1)}%</b> совпадений. Всё, что ниже, — медленная потеря депозита.`);
   }
   push('bot','Могу: объяснить текущий сигнал, посчитать конкретную пару («проанализируй SOL»), показать вашу статистику или разобрать математику выплаты.');
 }
@@ -1815,6 +1872,140 @@ function chatSend(){
   const i=document.getElementById('chatIn'), v=i.value.trim();
   if(!v)return; i.value=''; ask(v);
 }
+
+
+/* ═══════════ ЯЗЫКИ ═══════════ */
+const LANGS=[['ru','Русский','🇷🇺'],['uk','Українська','🇺🇦'],['en','English','🇬🇧'],
+             ['es','Español','🇪🇸'],['de','Deutsch','🇩🇪']];
+const DICT={
+uk:{"Главная":"Головна","Сигналы":"Сигнали","Аналитика":"Аналітика","История":"Історія","Профиль":"Профіль",
+"Анализировать":"Аналізувати","Рынок":"Ринок","Актив":"Актив","Срок экспирации":"Строк експірації",
+"РЫНОК":"РИНОК","АКТИВ":"АКТИВ","СРОК ЭКСПИРАЦИИ":"СТРОК ЕКСПІРАЦІЇ","НОВЫЙ АНАЛИЗ":"НОВИЙ АНАЛІЗ",
+"Пробный доступ":"Пробний доступ","вход по сигналам без ограничений":"вхід за сигналами без обмежень",
+"Последние сигналы":"Останні сигнали","ПОСЛЕДНИЕ СИГНАЛЫ":"ОСТАННІ СИГНАЛИ","Все":"Усі","Обновить":"Оновити",
+"Открыть разбор":"Відкрити розбір","Просмотреть анализ":"Переглянути аналіз","Подробный анализ ▾":"Детальний аналіз ▾",
+"Свернуть разбор ▴":"Згорнути розбір ▴","Объяснить словами":"Пояснити словами","Назад":"Назад","Отмена":"Скасувати",
+"ГЛАВНОЕ":"ГОЛОВНЕ","УРОВНИ":"РІВНІ","ФИГУРА НА ГРАФИКЕ":"ФІГУРА НА ГРАФІКУ","СВЕЧНЫЕ ФОРМАЦИИ":"СВІЧКОВІ ФОРМАЦІЇ",
+"ПРОВЕРКА НА ИСТОРИИ":"ПЕРЕВІРКА НА ІСТОРІЇ","ПАРАМЕТРЫ СДЕЛКИ":"ПАРАМЕТРИ УГОДИ",
+"Цена входа":"Ціна входу","Экспирация":"Експірація","Живой график":"Живий графік","Помощник":"Помічник",
+"Криптовалюты":"Криптовалюти","Форекс":"Форекс","Тренд":"Тренд","Импульс":"Імпульс","Структура":"Структура",
+"Риск":"Ризик","Сила":"Сила","Срок":"Строк","закрыто":"закрито","точность":"точність","ждут":"чекають",
+"ЖУРНАЛ СДЕЛОК":"ЖУРНАЛ УГОД","ПРОФИЛЬ И НАСТРОЙКИ":"ПРОФІЛЬ І НАЛАШТУВАННЯ","Очистить журнал":"Очистити журнал",
+"Высокий":"Високий","Средний":"Середній","Низкий":"Низький","Сильный":"Сильний","Умеренный":"Помірний","Слабый":"Слабкий",
+"Медвежий":"Ведмежий","Бычий":"Бичачий","Плоский":"Плаский","Согласован":"Узгоджений","Против":"Проти",
+"Растёт":"Зростає","Слабеет":"Слабшає","Падает":"Падає","Стабильно":"Стабільно","Волатильно":"Волатильно",
+"Дальше":"Далі","Пропустить":"Пропустити","Всё понятно, начать":"Все зрозуміло, почати","Язык":"Мова"},
+
+en:{"Главная":"Home","Сигналы":"Signals","Аналитика":"Analytics","История":"History","Профиль":"Profile",
+"Анализировать":"Analyze","Рынок":"Market","Актив":"Asset","Срок экспирации":"Expiry",
+"РЫНОК":"MARKET","АКТИВ":"ASSET","СРОК ЭКСПИРАЦИИ":"EXPIRY","НОВЫЙ АНАЛИЗ":"NEW ANALYSIS",
+"Пробный доступ":"Trial access","вход по сигналам без ограничений":"unlimited signal access",
+"Последние сигналы":"Latest signals","ПОСЛЕДНИЕ СИГНАЛЫ":"LATEST SIGNALS","Все":"All","Обновить":"Refresh",
+"Открыть разбор":"Open analysis","Просмотреть анализ":"View analysis","Подробный анализ ▾":"Full analysis ▾",
+"Свернуть разбор ▴":"Collapse ▴","Объяснить словами":"Explain in words","Назад":"Back","Отмена":"Cancel",
+"ГЛАВНОЕ":"KEY POINTS","УРОВНИ":"LEVELS","ФИГУРА НА ГРАФИКЕ":"CHART PATTERN","СВЕЧНЫЕ ФОРМАЦИИ":"CANDLESTICK PATTERNS",
+"ПРОВЕРКА НА ИСТОРИИ":"HISTORICAL CHECK","ПАРАМЕТРЫ СДЕЛКИ":"TRADE PARAMETERS",
+"Цена входа":"Entry price","Экспирация":"Expiry","Живой график":"Live chart","Помощник":"Assistant",
+"Криптовалюты":"Crypto","Форекс":"Forex","Тренд":"Trend","Импульс":"Momentum","Структура":"Structure",
+"Риск":"Risk","Сила":"Strength","Срок":"Term","закрыто":"closed","точность":"accuracy","ждут":"pending",
+"ЖУРНАЛ СДЕЛОК":"TRADE JOURNAL","ПРОФИЛЬ И НАСТРОЙКИ":"PROFILE & SETTINGS","Очистить журнал":"Clear journal",
+"Высокий":"High","Средний":"Medium","Низкий":"Low","Сильный":"Strong","Умеренный":"Moderate","Слабый":"Weak",
+"Медвежий":"Bearish","Бычий":"Bullish","Плоский":"Flat","Согласован":"Aligned","Против":"Against",
+"Растёт":"Rising","Слабеет":"Fading","Падает":"Falling","Стабильно":"Stable","Волатильно":"Volatile",
+"Дальше":"Next","Пропустить":"Skip","Всё понятно, начать":"Got it, start","Язык":"Language"},
+
+es:{"Главная":"Inicio","Сигналы":"Señales","Аналитика":"Analítica","История":"Historial","Профиль":"Perfil",
+"Анализировать":"Analizar","Рынок":"Mercado","Актив":"Activo","Срок экспирации":"Vencimiento",
+"РЫНОК":"MERCADO","АКТИВ":"ACTIVO","СРОК ЭКСПИРАЦИИ":"VENCIMIENTO","НОВЫЙ АНАЛИЗ":"NUEVO ANÁLISIS",
+"Пробный доступ":"Acceso de prueba","вход по сигналам без ограничений":"señales sin límite",
+"Последние сигналы":"Últimas señales","ПОСЛЕДНИЕ СИГНАЛЫ":"ÚLTIMAS SEÑALES","Все":"Todas","Обновить":"Actualizar",
+"Открыть разбор":"Ver análisis","Просмотреть анализ":"Ver análisis","Подробный анализ ▾":"Análisis completo ▾",
+"Свернуть разбор ▴":"Ocultar ▴","Объяснить словами":"Explicar","Назад":"Atrás","Отмена":"Cancelar",
+"ГЛАВНОЕ":"CLAVE","УРОВНИ":"NIVELES","ФИГУРА НА ГРАФИКЕ":"FIGURA DEL GRÁFICO","СВЕЧНЫЕ ФОРМАЦИИ":"VELAS",
+"ПРОВЕРКА НА ИСТОРИИ":"PRUEBA HISTÓRICA","ПАРАМЕТРЫ СДЕЛКИ":"PARÁMETROS",
+"Цена входа":"Precio de entrada","Экспирация":"Vencimiento","Живой график":"Gráfico en vivo","Помощник":"Asistente",
+"Криптовалюты":"Cripto","Форекс":"Forex","Тренд":"Tendencia","Импульс":"Impulso","Структура":"Estructura",
+"Риск":"Riesgo","Сила":"Fuerza","Срок":"Plazo","закрыто":"cerradas","точность":"precisión","ждут":"pendientes",
+"ЖУРНАЛ СДЕЛОК":"REGISTRO","ПРОФИЛЬ И НАСТРОЙКИ":"PERFIL Y AJUSTES","Очистить журнал":"Borrar registro",
+"Высокий":"Alto","Средний":"Medio","Низкий":"Bajo","Сильный":"Fuerte","Умеренный":"Moderado","Слабый":"Débil",
+"Медвежий":"Bajista","Бычий":"Alcista","Плоский":"Plano","Согласован":"Alineado","Против":"En contra",
+"Растёт":"Sube","Слабеет":"Se debilita","Падает":"Baja","Стабильно":"Estable","Волатильно":"Volátil",
+"Дальше":"Siguiente","Пропустить":"Omitir","Всё понятно, начать":"Entendido, empezar","Язык":"Idioma"},
+
+de:{"Главная":"Start","Сигналы":"Signale","Аналитика":"Analyse","История":"Verlauf","Профиль":"Profil",
+"Анализировать":"Analysieren","Рынок":"Markt","Актив":"Wert","Срок экспирации":"Laufzeit",
+"РЫНОК":"MARKT","АКТИВ":"WERT","СРОК ЭКСПИРАЦИИ":"LAUFZEIT","НОВЫЙ АНАЛИЗ":"NEUE ANALYSE",
+"Пробный доступ":"Testzugang","вход по сигналам без ограничений":"Signale ohne Limit",
+"Последние сигналы":"Letzte Signale","ПОСЛЕДНИЕ СИГНАЛЫ":"LETZTE SIGNALE","Все":"Alle","Обновить":"Aktualisieren",
+"Открыть разбор":"Analyse öffnen","Просмотреть анализ":"Analyse ansehen","Подробный анализ ▾":"Details ▾",
+"Свернуть разбор ▴":"Einklappen ▴","Объяснить словами":"Erklären","Назад":"Zurück","Отмена":"Abbrechen",
+"ГЛАВНОЕ":"KERNPUNKTE","УРОВНИ":"NIVEAUS","ФИГУРА НА ГРАФИКЕ":"CHARTFORMATION","СВЕЧНЫЕ ФОРМАЦИИ":"KERZENMUSTER",
+"ПРОВЕРКА НА ИСТОРИИ":"HISTORIENTEST","ПАРАМЕТРЫ СДЕЛКИ":"PARAMETER",
+"Цена входа":"Einstiegspreis","Экспирация":"Laufzeit","Живой график":"Live-Chart","Помощник":"Assistent",
+"Криптовалюты":"Krypto","Форекс":"Forex","Тренд":"Trend","Импульс":"Momentum","Структура":"Struktur",
+"Риск":"Risiko","Сила":"Stärke","Срок":"Frist","закрыто":"geschlossen","точность":"Trefferquote","ждут":"offen",
+"ЖУРНАЛ СДЕЛОК":"HANDELSJOURNAL","ПРОФИЛЬ И НАСТРОЙКИ":"PROFIL & EINSTELLUNGEN","Очистить журнал":"Journal löschen",
+"Высокий":"Hoch","Средний":"Mittel","Низкий":"Niedrig","Сильный":"Stark","Умеренный":"Moderat","Слабый":"Schwach",
+"Медвежий":"Bärisch","Бычий":"Bullisch","Плоский":"Flach","Согласован":"Im Einklang","Против":"Dagegen",
+"Растёт":"Steigt","Слабеет":"Schwächt","Падает":"Fällt","Стабильно":"Stabil","Волатильно":"Volatil",
+"Дальше":"Weiter","Пропустить":"Überspringen","Всё понятно, начать":"Alles klar, los","Язык":"Sprache"}
+};
+
+let LANG=(()=>{try{return localStorage.getItem('acs_lang')||'ru'}catch{return 'ru'}})();
+let i18nBusy=false;
+
+function tr(s){
+  if(LANG==='ru')return s;
+  const d=DICT[LANG]; if(!d)return s;
+  const k=s.trim(); if(!k)return s;
+  return d[k]!=null ? s.replace(k,d[k]) : s;
+}
+function applyLang(root){
+  if(LANG==='ru'||i18nBusy)return;
+  i18nBusy=true;
+  const w=document.createTreeWalker(root||document.body,NodeFilter.SHOW_TEXT,{
+    acceptNode:n=>{const p=n.parentNode?.nodeName;
+      return (p==='SCRIPT'||p==='STYLE'||p==='CANVAS')?NodeFilter.FILTER_REJECT
+        : n.nodeValue.trim()?NodeFilter.FILTER_ACCEPT:NodeFilter.FILTER_REJECT}});
+  const list=[]; while(w.nextNode())list.push(w.currentNode);
+  list.forEach(n=>{const v=tr(n.nodeValue); if(v!==n.nodeValue)n.nodeValue=v});
+  document.querySelectorAll('[placeholder]').forEach(el=>{
+    if(!el.dataset.ph)el.dataset.ph=el.placeholder;
+    const t=DICT[LANG]?.[el.dataset.ph]; if(t)el.placeholder=t});
+  i18nBusy=false;
+}
+function setLang(code){
+  LANG=code; try{localStorage.setItem('acs_lang',code)}catch{}
+  document.documentElement.lang=code;
+  const l=LANGS.find(x=>x[0]===code);
+  const b=document.getElementById('langBtn'); if(b)b.textContent=l[2];
+  closeLangMenu();
+  if(code==='ru')return location.reload();
+  applyLang();
+  haptic('medium');
+}
+function toggleLangMenu(){
+  const m=document.getElementById('langMenu');
+  m.classList.toggle('on');
+  if(m.classList.contains('on')&&!m.dataset.r){
+    m.innerHTML=LANGS.map(l=>`<div class="lrow" onclick="setLang('${l[0]}')">
+      <span class="lf">${l[2]}</span><b>${l[1]}</b></div>`).join('');
+    m.dataset.r='1';
+  }
+  haptic();
+}
+const closeLangMenu=()=>document.getElementById('langMenu')?.classList.remove('on');
+document.addEventListener('click',e=>{
+  if(!e.target.closest('#langMenu')&&!e.target.closest('#langBtn'))closeLangMenu()});
+
+// перевод после каждой перерисовки
+new MutationObserver(()=>{if(LANG!=='ru')clearTimeout(window._i18nT),
+  window._i18nT=setTimeout(()=>applyLang(),60)})
+  .observe(document.body,{childList:true,subtree:true});
+
+setLang.init=()=>{const l=LANGS.find(x=>x[0]===LANG)||LANGS[0];
+  const b=document.getElementById('langBtn'); if(b)b.textContent=l[2];
+  if(LANG!=='ru')applyLang()};
 
 /* ─────────────── nav & settings ─────────────── */
 function go(t,from){
@@ -1857,7 +2048,7 @@ document.getElementById('runBtn').removeAttribute('onclick');
 document.getElementById('beVal').textContent=(100/(1+S.payout)).toFixed(1)+'%';
 document.querySelectorAll('#payouts .opt').forEach(o=>o.classList.toggle('on',+o.dataset.p===S.payout));
 document.querySelectorAll('#mins .opt').forEach(o=>o.classList.toggle('on',+o.dataset.m===S.min));
-renderHistory(); renderHome(); resolvePending(); setInterval(resolvePending,30000);
+renderHistory(); renderHome(); setLang.init(); resolvePending(); setInterval(resolvePending,30000);
 </script>
 
 <script type="text/html" id="pg-chart"><!DOCTYPE html>
