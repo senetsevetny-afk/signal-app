@@ -41,7 +41,7 @@ body{
 .burger i:nth-child(2){width:74%}
 .brand{display:flex;align-items:center;gap:10px;flex:1}
 .pulse{width:26px;height:26px;flex:none}
-.brand h1{font-size:18px;font-weight:800;margin:0;letter-spacing:.2px}
+.brand h1{font-size:16.5px;font-weight:800;margin:0;letter-spacing:-.2px;white-space:nowrap}
 .brand span{display:block;font-size:11px;color:var(--tx2);font-weight:500}
 .avatar{width:38px;height:38px;border-radius:50%;border:1px solid var(--line);
   display:grid;place-items:center;background:var(--card);font-size:17px}
@@ -504,6 +504,111 @@ nav{position:fixed;left:0;right:0;bottom:0;background:rgba(8,15,26,.94);
 .lvBtn{margin:0}
 .lvWait{text-align:center;color:var(--tx3);font-size:13px;line-height:1.55;padding:26px 18px;
   background:var(--card);border:1px solid var(--line2);border-radius:18px}
+
+.pRow{background:var(--card);border:1px solid var(--line2);border-radius:18px;padding:13px;
+  margin-bottom:10px;position:relative;overflow:hidden;cursor:pointer;display:flex;gap:12px;align-items:center}
+.pRow.on{display:block;border-left:3px solid var(--edge,var(--line2))}
+.pTop{display:flex;align-items:center;gap:12px}
+.pIco{flex:none} .pIco.big{transform:scale(1.15);margin-right:4px}
+.pMid{flex:1;min-width:0}
+.pMid b{font-size:15.5px;font-weight:800;display:block}
+.pTf{font-size:11.5px;color:var(--tx3)}
+.pSub{font-size:11.5px;color:var(--tx3);margin-top:2px}
+.pPx{text-align:right}
+.pPx b{font-size:14.5px;display:block}
+.pPx s{text-decoration:none;font-size:11.5px}
+.pBot{display:flex;align-items:center;gap:11px;margin-top:12px}
+.pTag{font-size:10.5px;font-weight:800;letter-spacing:.04em;padding:6px 10px;border-radius:9px;white-space:nowrap}
+.pBar{flex:1;height:7px;border-radius:4px;background:rgba(255,255,255,.07);overflow:hidden}
+.pBar i{display:block;height:100%;border-radius:4px}
+.pNum{font:800 13px 'JetBrains Mono',monospace;color:var(--tx2);width:26px;text-align:right}
+
+#pulseWrap{position:fixed;inset:0;z-index:118;background:rgba(0,0,0,.6);display:none;
+  align-items:flex-end;backdrop-filter:blur(3px)}
+#pulseWrap.on{display:flex}
+#pulseSheet{background:var(--bg);border-radius:26px 26px 0 0;width:100%;max-width:520px;margin:0 auto;
+  max-height:92vh;display:flex;flex-direction:column;border-top:1px solid var(--line)}
+.shHead{display:flex;align-items:center;gap:12px;padding:16px 16px 14px;border-bottom:1px solid var(--line2)}
+.shHead b{font-size:20px;font-weight:800}
+.shX{width:36px;height:36px;border-radius:50%;background:var(--card2);border:1px solid var(--line2);
+  color:var(--tx2);font-size:15px;cursor:pointer;flex:none}
+.shBody{overflow-y:auto;padding:16px 16px max(20px,env(safe-area-inset-bottom));-webkit-overflow-scrolling:touch}
+.lbl2{font-size:10px;letter-spacing:.12em;color:var(--tx3);font-weight:700;text-transform:uppercase}
+.gScale{display:flex;justify-content:space-between;font-size:10.5px;color:var(--tx3);margin-top:-4px}
+.gVerd{text-align:center;font-weight:800;font-size:15px;padding:11px;border-radius:12px;
+  border:1px solid;margin-top:12px}
+.gVerd.sm{font-size:11.5px;padding:8px;margin-top:6px}
+.tfGrid{display:grid;grid-template-columns:repeat(3,1fr);gap:9px}
+.tfGrid .opt{padding:11px 4px}
+.tfGrid .opt b{font-size:15px}
+.tfGrid .opt s{font-size:10px;margin-top:2px}
+
+.vCard{display:flex;gap:14px;align-items:flex-start;border-radius:20px;padding:16px;margin-bottom:14px;border:1px solid}
+.vCard b{font-size:16.5px;font-weight:800;display:block;margin-bottom:5px}
+.vCard p{margin:0;font-size:13.5px;line-height:1.55;color:var(--tx2)}
+.vIco{width:38px;height:38px;border-radius:12px;display:grid;place-items:center;flex:none;font-size:18px;font-weight:800}
+.vCard.good{background:rgba(43,217,138,.08);border-color:rgba(43,217,138,.32)}
+.vCard.good .vIco{background:rgba(43,217,138,.16);color:var(--up)}
+.vCard.bad{background:rgba(255,92,108,.08);border-color:rgba(255,92,108,.32)}
+.vCard.bad .vIco{background:rgba(255,92,108,.16);color:var(--down)}
+.vCard.neutral{background:var(--card);border-color:var(--line2)}
+.vCard.neutral .vIco{background:var(--card2);color:var(--tx2)}
+.adv .advT{font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--gold);
+  font-weight:700;margin-bottom:12px}
+.advRow{display:flex;gap:11px;align-items:flex-start;padding:7px 0}
+.advDot{width:8px;height:8px;border-radius:50%;margin-top:7px;flex:none}
+.advDot.up{background:var(--up)} .advDot.dn{background:var(--down)}
+.advRow s{text-decoration:none;display:block;font-size:10.5px;color:var(--tx3);letter-spacing:.06em;text-transform:uppercase}
+.advRow b{font-size:14px;font-weight:700}
+.advAct{margin-top:12px;padding:11px 13px;border-radius:12px;background:var(--card2);
+  border:1px solid var(--line2);font-size:13px;color:var(--tx);line-height:1.5}
+
+.stRow{display:flex;align-items:flex-start;gap:12px;background:var(--card2);border:1px solid var(--line2);
+  border-radius:16px;padding:13px;margin-bottom:9px;cursor:pointer;transition:border-color .16s}
+.stRow.on{border-color:var(--gold);background:rgba(245,185,66,.07)}
+.stIco{width:36px;height:36px;border-radius:11px;display:grid;place-items:center;flex:none;
+  background:rgba(255,255,255,.05);border:1px solid var(--line2);font-size:16px;color:var(--tx2)}
+.stRow.on .stIco{color:var(--gold);border-color:rgba(245,185,66,.35);background:rgba(245,185,66,.12)}
+.stRow b{font-size:14.5px;font-weight:800;display:block}
+.stRow b s{text-decoration:none;font-size:11px;color:var(--tx3);font-weight:600;margin-left:6px}
+.stRow p{margin:4px 0 0;font-size:12px;color:var(--tx2);line-height:1.5}
+.stDot{width:16px;height:16px;border-radius:50%;border:2px solid var(--line2);flex:none;margin-top:9px}
+.stRow.on .stDot{border-color:var(--gold);background:radial-gradient(circle,var(--gold) 0 4px,transparent 5px)}
+
+.pSearch{display:flex;gap:9px;margin-bottom:12px}
+.pSearch input{flex:1;background:var(--card2);border:1px solid var(--line2);border-radius:13px;
+  padding:13px 14px;color:var(--tx);font:600 14.5px Manrope,sans-serif}
+.pSearch input:focus{outline:none;border-color:var(--gold)}
+.pSearch button{background:rgba(245,185,66,.12);border:1px solid rgba(245,185,66,.35);color:var(--gold);
+  border-radius:13px;padding:0 16px;font:700 13px Manrope,sans-serif;cursor:pointer}
+.hitRow{display:flex;align-items:center;gap:12px;background:var(--card);border:1px solid var(--line2);
+  border-radius:14px;padding:11px 13px;margin-bottom:8px;cursor:pointer}
+.hitRow b{font-size:14.5px;font-weight:700}
+
+.csRow{display:flex;align-items:center;gap:11px;padding:7px 0}
+.csCur{width:78px;font-size:13.5px;font-weight:700;flex:none}
+.csTrack{flex:1;height:10px;border-radius:5px;background:rgba(255,255,255,.06);position:relative}
+.csTrack i,.mtfBar i{position:absolute;top:0;height:100%;border-radius:5px;display:block}
+.csMid{position:absolute;left:50%;top:-3px;width:1px;height:16px;background:rgba(255,255,255,.18)}
+.csVal{width:58px;text-align:right;font:800 12.5px 'JetBrains Mono',monospace;flex:none}
+.mtfRow{display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid var(--line2)}
+.mtfRow:last-of-type{border-bottom:0}
+.mtfTf{width:38px;font:800 12.5px 'JetBrains Mono',monospace;color:var(--tx2);flex:none}
+.mtfBar{flex:1;height:9px;border-radius:5px;background:rgba(255,255,255,.06);position:relative}
+.mtfV{width:44px;text-align:right;font-size:11px;font-weight:800;flex:none}
+.mtfS{width:30px;text-align:right;font-size:12px;color:var(--tx2);flex:none}
+.volRow{display:flex;align-items:center;gap:11px;padding:9px 0;cursor:pointer;border-bottom:1px solid var(--line2)}
+.volRow:last-of-type{border-bottom:0}
+.volName{width:104px;font-size:13px;font-weight:700;flex:none;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.volBar{flex:1;height:9px;border-radius:5px;background:rgba(255,255,255,.06);overflow:hidden}
+.volBar i{display:block;height:100%;border-radius:5px}
+.volNum{width:52px;text-align:right;font-size:12.5px;font-weight:800;flex:none}
+.hrGrid{display:flex;gap:3px;align-items:flex-end;height:74px}
+.hrCol{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;gap:3px}
+.hrCol i{display:block;width:100%;border-radius:3px}
+.hrCol s{text-decoration:none;font-size:7.5px;color:var(--tx3);font-family:'JetBrains Mono',monospace}
+.hrCol.now i{outline:1px solid var(--gold)}
+.hrCol.now s{color:var(--gold);font-weight:700}
 .disc{font-size:11.5px;color:var(--tx3);line-height:1.5;padding:4px 4px 16px;text-align:center}
 
 /* вердикт над графиком */
@@ -647,7 +752,7 @@ nav{position:fixed;left:0;right:0;bottom:0;background:rgba(8,15,26,.94);
     <div class="bSlide hide" data-i="1">
       <div class="bIco">🎯</div>
       <h2>Сила сигнала от 0 до 10</h2>
-      <p>Число показывает, насколько индикаторы согласны между собой. Одиннадцать голосов складываются, разница между «за рост» и «за падение» превращается в шкалу.</p>
+      <p>Число показывает, насколько индикаторы согласны между собой. Пятнадцать голосов складываются, разница между «за рост» и «за падение» превращается в шкалу.</p>
       <ul class="bList">
         <li><span>◆</span><div><b>Ниже 5.5</b> — WAIT, согласия нет</div></li>
         <li><span>◆</span><div><b>5.5–7</b> — направление есть, но слабое</div></li>
@@ -748,7 +853,7 @@ nav{position:fixed;left:0;right:0;bottom:0;background:rgba(8,15,26,.94);
     <div class="brand">
       <span class="mark"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1"
         stroke-linecap="round" stroke-linejoin="round"><path d="M2 12h4l3-8 4 16 3-8h6"/></svg></span>
-      <div><h1>AI Comfort Signal</h1><span>помощник трейдера на реальных данных</span></div>
+      <div style="min-width:0"><h1>AI Comfort Signal</h1><span style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;display:block">анализ на реальных данных</span></div>
     </div>
     <button class="bell" onclick="openChat()" aria-label="Помощник"><svg viewBox="0 0 24 24" fill="none"
       stroke="currentColor" stroke-width="2"><path d="M18 8a6 6 0 10-12 0c0 7-3 8-3 8h18s-3-1-3-8"/>
@@ -768,6 +873,7 @@ nav{position:fixed;left:0;right:0;bottom:0;background:rgba(8,15,26,.94);
   <section class="tab on" id="tab-home">
     <div id="liveBox"></div>
     <div id="activeCard"></div>
+    <div id="homeRows"></div>
 
     <div class="rowHead"><b>Последние сигналы</b>
       <button class="lnk" onclick="go('signals')">Все ›</button></div>
@@ -781,7 +887,10 @@ nav{position:fixed;left:0;right:0;bottom:0;background:rgba(8,15,26,.94);
     <div class="card">
       <div class="sect">НОВЫЙ АНАЛИЗ</div>
 
-      <div class="step" style="margin-top:0">РЫНОК</div>
+      <div class="step" style="margin-top:0">СТРАТЕГИЧЕСКИЙ ПРОФИЛЬ</div>
+      <div id="stratBox"></div>
+
+      <div class="step">РЫНОК</div>
       <div class="grid3" id="cats">
         <div class="opt on" data-cat="crypto" tabindex="0"><span class="ic">₿</span><b>Crypto</b><s>24/7</s></div>
         <div class="opt" data-cat="forex" tabindex="0"><span class="ic">💱</span><b>Forex</b><s>по сессии</s></div>
@@ -793,12 +902,18 @@ nav{position:fixed;left:0;right:0;bottom:0;background:rgba(8,15,26,.94);
       <button class="assetBtn" id="assetBtn" onclick="openPicker()"></button>
 
       <div class="step">СРОК ЭКСПИРАЦИИ</div>
-      <div class="grid4" id="tfs">
-        <div class="opt" data-tf="1m" tabindex="0"><b>1m</b></div>
-        <div class="opt on" data-tf="5m" tabindex="0"><b>5m</b></div>
-        <div class="opt" data-tf="15m" tabindex="0"><b>15m</b></div>
-        <div class="opt" data-tf="1h" tabindex="0"><b>1H</b></div>
+      <div class="tfGrid" id="tfs">
+        <div class="opt" data-tf="1m" tabindex="0"><b>1m</b><s>минута</s></div>
+        <div class="opt" data-tf="3m" tabindex="0"><b>3m</b><s>3 мин</s></div>
+        <div class="opt on" data-tf="5m" tabindex="0"><b>5m</b><s>5 мин</s></div>
+        <div class="opt" data-tf="15m" tabindex="0"><b>15m</b><s>15 мин</s></div>
+        <div class="opt" data-tf="30m" tabindex="0"><b>30m</b><s>полчаса</s></div>
+        <div class="opt" data-tf="1h" tabindex="0"><b>1H</b><s>час</s></div>
+        <div class="opt" data-tf="2h" tabindex="0"><b>2H</b><s>2 часа</s></div>
+        <div class="opt" data-tf="4h" tabindex="0"><b>4H</b><s>4 часа</s></div>
+        <div class="opt" data-tf="1d" tabindex="0"><b>1D</b><s>сутки</s></div>
       </div>
+      <div class="hint" style="margin-top:10px" id="tfNote"></div>
 
       <button class="btn" id="runBtn" style="margin-top:16px">
         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"
@@ -845,12 +960,13 @@ nav{position:fixed;left:0;right:0;bottom:0;background:rgba(8,15,26,.94);
     </div>
 
     <div class="grid3" id="anaNav" style="margin-bottom:16px">
-      <div class="opt on" data-v="signals"><b>Сигналы</b></div>
-      <div class="opt" data-v="auto"><b>Автоторговля</b></div>
-      <div class="opt" data-v="disc"><b>Дисциплина</b></div>
+      <div class="opt on" data-v="signals"><b>Итог</b></div>
+      <div class="opt" data-v="advice"><b>Что менять</b></div>
+      <div class="opt" data-v="auto"><b>Симулятор</b></div>
     </div>
 
     <div id="anaPane-signals">
+      <div id="anaVerdict"></div>
       <div class="grid3" id="anaTabs" style="margin-bottom:14px"></div>
       <div class="card anaCard" id="anaTop"></div>
       <div class="grid3" id="anaDirs" style="margin-bottom:14px"></div>
@@ -863,34 +979,61 @@ nav{position:fixed;left:0;right:0;bottom:0;background:rgba(8,15,26,.94);
       <div id="autoBox"></div>
     </div>
 
-    <div id="anaPane-disc" style="display:none">
+    <div id="anaPane-advice" style="display:none">
+      <div id="anaAdvice"></div>
+      <div id="anaSlices"></div>
       <div id="disc2"></div>
     </div>
   </section>
 
   <!-- ================= MARKET ================= -->
   <section class="tab" id="tab-market">
-    <div class="sect">КАРТА РЫНКА</div>
-    <div class="card gold" style="padding:14px">
-      <div id="mapTop"><b>Считаю инструменты…</b><div class="sub2">это занимает около минуты</div></div>
-      <div class="mapBar"><i id="mapProg"></i></div>
-      <div class="mapGrid" id="mapGrid"></div>
-      <button class="btn ghost" style="margin-top:14px" onclick="mapCells=[];buildMap()">Пересчитать</button>
-      <div class="hint" style="margin-top:10px">Плитка подсвечена, если сила выше вашего порога. Нажмите на любую — откроется полный разбор.</div>
+    <div class="rowHead" style="margin:2px 0 12px">
+      <div><div style="font-size:22px;font-weight:800" id="mkTitle">Пульс рынка</div>
+        <div class="sub2" id="pulseHead">считаю инструменты…</div></div>
+      <button class="lnk" id="mkRefresh" onclick="PULSE=[];buildPulse()">Обновить</button>
     </div>
 
-    <div class="sect">НАСТРОЕНИЕ РЫНКА</div>
-    <div class="card" id="fng"><div class="hint">Загружаю…</div></div>
+    <div class="grid2" id="mkNav" style="margin-bottom:16px">
+      <div class="opt on" data-v="pulse"><b>Пульс</b></div>
+      <div class="opt" data-v="over"><b>Обзор рынка</b></div>
+    </div>
 
-    <div class="sect">ШИРИНА РЫНКА</div>
-    <div class="card" id="breadth"><div class="hint">Загружаю…</div></div>
+    <div id="mkPane-pulse">
+      <div class="pSearch">
+        <input id="pulseQ" placeholder="Поиск: EURJPY, BTC, XAU" autocomplete="off"
+          oninput="pulseFilter()" onkeydown="if(event.key==='Enter')pulseOpenQuery()">
+        <button onclick="pulseOpenQuery()">Открыть</button>
+      </div>
+      <div id="pulseHits"></div>
+      <div class="mapBar"><i id="pulseProg"></i></div>
+      <div id="pulseList"></div>
+      <div class="disc">Перевес — сумма весов индикаторов на текущей свече, а не вероятность исхода.</div>
+    </div>
 
-    <div class="sect">ТОРГОВЫЕ СЕССИИ</div>
-    <div class="card" id="sess"></div>
+    <div id="mkPane-over" style="display:none">
+      <div class="note" id="overNote" style="margin-bottom:14px"><div>
+        <b>Первая загрузка идёт до двух минут</b>
+        Бесплатный тариф Twelve Data отдаёт восемь запросов в минуту, поэтому блоки считаются по очереди.
+        Дальше данные берутся из кэша и открываются мгновенно.</div></div>
 
-    <div class="sect">НОВОСТИ</div>
-    <div class="card" id="news"></div>
-    <div class="disc">Новости даны для фона. Заголовок выходит уже после того, как рынок отреагировал, поэтому торговать по нему нельзя.</div>
+      <div class="sect">СИЛА ВАЛЮТ</div>
+      <div id="csBox"></div>
+
+      <div class="sect">СОГЛАСИЕ ТАЙМФРЕЙМОВ</div>
+      <div id="mtfBox"></div>
+
+      <div class="sect">ГДЕ ЕСТЬ ДВИЖЕНИЕ</div>
+      <div id="volBox"></div>
+
+      <div class="sect">ЧАСЫ АКТИВНОСТИ</div>
+      <div id="hoursBox"></div>
+
+      <div class="sect">ТОРГОВЫЕ СЕССИИ</div>
+      <div class="card" id="sess"></div>
+
+      <div class="disc">Всё считается по реальным свечам выбранного рынка. Ничего не берётся со стороны и не подставляется вручную.</div>
+    </div>
   </section>
 
   <!-- ================= HISTORY ================= -->
@@ -997,12 +1140,13 @@ nav{position:fixed;left:0;right:0;bottom:0;background:rgba(8,15,26,.94);
   </div>
   <div id="pkList"></div>
 </div>
+<div id="pulseWrap"><div id="pulseSheet"></div></div>
 <div id="toast"></div>
 <nav>
   <div class="navin">
     <button class="nb on" data-t="home" onclick="go('home')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 10l9-7 9 7v10a2 2 0 01-2 2H5a2 2 0 01-2-2z"/></svg>Главная</button>
     <button class="nb" data-t="signals" onclick="go('signals')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M2 12h4l3-8 4 16 3-8h6"/></svg>Сигналы</button>
-    <button class="nb" data-t="market" onclick="go('market')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="M12 2l9 5-9 5-9-5z"/><path d="M3 12l9 5 9-5"/><path d="M3 17l9 5 9-5"/></svg>Рынок</button>
+    <button class="nb" data-t="market" onclick="go('market')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12h3l2-5 3 12 2.5-9 2 6 1.5-4H21"/></svg>Пульс</button>
     <button class="nb" data-t="analytics" onclick="go('analytics')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M5 20V10M12 20V4M19 20v-7"/></svg>Аналитика</button>
     <button class="nb" data-t="history" onclick="go('history')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M3 3v5h5"/><path d="M3.05 13A9 9 0 106 5.3L3 8"/><path d="M12 7v5l4 2"/></svg>История</button>
     <button class="nb" data-t="profile" onclick="go('profile')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 4-6 8-6s8 2 8 6"/></svg>Профиль</button>
@@ -1053,12 +1197,19 @@ async function jget(url,ms=15000){
   const ac=new AbortController(), t=setTimeout(()=>ac.abort(),ms);
   try{
     const r=await fetch(url,{signal:ac.signal});
-    if(!r.ok)throw new Error('биржа ответила кодом '+r.status);
+    if(!r.ok){
+      const m={401:'нужен ключ провайдера',403:'ключ не даёт доступа к этим данным',
+        429:'превышен лимит запросов, подождите минуту',404:'инструмент не найден у источника',
+        451:'источник недоступен в вашем регионе'}[r.status];
+      throw new Error(m||('источник ответил кодом '+r.status));
+    }
     return await r.json();
   }catch(e){
     if(e.name==='AbortError')throw new Error('биржа не ответила за 15 секунд');
+    let host='источник';
+    try{ host=new URL(url).hostname }catch{}
     throw new Error(e.message==='Failed to fetch'
-      ? 'нет доступа к api.binance.com — сеть, провайдер или блокировка запросов со страницы'
+      ? `нет доступа к ${host} — сеть, провайдер или блокировка запросов со страницы`
       : e.message);
   }finally{ clearTimeout(t) }
 }
@@ -1085,8 +1236,8 @@ async function klines(sym,int,lim=200,endTime){
   if(!Array.isArray(d))throw new Error('биржа вернула неожиданный ответ');
   return d.map(k=>({t:k[0],o:+k[1],h:+k[2],l:+k[3],c:+k[4],v:+k[5],ct:k[6]}));
 }
-const HTF={'1m':'5m','5m':'15m','15m':'1h','1h':'4h'};
-const MS={'1m':6e4,'5m':3e5,'15m':9e5,'1h':36e5};
+const HTF={'1m':'5m','3m':'15m','5m':'15m','15m':'1h','30m':'2h','1h':'4h','2h':'6h','4h':'1d','1d':'1w'};
+const MS={'1m':6e4,'3m':1.8e5,'5m':3e5,'15m':9e5,'30m':1.8e6,'1h':36e5,'2h':7.2e6,'4h':1.44e7,'1d':8.64e7};
 
 /* ─────────────── analysis engine ─────────────── */
 
@@ -1144,7 +1295,14 @@ function analyze(k,htf){
   const hc=htf.map(x=>x.c), h9=EMA(hc,9), h21=EMA(hc,21), hn=hc.length-1;
   const vMA=SMA(k.map(x=>x.v),20);
   const F=[]; // factors
-  const add=(name,dir,w,text)=>F.push({name,dir,w,text});
+  let MAXW=0;
+  const MUL=STRATS[STRAT]?.mult||{};
+  const add=(name,dir,w,text)=>{
+    const m=MUL[name]??1;
+    const ww=+(w*m).toFixed(2);
+    MAXW+=Math.max(w*m,0.9*m);
+    F.push({name,dir,w:ww,text});
+  };
 
   // 1 — тренд
   if(e9[n]>e21[n]&&e21[n]>e50[n]) add('Тренд EMA','up',1.6,`EMA9 выше EMA21 выше EMA50 — покупатели контролируют цену`);
@@ -1216,13 +1374,47 @@ function analyze(k,htf){
   else if(dev<-0.15) add('VWAP','down',0.9,`Цена на ${Math.abs(dev).toFixed(2)}% ниже средневзвешенной — продавцы уступают`);
   else add('VWAP','flat',0,'Цена у средневзвешенной, перевеса нет');
 
+  // 12 — свечная формация
+  try{
+    const cp=candlePatterns(k);
+    if(cp.length){
+      const p=cp.find(x=>x.d!=='flat')||cp[0];
+      add('Свечная формация',p.d,1.2,`${p.n}: ${p.t}`);
+    } else add('Свечная формация','flat',0,'узнаваемых формаций на последних свечах нет');
+  }catch{ add('Свечная формация','flat',0,'формации не определены'); }
+
+  // 13 — фигура графика
+  try{
+    const fg=figure(k);
+    if(fg&&fg.dir!=='flat') add('Фигура графика',fg.dir,1.3,`${fg.name}: ${fg.text}`);
+    else add('Фигура графика','flat',0,fg?`${fg.name} — сторона пробоя неизвестна`:'чёткой фигуры нет');
+  }catch{ add('Фигура графика','flat',0,'фигура не определена'); }
+
+  // 14 — близость уровня
+  try{
+    const lv=levels(k,at[n]);
+    const toR=lv.res?(lv.res.p-last.c)/last.c*100:null;
+    const toS=lv.sup?(last.c-lv.sup.p)/last.c*100:null;
+    if(toS!=null&&toS<0.12&&(toR==null||toR>toS))
+      add('Уровень рядом','up',1.4,`цена у поддержки ${fmtP(lv.sup.p)} (${lv.sup.n} касаний) — отбой вероятнее пробоя`);
+    else if(toR!=null&&toR<0.12&&(toS==null||toS>toR))
+      add('Уровень рядом','down',1.4,`цена у сопротивления ${fmtP(lv.res.p)} (${lv.res.n} касаний) — отбой вероятнее пробоя`);
+    else add('Уровень рядом','flat',0,'цена в середине диапазона, до границ далеко');
+  }catch{ add('Уровень рядом','flat',0,'уровни не определены'); }
+
+  // 15 — дивергенция
+  try{
+    const dv=divergence(k);
+    if(dv) add('Дивергенция',dv.d,1.5,dv.t);
+    else add('Дивергенция','flat',0,'расхождений цены и RSI нет');
+  }catch{ add('Дивергенция','flat',0,'дивергенции не определены'); }
+
   // счёт
   let up=0,dn=0;
   F.forEach(f=>{f.dir==='up'?up+=f.w:f.dir==='down'?dn+=f.w:0});
   const net=up-dn, total=up+dn||1;
-  const MAXW=13.0;                                    // сумма максимальных весов
-  const conf=Math.abs(net)/MAXW;
-  const score=Math.min(10,Math.round((Math.abs(net)/MAXW*10+ (Math.abs(net)/total)*1.8)*10)/10);
+  const conf=Math.abs(net)/(MAXW||13);
+  const score=Math.min(10,Math.round((Math.abs(net)/((MAXW||13)*1.02)*10+ (Math.abs(net)/total)*0.9)*10)/10);
   let dir = score<S.min ? 'WAIT' : (net>0?'CALL':net<0?'PUT':'WAIT');
 
   // характеристики
@@ -1360,29 +1552,38 @@ function assetIcon(a){
 }
 
 /* ─────────────── источники данных ─────────────── */
-const YTF={'1m':'1m','5m':'5m','15m':'15m','1h':'60m','4h':'1h','1d':'1d'};
-const YRANGE={'1m':'1d','5m':'5d','15m':'5d','60m':'1mo','1h':'1mo','1d':'1y'};
+const YTF={'1m':'1m','3m':'5m','5m':'5m','15m':'15m','30m':'30m','1h':'60m','2h':'60m','4h':'1h','1d':'1d'};
+const YRANGE={'1m':'1d','5m':'5d','15m':'5d','30m':'1mo','60m':'1mo','1h':'1mo','1d':'2y'};
 
 const FXPROXY=[
   u=>u,
   u=>'https://api.allorigins.win/raw?url='+encodeURIComponent(u),
   u=>'https://corsproxy.io/?url='+encodeURIComponent(u),
 ];
-const TDTF={'1m':'1min','5m':'5min','15m':'15min','1h':'1h','4h':'4h','1d':'1day'};
+const TDTF={'1m':'1min','3m':'5min','5m':'5min','15m':'15min','30m':'30min','1h':'1h','2h':'2h','4h':'4h','1d':'1day'};
 let TDKEY=(()=>{try{return localStorage.getItem('acs_tdkey')||''}catch{return ''}})();
 
 let tdCalls=[];
 async function tdCandles(pair,tf,limit){
-  const now=Date.now(); tdCalls=tdCalls.filter(t=>now-t<60000);
-  if(tdCalls.length>=7)throw new Error('лимит провайдера: 8 запросов в минуту, подождите');
-  tdCalls.push(now);
+  // бесплатный тариф: 8 запросов в минуту. Ждём свободный слот, а не бросаем ошибку.
+  for(let guard=0;guard<70;guard++){
+    const now=Date.now();
+    tdCalls=tdCalls.filter(t=>now-t<60000);
+    if(tdCalls.length<8){ tdCalls.push(now); break }
+    await new Promise(r=>setTimeout(r,1200));
+    if(guard===69)throw new Error('провайдер ограничивает частоту — попробуйте через минуту');
+  }
   const sym=pair==='XAUUSD'?'XAU/USD':pair==='XAGUSD'?'XAG/USD'
     :pair.slice(0,3)+'/'+pair.slice(3,6);
   const u=`https://api.twelvedata.com/time_series?symbol=${encodeURIComponent(sym)}`
     +`&interval=${TDTF[tf]||'5min'}&outputsize=${Math.min(limit,500)}&apikey=${TDKEY}`;
   const j=await jget(u,15000);
-  if(j.status==='error'||j.code>=400)
-    throw new Error(j.message||'провайдер отклонил запрос');
+  if(j.status==='error'||j.code>=400){
+    const m=String(j.message||'');
+    if(/api key|apikey/i.test(m))throw new Error('ключ не принят — проверьте, что скопировали его целиком');
+    if(/limit|credits/i.test(m))throw new Error('исчерпан лимит тарифа на сегодня');
+    throw new Error(m||'провайдер отклонил запрос');
+  }
   if(!Array.isArray(j.values)||!j.values.length)
     throw new Error('нет свечей по '+sym+' — возможно, рынок закрыт');
   return j.values.slice().reverse().map(v=>{
@@ -1406,27 +1607,51 @@ function yahooParse(j,tf,limit){
 async function fxCandles(pair,tf,limit){
   let lastErr='';
   if(TDKEY){
-    try{ const d=await tdCandles(pair,tf,limit); if(d.length>=40)return d;
-      lastErr='провайдер вернул '+d.length+' свечей' }
-    catch(e){ lastErr=e.message }
+    try{
+      const d=await tdCandles(pair,tf,limit);
+      if(d.length>=40)return d;
+      lastErr='провайдер вернул '+d.length+' свечей';
+    }catch(e){ lastErr=e.message }
+    // с ключом резервные прокси дёргаем один раз и коротко — иначе экраны висят
+    try{
+      const base=`https://query1.finance.yahoo.com/v8/finance/chart/${pair}=X`
+        +`?interval=${YTF[tf]||'5m'}&range=${YRANGE[YTF[tf]]||'5d'}`;
+      const j=await jget(FXPROXY[1](base),7000);
+      const out=yahooParse(j,tf,limit);
+      if(out&&out.length>=40)return out;
+    }catch(e){ /* резерв не сработал — сообщаем основную причину */ }
+    throw new Error('котировки '+pair+': '+lastErr);
   }
   const base=`https://query1.finance.yahoo.com/v8/finance/chart/${pair}=X`
     +`?interval=${YTF[tf]||'5m'}&range=${YRANGE[YTF[tf]]||'5d'}`;
   for(const wrap of FXPROXY){
     try{
-      const j=await jget(wrap(base),12000);
+      const j=await jget(wrap(base),8000);
       const out=yahooParse(j,tf,limit);
       if(out&&out.length>=40)return out;
       lastErr='резервный источник вернул мало свечей';
     }catch(e){ lastErr=e.message }
   }
-  throw new Error('котировки '+pair+' недоступны: '+lastErr
-    +(TDKEY?'. Проверьте, идёт ли торговая сессия — в выходные валютный рынок закрыт.'
-           :'. Вставьте бесплатный ключ Twelve Data в профиле, и форекс заработает стабильно.'));
+  throw new Error('для валютных пар нужен ключ Twelve Data. Откройте Профиль, вставьте бесплатный ключ — регистрация на twelvedata.com занимает минуту.');
 }
 
-async function getCandles(id,tf,limit=200,endTime){
+/* Прямой запрос без кэша: OTC считается по базовой паре. */
+async function getCandlesRaw(id,tf,limit=200,endTime){
+  if(id.endsWith('-OTC'))return getCandlesRaw(id.slice(0,-4),tf,limit,endTime);
   return marketOf(id)==='forex' ? fxCandles(id,tf,limit) : klines(id,tf,limit,endTime);
+}
+
+/* Кэш живёт не дольше 20 секунд, чтобы лента видела свежие свечи. */
+const CACHE=new Map();
+async function getCandles(id,tf,limit=200,endTime){
+  if(endTime)return getCandlesRaw(id,tf,limit,endTime);
+  const key=id+'|'+tf+'|'+limit, hit=CACHE.get(key);
+  const ttl=Math.max(20000,Math.min((MS[tf]||3e5)/2,600000));
+  if(hit&&Date.now()-hit.t<ttl)return hit.v;
+  const v=await getCandlesRaw(id,tf,limit);
+  CACHE.set(key,{t:Date.now(),v});
+  if(CACHE.size>120)CACHE.delete(CACHE.keys().next().value);
+  return v;
 }
 
 /* ─────────────── выбор актива ─────────────── */
@@ -1498,8 +1723,15 @@ function setAsset(id){
   document.getElementById('assetBtn').innerHTML=
     `${assetIcon(a)}<span class="al"><b>${a.label}</b><s>${a.market==='forex'?'валютная пара':'криптовалюта'}</s></span><span class="chev">›</span>`;
   closePicker(); haptic('medium');
-  document.getElementById('catNote').innerHTML = a.market!=='forex' ? '' :
-    `<div class="note"><div><b>Данные форекса берутся у стороннего источника</b>Для стабильной работы вставьте бесплатный ключ Twelve Data в профиле. Без ключа приложение пробует резервные пути, но они часто отказывают.</div></div>`;
+  const nt=document.getElementById('catNote');
+  if(a.market==='crypto'){ nt.innerHTML=''; }
+  else if(TDKEY){
+    nt.innerHTML=`<div class="note"><div><b>Источник подключён</b>Котировки ${a.market==='otc'?'базовой пары':'валютных пар'} идут через Twelve Data.</div></div>`;
+  }else{
+    nt.innerHTML=`<div class="note warn"><div><b>Нужен ключ для валютных данных</b>
+      Binance валютных пар не даёт. Бесплатный ключ Twelve Data решает вопрос за минуту.
+      <button class="btn ghost" style="margin-top:10px" onclick="go('profile')">Перейти в профиль</button></div></div>`;
+  }
 }
 
 function gauge(score){
@@ -1958,8 +2190,15 @@ function riskOf(a){return a.atrPct>1.2?['Высокий','var(--down)']:a.atrPct
 function strengthOf(s){return s>=7.5?'Сильный':s>=5.5?'Умеренный':'Слабый'}
 
 function renderHome(){
-  const el=document.getElementById('activeCard'), sig=signals.find(s=>s.a.dir!=='WAIT')||signals[0];
+  const el=document.getElementById('activeCard'); if(!el)return;
+  const sig=signals.find(s=>s.a.dir!=='WAIT')||signals[0];
   if(!sig){
+    // если бот не запущен, пустую карточку не дублируем — достаточно блока ленты
+    if(!LIVE.on&&!LIVE.found.length){
+      el.innerHTML='';
+      const hr=document.getElementById('homeRows'); if(hr)hr.innerHTML='';
+      return;
+    }
     el.innerHTML=`<div class="hero empty2">
       <span class="ic">◈</span><b>Активного сигнала нет</b>
       <p>Выберите актив и срок ниже — расчёт займёт пару секунд.</p></div>`;
@@ -2345,31 +2584,6 @@ setLang.init=()=>{const l=LANGS.find(x=>x[0]===LANG)||LANGS[0];
   if(LANG!=='ru')applyLang()};
 
 /* ═══════════ РЫНОЧНЫЙ ФОН ═══════════ */
-async function loadFng(){
-  const el=document.getElementById('fng'); if(!el)return;
-  try{
-    const j=await jget('https://api.alternative.me/fng/?limit=2',12000);
-    const d=j.data[0], v=+d.value, prev=+(j.data[1]?.value||v);
-    const NAMES={'Extreme Fear':'Крайний страх','Fear':'Страх','Neutral':'Нейтрально',
-      'Greed':'Жадность','Extreme Greed':'Крайняя жадность'};
-    const col=v<25?'#FF5C6C':v<45?'#FF9F43':v<55?'#8FA3BF':v<75?'#2BD98A':'#F5B942';
-    const dl=v-prev;
-    el.innerHTML=`
-      <div class="fgWrap">
-        <div class="fgRing">${(()=>{const R=38,C=2*Math.PI*R;return `<svg viewBox="0 0 88 88">
-          <circle cx="44" cy="44" r="${R}" stroke="rgba(255,255,255,.07)" stroke-width="7" fill="none"/>
-          <circle cx="44" cy="44" r="${R}" stroke="${col}" stroke-width="7" fill="none" stroke-linecap="round"
-            stroke-dasharray="${C}" stroke-dashoffset="${C*(1-v/100)}" transform="rotate(-90 44 44)"/></svg>`})()}
-          <div class="fgVal"><b style="color:${col}">${v}</b></div>
-        </div>
-        <div class="fgTxt">
-          <b style="color:${col}">${NAMES[d.value_classification]||d.value_classification}</b>
-          <div class="sub2">Индекс страха и жадности, ${dl>=0?'+':''}${dl} за сутки</div>
-          <div class="hint" style="margin-top:7px">Высокие значения — рынок перегрет покупками, низкие — паника. Не сигнал сам по себе, но объясняет фон.</div>
-        </div>
-      </div>`;
-  }catch(e){ el.innerHTML=`<div class="hint">Индекс настроений недоступен: ${e.message}</div>` }
-}
 
 const SESSIONS=[
   ['Азия','Токио',0,9],['Европа','Лондон',7,16],['Америка','Нью-Йорк',12,21]
@@ -2389,115 +2603,13 @@ function renderSessions(){
     (open.length?'':`<div class="note warn" style="margin-top:12px"><div><b>Все сессии закрыты</b>Ликвидность низкая, движения рваные. На форексе свечей может не быть вовсе — валютный рынок не работает в выходные.</div></div>`);
 }
 
-async function loadBreadth(){
-  const el=document.getElementById('breadth'); if(!el)return;
-  try{
-    if(!cryptoLoaded)await loadCrypto();
-    const top=REG.crypto.slice(0,40).filter(a=>a.vol);
-    if(!top.length)throw new Error('нет данных об оборотах');
-    const up=top.filter(a=>a.chg>0).length, pct=up/top.length*100;
-    const btc=REG.crypto.find(a=>a.id==='BTCUSDT');
-    const totVol=top.reduce((s,a)=>s+a.vol,0);
-    const share=btc?btc.vol/totVol*100:0;
-    el.innerHTML=`
-      <div class="kv"><span>Растут из топ-${top.length}</span>
-        <b class="mono" style="color:${pct>=50?'var(--up)':'var(--down)'}">${up} · ${pct.toFixed(0)}%</b></div>
-      <div class="kv"><span>Доля BTC в обороте</span><b class="mono">${share.toFixed(1)}%</b></div>
-      <div class="kv"><span>Суммарный оборот топа</span><b class="mono">${(totVol/1e9).toFixed(1)} млрд $</b></div>
-      <div class="hint" style="margin-top:10px">${pct>=65?'Рынок растёт широко — лонговые сигналы чаще совпадают с фоном.'
-        :pct<=35?'Падает большинство пар — шортовые сигналы идут по тренду рынка.'
-        :'Рынок разнонаправлен, единого движения нет.'}</div>`;
-  }catch(e){ el.innerHTML=`<div class="hint">Не удалось посчитать: ${e.message}</div>` }
-}
 
-async function loadNews(){
-  const el=document.getElementById('news'); if(!el)return;
-  el.innerHTML='<div class="empty" style="padding:22px"><span>📰</span>Загружаю ленту…</div>';
-  const FEEDS=['https://www.coindesk.com/arc/outboundfeeds/rss/',
-               'https://cointelegraph.com/rss'];
-  for(const f of FEEDS){
-    try{
-      const j=await jget('https://api.allorigins.win/raw?url='+encodeURIComponent(f),12000)
-        .catch(()=>null);
-      let xml=j;
-      if(typeof xml!=='string'){
-        const r=await fetch('https://api.allorigins.win/raw?url='+encodeURIComponent(f));
-        xml=await r.text();
-      }
-      const doc=new DOMParser().parseFromString(xml,'text/xml');
-      const items=[...doc.querySelectorAll('item')].slice(0,8);
-      if(!items.length)continue;
-      el.innerHTML=items.map(it=>{
-        const t=it.querySelector('title')?.textContent||'';
-        const d=new Date(it.querySelector('pubDate')?.textContent||Date.now());
-        const link=it.querySelector('link')?.textContent||'#';
-        return `<a class="nRow" href="${link}" target="_blank" rel="noopener">
-          <div style="flex:1"><b>${t}</b>
-            <div class="sub2">${d.toLocaleString('ru',{day:'numeric',month:'short',hour:'2-digit',minute:'2-digit'})}</div></div>
-          <span class="chev">›</span></a>`}).join('');
-      return;
-    }catch{}
-  }
-  el.innerHTML='<div class="hint">Лента недоступна: источник блокирует запросы из браузера. Нужен свой прокси.</div>';
-}
 
 /* ═══════════ КАРТА РЫНКА ═══════════ */
 let mapCells=[], mapBusy=false;
 
-async function buildMap(){
-  if(mapBusy)return; mapBusy=true;
-  const el=document.getElementById('mapGrid');
-  const bar=document.getElementById('mapProg');
-  try{
-    if(!cryptoLoaded)await loadCrypto();
-    const syms=S.cat==='crypto'?REG.crypto.slice(0,24)
-      :(REG[S.cat]||REG.crypto).filter(a=>['major','cross'].includes(a.group)).slice(0,24);
-    mapCells=[];
-    const short=a=>a.base&&a.market==='crypto'?a.base:(a.id.replace('-OTC','').slice(0,3)+'/'+a.id.slice(3,6));
-    el.innerHTML=syms.map(a=>`<div class="cell" id="mc-${a.id}">
-      <b>${short(a)}</b><s>…</s></div>`).join('');
-    let done=0;
-    for(const a of syms){
-      try{
-        const [k,h]=await Promise.all([getCandles(a.id,S.tf,200),getCandles(a.id,HTF[S.tf],120)]);
-        const an=analyze(k,h);
-        mapCells.push({id:a.id,base:a.base||a.id,a:an});
-        const c=document.getElementById('mc-'+a.id);
-        if(c){
-          const col=an.dir==='CALL'?'var(--up)':an.dir==='PUT'?'var(--down)':'var(--tx3)';
-          c.className='cell '+an.dir+(an.score>=S.min?' hot':'');
-          c.innerHTML=`<b>${short(a)}</b><s style="color:${col}">${an.dir}</s>
-            <i>${an.score.toFixed(1)}</i>`;
-          c.onclick=()=>mapOpen(a.id);
-        }
-      }catch{ const c=document.getElementById('mc-'+a.id); if(c)c.innerHTML=`<b>${short(a)}</b><s>—</s>` }
-      done++; if(bar)bar.style.width=(done/syms.length*100)+'%';
-    }
-    const hot=mapCells.filter(c=>c.a.score>=S.min).sort((x,y)=>y.a.score-x.a.score);
-    document.getElementById('mapTop').innerHTML=hot.length
-      ? `<b>Выше порога ${S.min}: ${hot.length} из ${mapCells.length}</b>
-         <div class="sub2">Лидеры: ${hot.slice(0,3).map(h=>label(h.id)+' '+h.a.score.toFixed(1)).join(' · ')}</div>`
-      : `<b>Сигналов выше порога нет</b><div class="sub2">Сейчас рынок без выраженного направления на ${S.tf}</div>`;
-  }catch(e){ el.innerHTML=`<div class="hint">${e.message}</div>` }
-  mapBusy=false;
-}
 
-async function mapOpen(id){
-  toast('Считаю '+label(id),'Открою полный разбор через пару секунд.',1);
-  try{
-    const sig=await buildSignal(id,S.tf);
-    signals.unshift(sig); renderSignals(); renderHome?.();
-    renderDetail(sig); go('detail','market');
-  }catch(e){ toast('Не получилось',e.message) }
-}
 
-function renderMarket(){
-  renderSessions(); loadFng(); loadBreadth();
-  if(!mapCells.length&&!mapBusy)buildMap();
-  if(!document.getElementById('news').dataset.r){
-    document.getElementById('news').dataset.r='1'; loadNews();
-  }
-}
 
 
 /* ═══════════ ДНЕВНИК РЕШЕНИЙ ═══════════ */
@@ -2864,10 +2976,10 @@ setInterval(()=>{
 let anaPane='signals';
 function anaGo(v){
   anaPane=v; haptic();
-  ['signals','auto','disc'].forEach(p=>{
+  ['signals','auto','advice'].forEach(p=>{
     const el=document.getElementById('anaPane-'+p); if(el)el.style.display=p===v?'block':'none'});
   document.querySelectorAll('#anaNav .opt').forEach(o=>o.classList.toggle('on',o.dataset.v===v));
-  if(v==='auto')renderAuto(); if(v==='disc')renderDiscipline();
+  if(v==='auto')renderAuto(); if(v==='advice'){renderAdvice();renderDiscipline()}
 }
 
 
@@ -3025,8 +3137,9 @@ function renderLive(){
     el.innerHTML=`<div class="lvIdle">
       <div class="lvPulseWrap"><span class="lvPulse"></span></div>
       <b>Бот не запущен</b>
-      <p>Включите — он сам пойдёт по инструментам, будет считать индикаторы и сообщать, когда найдёт вход.</p>
+      <p>Включите — он сам пойдёт по инструментам, будет считать индикаторы и сообщать, когда найдёт вход. Либо посчитайте одну пару вручную ниже.</p>
       <button class="btn" onclick="liveStart()">Запустить бота</button>
+      <button class="btn ghost" style="margin-top:10px" onclick="document.getElementById('runBtn').scrollIntoView({behavior:'smooth',block:'center'})">Выбрать пару вручную</button>
     </div>`;
     return;
   }
@@ -3062,15 +3175,644 @@ document.addEventListener('visibilitychange',()=>{
          if(AUTO&&AUTO.on)autoLoop(); }
 });
 
+/* ═══════════ ПУЛЬС РЫНКА ═══════════ */
+const OSC=['RSI','Стохастик','MACD','VWAP','Полосы Боллинджера','Объём','Дивергенция'];
+const TRN=['Тренд EMA','Пересечение EMA','Supertrend','Сила тренда','Старший таймфрейм','Фигура графика','Свечная формация','Уровень рядом'];
+
+function groupScore(a,names){
+  let up=0,dn=0,max=0;
+  a.factors.forEach(f=>{
+    if(!names.includes(f.name))return;
+    max+=Math.max(f.w,0.9);
+    if(f.dir==='up')up+=f.w; else if(f.dir==='down')dn+=f.w;
+  });
+  const net=up-dn;
+  return{net,norm:max?Math.max(-1,Math.min(1,net/(max*0.62))):0,up,dn,
+         votes:a.factors.filter(f=>names.includes(f.name)&&f.dir!=='flat').length,
+         total:names.filter(n=>a.factors.some(f=>f.name===n)).length};
+}
+
+function verdictOf(v){
+  if(v>=.5)return['АКТИВНО ПОКУПАТЬ','var(--up)'];
+  if(v>=.18)return['ПОКУПАТЬ','var(--up)'];
+  if(v<=-.5)return['АКТИВНО ПРОДАВАТЬ','var(--down)'];
+  if(v<=-.18)return['ПРОДАВАТЬ','var(--down)'];
+  return['НЕЙТРАЛЬНО','var(--tx2)'];
+}
+
+/* дуговой индикатор со стрелкой: v от -1 до 1 */
+function gaugeArc(v,size,thick){
+  const R=size/2-thick/2-4, cx=size/2, cy=size/2+size*0.06;
+  const ang=180*(v+1)/2;                       // 0..180
+  const rad=(180-ang)*Math.PI/180;
+  const nx=cx+Math.cos(rad)*(R-thick*0.9), ny=cy-Math.sin(rad)*(R-thick*0.9);
+  const seg=(a1,a2,col)=>{
+    const p=(a)=>[cx+R*Math.cos((180-a)*Math.PI/180), cy-R*Math.sin((180-a)*Math.PI/180)];
+    const [x1,y1]=p(a1),[x2,y2]=p(a2);
+    return `<path d="M${x1} ${y1} A${R} ${R} 0 0 1 ${x2} ${y2}" stroke="${col}"
+      stroke-width="${thick}" fill="none" stroke-linecap="butt"/>`;
+  };
+  return `<svg viewBox="0 0 ${size} ${size*0.72}" style="width:100%;display:block">
+    ${seg(0,36,'#FF5C6C')}${seg(37,72,'#FF9F43')}${seg(73,107,'#8FA3BF')}
+    ${seg(108,143,'#5AC8E8')}${seg(144,180,'#2BD98A')}
+    <line x1="${cx}" y1="${cy}" x2="${nx}" y2="${ny}" stroke="#E9F0FA" stroke-width="3"
+      stroke-linecap="round"/>
+    <circle cx="${cx}" cy="${cy}" r="${thick*0.42}" fill="#E9F0FA"/>
+  </svg>`;
+}
+
+let PULSE=[], pulseBusy=false, pulseSym=null;
+
+async function buildPulse(){
+  if(pulseBusy)return; pulseBusy=true;
+  const el=document.getElementById('pulseList');
+  const bar=document.getElementById('pulseProg');
+  try{
+    if(S.cat==='crypto'&&!cryptoLoaded)await loadCrypto();
+    const pool=S.cat==='crypto'?REG.crypto.slice(0,14)
+      :(REG[S.cat]||[]).filter(a=>['major','cross'].includes(a.group)).slice(0,14);
+    if(!pool.length)throw new Error('нет инструментов для этого рынка');
+    PULSE=[];
+    el.innerHTML=pool.map(a=>`<div class="pRow" id="pr-${a.id}">
+      <div class="pIco">${assetIcon(a)}</div>
+      <div class="pMid"><b>${label(a.id)}</b><div class="pSub">считаю…</div></div>
+    </div>`).join('');
+    let done=0;
+    for(const a of pool){
+      try{
+        const [k,h]=await Promise.all([getCandles(a.id,S.tf,200),getCandles(a.id,HTF[S.tf],120)]);
+        const an=analyze(k,h);
+        const all=groupScore(an,[...OSC,...TRN]);
+        PULSE.push({id:a.id,a:an,v:all.norm,k});
+        pulseRow(a,an,all.norm);
+      }catch(e){
+        const r=document.getElementById('pr-'+a.id);
+        if(r)r.querySelector('.pSub').textContent='данные не пришли';
+      }
+      done++; if(bar)bar.style.width=(done/pool.length*100)+'%';
+    }
+    PULSE.sort((x,y)=>Math.abs(y.v)-Math.abs(x.v));
+    document.getElementById('pulseHead').innerHTML=
+      `<b>${PULSE.length} инструментов · ${S.tf}</b>
+       <div class="sub2">Отсортировано по силе перевеса. Тап — подробный пульс.</div>`;
+  }catch(e){ el.innerHTML=`<div class="empty"><span>⚠</span>${e.message}</div>` }
+  pulseBusy=false;
+}
+
+function pulseRow(a,an,v){
+  const r=document.getElementById('pr-'+a.id); if(!r)return;
+  const [verd,col]=verdictOf(v);
+  const pct=Math.round(Math.abs(v)*100);
+  const px=an.price, chg=((an.price-an.k[an.k.length-2].c)/an.k[an.k.length-2].c*100);
+  r.className='pRow on';
+  r.style.setProperty('--edge',col);
+  r.innerHTML=`
+    <div class="pTop">
+      <div class="pIco">${assetIcon(a)}</div>
+      <div class="pMid"><b>${label(a.id)}</b>
+        <span class="pTf">${S.tf} · сила ${an.score.toFixed(1)}</span></div>
+      <div class="pPx"><b class="mono">${fmtP(px)}</b>
+        <s style="color:${chg>=0?'var(--up)':'var(--down)'}">${chg>=0?'+':''}${chg.toFixed(3)}%</s></div>
+    </div>
+    <div class="pBot">
+      <span class="pTag" style="color:${col};background:${col==='var(--up)'?'rgba(43,217,138,.12)':col==='var(--down)'?'rgba(255,92,108,.12)':'rgba(255,255,255,.06)'}">${verd}</span>
+      <div class="pBar"><i style="width:${pct}%;background:${col}"></i></div>
+      <span class="pNum">${pct}</span>
+    </div>`;
+  r.onclick=()=>openPulse(a.id);
+}
+
+function openPulse(id){
+  const p=PULSE.find(x=>x.id===id); if(!p)return;
+  pulseSym=id; haptic('medium');
+  const a=p.a;
+  const osc=groupScore(a,OSC), trn=groupScore(a,TRN);
+  const [verd,col]=verdictOf(p.v);
+  const [vo]=verdictOf(osc.norm), [vt]=verdictOf(trn.norm);
+  const cls=a.k.map(c=>c.c), n=cls.length-1;
+  const md=MACD(cls), st=STOCH(a.k), ad=ADX(a.k);
+  const conf=Math.round(Math.abs(p.v)*100);
+
+  document.getElementById('pulseSheet').innerHTML=`
+  <div class="shHead">
+    <div class="pIco big">${assetIcon(REG[marketOf(id)]?.find(x=>x.id===id)||{id,market:marketOf(id),base:id.slice(0,-4)})}</div>
+    <div style="flex:1"><b>${label(id)}</b><div class="sub2">${S.tf} · ${marketOf(id)==='crypto'?'биржа':'валютный рынок'}</div></div>
+    <button class="shX" onclick="closePulse()">✕</button>
+  </div>
+  <div class="shBody">
+    <div class="grid2" style="gap:10px;margin-bottom:14px">
+      <div class="card tight" style="margin:0"><div class="lbl2">ЦЕНА</div>
+        <b class="mono" style="font-size:22px">${fmtP(a.price)}</b>
+        <div class="sub2">ATR ${a.atrPct.toFixed(2)}% · ${riskOf(a)[0].toLowerCase()} риск</div></div>
+      <div class="card tight" style="margin:0"><div class="lbl2">ДАННЫЕ</div>
+        <b style="color:var(--up);font-size:19px">ЖИВЫЕ</b>
+        <div class="sub2">${a.k.length} свечей проанализировано</div></div>
+    </div>
+
+    <div class="card">
+      <div style="display:flex;align-items:flex-start">
+        <div style="flex:1"><b style="font-size:17px">Сводный перевес</b>
+          <div class="sub2">пятнадцать факторов вместе</div></div>
+        <div style="text-align:right"><b class="mono" style="font-size:26px">${conf}%</b>
+          <div class="lbl2">ПЕРЕВЕС</div></div>
+      </div>
+      ${gaugeArc(p.v,320,26)}
+      <div class="gScale"><span>активно продавать</span><span>активно покупать</span></div>
+      <div class="gVerd" style="color:${col};border-color:${col};background:${col==='var(--up)'?'rgba(43,217,138,.1)':col==='var(--down)'?'rgba(255,92,108,.1)':'rgba(255,255,255,.05)'}">${verd}</div>
+      <div class="sub2" style="text-align:center;margin-top:10px">
+        ${a.up.toFixed(1)} веса за рост · ${a.dn.toFixed(1)} за падение</div>
+    </div>
+
+    <div class="grid2" style="gap:10px">
+      <div class="card" style="margin:0">
+        <div class="lbl2">ОСЦИЛЛЯТОРЫ</div>
+        <div class="sub2" style="margin-bottom:6px">RSI, стохастик, MACD, Боллинджер, VWAP, объём, дивергенция</div>
+        ${gaugeArc(osc.norm,150,15)}
+        <div class="gVerd sm" style="color:${verdictOf(osc.norm)[1]};border-color:${verdictOf(osc.norm)[1]}">${vo}</div>
+        <div class="sub2" style="text-align:center">${osc.votes} из ${osc.total} голосуют</div>
+      </div>
+      <div class="card" style="margin:0">
+        <div class="lbl2">ТРЕНДОВЫЕ</div>
+        <div class="sub2" style="margin-bottom:6px">EMA, Supertrend, ADX, старший ТФ, фигуры, свечи, уровни</div>
+        ${gaugeArc(trn.norm,150,15)}
+        <div class="gVerd sm" style="color:${verdictOf(trn.norm)[1]};border-color:${verdictOf(trn.norm)[1]}">${vt}</div>
+        <div class="sub2" style="text-align:center">${trn.votes} из ${trn.total} голосуют</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="lbl2" style="margin-bottom:6px">ТЕКУЩИЕ ЗНАЧЕНИЯ</div>
+      <div class="kv"><span>RSI (14)</span><b class="mono">${a.rsi.toFixed(2)}</b></div>
+      <div class="kv"><span>MACD (12, 26)</span><b class="mono">${md.h[n].toFixed(5)}</b></div>
+      <div class="kv"><span>Стохастик (14, 3)</span><b class="mono">${st.k[n].toFixed(2)}</b></div>
+      <div class="kv"><span>ADX (14)</span><b class="mono">${(ad.adx[n]||0).toFixed(2)}</b></div>
+      <div class="kv"><span>Старший таймфрейм</span><b>${a.mtf}</b></div>
+    </div>
+
+    <div class="note ${Math.abs(p.v)>=.18?'':'warn'}"><div>
+      <b>${Math.abs(p.v)>=.18?'Перевес есть, но это не прогноз':'Перевеса нет'}</b>
+      ${Math.abs(p.v)>=.18
+        ?'Стрелка показывает согласие индикаторов на текущей свече. Через минуту картина может измениться — проверьте таймер экспирации.'
+        :'Индикаторы разошлись. Вход в такой момент ближе к случайному, чем к расчётному.'}
+    </div></div>
+
+    <button class="btn" onclick="pulseToSignal('${id}')">Взять как сигнал и открыть разбор</button>
+    <div class="disc">Сводный перевес — сумма весов индикаторов, а не вероятность исхода.</div>
+  </div>`;
+  document.getElementById('pulseWrap').classList.add('on');
+}
+
+function closePulse(){document.getElementById('pulseWrap').classList.remove('on');haptic()}
+
+async function pulseToSignal(id){
+  closePulse();
+  try{
+    const sig=await buildSignal(id,S.tf);
+    signals.unshift(sig); signals=signals.slice(0,20);
+    if(sig.a.dir!=='WAIT'){history.unshift(sig);history=history.slice(0,200);saveHistory()}
+    renderHome(); renderSignals(); renderHistory();
+    renderDetail(sig); go('detail','market');
+  }catch(e){ toast('Не получилось',e.message) }
+}
+
+function pulseCandidates(q){
+  q=(q||'').trim().toUpperCase().replace('/','');
+  if(!q)return [];
+  const all=[...(REG.crypto||[]),...(REG.forex||[]),...(REG.otc||[])];
+  return all.filter(a=>a.id.replace('-OTC','').includes(q)||a.label.replace('/','').includes(q))
+            .slice(0,8);
+}
+
+function pulseFilter(){
+  const q=document.getElementById('pulseQ').value;
+  const box=document.getElementById('pulseHits');
+  const list=pulseCandidates(q);
+  if(!q.trim()){box.innerHTML='';document.querySelectorAll('#pulseList .pRow').forEach(r=>r.style.display='');return}
+  box.innerHTML=list.length
+    ? list.map(a=>`<div class="hitRow" onclick="pulseOpenAny('${a.id}')">
+        ${assetIcon(a)}<div style="flex:1"><b>${a.label}</b>
+          <div class="sub2">${a.market==='crypto'?'криптовалюта':a.market==='otc'?'OTC по базовой паре':'валютная пара'}</div></div>
+        <span class="chev">›</span></div>`).join('')
+    : '<div class="hint" style="padding:14px 4px">Ничего не найдено</div>';
+  // прячем общий список, пока идёт поиск
+  document.querySelectorAll('#pulseList .pRow').forEach(r=>r.style.display='none');
+}
+
+function pulseOpenQuery(){
+  const list=pulseCandidates(document.getElementById('pulseQ').value);
+  if(list.length)pulseOpenAny(list[0].id);
+  else toast('Не найдено','Проверьте написание: EURJPY, BTC, XAUUSD.');
+}
+
+async function pulseOpenAny(id){
+  const have=PULSE.find(x=>x.id===id);
+  if(have)return openPulse(id);
+  toast('Считаю '+label(id),'Загружаю свечи и индикаторы.',1);
+  try{
+    const [k,h]=await Promise.all([getCandles(id,S.tf,200),getCandles(id,HTF[S.tf],120)]);
+    const an=analyze(k,h);
+    const all=groupScore(an,[...OSC,...TRN]);
+    PULSE.unshift({id,a:an,v:all.norm,k});
+    document.getElementById('toast').className='';
+    openPulse(id);
+  }catch(e){ toast('Не получилось',e.message) }
+}
+
+function renderPulse(){
+  if(!PULSE.length&&!pulseBusy)buildPulse();
+}
+
+let mkPane='pulse';
+function mkGo(v){
+  mkPane=v; haptic();
+  document.getElementById('mkPane-pulse').style.display = v==='pulse'?'block':'none';
+  document.getElementById('mkPane-over').style.display  = v==='over'?'block':'none';
+  document.querySelectorAll('#mkNav .opt').forEach(o=>o.classList.toggle('on',o.dataset.v===v));
+  document.getElementById('mkTitle').textContent = v==='pulse'?'Пульс рынка':'Обзор рынка';
+  const rf=document.getElementById('mkRefresh');
+  rf.onclick = v==='pulse' ? ()=>{PULSE=[];buildPulse()} : ()=>renderOverview();
+  if(v==='pulse')renderPulse(); else renderOverview();
+  if(v==='over')document.getElementById('pulseHead').textContent='сила валют, согласие сроков, волатильность';
+}
+
+/* ═══════════ ИТОГ ОДНОЙ СТРОКОЙ ═══════════ */
+function verdictCard(){
+  const el=document.getElementById('anaVerdict'); if(!el)return;
+  const done=history.filter(h=>h.result==='win'||h.result==='loss');
+  const be=1/(1+S.payout);
+  if(done.length<10){
+    el.innerHTML=`<div class="vCard neutral">
+      <div class="vIco">◷</div>
+      <div><b>Рано делать выводы</b>
+        <p>Закрыто ${done.length} сделок из десяти, нужных для первой оценки.
+        Запустите живую ленту — она наберёт статистику сама.</p></div></div>`;
+    return;
+  }
+  const w=done.filter(h=>h.result==='win').length, wr=w/done.length;
+  const ev=wr*S.payout-(1-wr);
+  const se=Math.sqrt(wr*(1-wr)/done.length);
+  const lo=wr-1.96*se, hi=wr+1.96*se;
+  let kind,title,text;
+  if(lo>be){ kind='good'; title='Перевес подтверждён статистикой';
+    text=`Точность ${(wr*100).toFixed(1)}% на ${done.length} сделках, нижняя граница интервала ${(lo*100).toFixed(1)}% всё ещё выше планки ${(be*100).toFixed(1)}%.`; }
+  else if(hi<be){ kind='bad'; title='Убыток подтверждён статистикой';
+    text=`Точность ${(wr*100).toFixed(1)}%, даже верхняя граница интервала ${(hi*100).toFixed(1)}% ниже планки ${(be*100).toFixed(1)}%. Каждая ставка в среднем теряет ${Math.abs(ev*100).toFixed(1)}%.`; }
+  else { kind='neutral'; title='Результат пока неотличим от случайного';
+    text=`Точность ${(wr*100).toFixed(1)}%, интервал ${(lo*100).toFixed(0)}–${(hi*100).toFixed(0)}% накрывает планку ${(be*100).toFixed(1)}%. Нужно больше сделок, чтобы отличить умение от везения.`; }
+  el.innerHTML=`<div class="vCard ${kind}">
+    <div class="vIco">${kind==='good'?'✓':kind==='bad'?'✕':'◷'}</div>
+    <div><b>${title}</b><p>${text}</p></div></div>`;
+}
+
+/* ═══════════ РЕКОМЕНДАЦИИ ИЗ ВАШИХ ЖЕ ДАННЫХ ═══════════ */
+function bestOf(done,keyFn,labelFn,minN=4){
+  const m={};
+  done.forEach(h=>{const k=keyFn(h); if(k==null)return;
+    (m[k]=m[k]||{n:0,w:0}); m[k].n++; if(h.result==='win')m[k].w++});
+  const rows=Object.entries(m).filter(([,v])=>v.n>=minN)
+    .map(([k,v])=>({k,n:v.n,wr:v.w/v.n,label:labelFn(k)}))
+    .sort((a,b)=>b.wr-a.wr);
+  return rows;
+}
+
+function renderAdvice(){
+  const el=document.getElementById('anaAdvice'); if(!el)return;
+  const done=history.filter(h=>h.result==='win'||h.result==='loss');
+  const be=1/(1+S.payout);
+  if(done.length<12){
+    el.innerHTML=`<div class="card"><div class="hint">
+      Рекомендации появятся после двенадцати закрытых сделок — сейчас ${done.length}.
+      Они строятся только на ваших данных, ничего не берётся со стороны.</div></div>`;
+    return;
+  }
+  const blocks=[];
+
+  const byAsset=bestOf(done,h=>h.sym,k=>label(k));
+  if(byAsset.length>=2){
+    const b=byAsset[0], w=byAsset[byAsset.length-1];
+    blocks.push({t:'Инструменты',
+      good:`${b.label} — ${(b.wr*100).toFixed(0)}% на ${b.n} сделках`,
+      bad:`${w.label} — ${(w.wr*100).toFixed(0)}% на ${w.n} сделках`,
+      act:b.wr>be&&w.wr<be
+        ? `Сосредоточьтесь на ${b.label}, а ${w.label} уберите из работы.`
+        : 'Разница между инструментами пока в пределах случайной.'});
+  }
+
+  const byTf=bestOf(done,h=>h.tf,k=>k,3);
+  if(byTf.length>=2){
+    const b=byTf[0];
+    blocks.push({t:'Сроки экспирации',
+      good:`${b.label} — ${(b.wr*100).toFixed(0)}% на ${b.n} сделках`,
+      bad:`${byTf[byTf.length-1].label} — ${(byTf[byTf.length-1].wr*100).toFixed(0)}%`,
+      act:b.wr>be?`Держитесь срока ${b.label}.`:'Ни один срок пока не выходит за планку.'});
+  }
+
+  const byHour=bestOf(done,h=>new Date(h.ts).getHours(),k=>String(k).padStart(2,'0')+':00',3);
+  if(byHour.length>=2){
+    const good=byHour.filter(r=>r.wr>=be).map(r=>r.label);
+    const bad=byHour.filter(r=>r.wr<0.45).map(r=>r.label);
+    blocks.push({t:'Часы входа',
+      good:good.length?good.slice(0,3).join(', '):'выраженно удачных часов нет',
+      bad:bad.length?bad.slice(0,3).join(', '):'провальных часов нет',
+      act:bad.length?`Не входите в ${bad[0]} — там статистика хуже всего.`
+                    :'Время суток пока не влияет заметно.'});
+  }
+
+  const buckets=bestOf(done,h=>h.a.score<6?'5.5–6':h.a.score<7?'6–7':h.a.score<8?'7–8':'8+',k=>k,3);
+  if(buckets.length>=2){
+    const top=buckets[0];
+    const badLow=buckets.find(b=>b.k==='5.5–6');
+    blocks.push({t:'Порог силы',
+      good:`${top.label} — ${(top.wr*100).toFixed(0)}% на ${top.n} сделках`,
+      bad:badLow?`5.5–6 — ${(badLow.wr*100).toFixed(0)}% на ${badLow.n} сделках`:'слабых сигналов мало',
+      act:badLow&&badLow.wr<be&&top.wr>be
+        ? `Поднимите порог силы в профиле: слабые сигналы съедают результат.`
+        : 'Порог пока можно не менять.'});
+  }
+
+  const dirs=['CALL','PUT'].map(d=>{
+    const s2=done.filter(h=>h.a.dir===d);
+    return{d,n:s2.length,wr:s2.length?s2.filter(h=>h.result==='win').length/s2.length:0}});
+  if(dirs[0].n>=4&&dirs[1].n>=4){
+    const b=dirs[0].wr>=dirs[1].wr?dirs[0]:dirs[1], w=dirs[0].wr>=dirs[1].wr?dirs[1]:dirs[0];
+    blocks.push({t:'Направление',
+      good:`${b.d} — ${(b.wr*100).toFixed(0)}% на ${b.n} сделках`,
+      bad:`${w.d} — ${(w.wr*100).toFixed(0)}% на ${w.n} сделках`,
+      act:b.wr-w.wr>0.2?`Ваши ${w.d} заметно слабее — возможно, вы ловите контртренд.`
+                       :'Обе стороны работают примерно одинаково.'});
+  }
+
+  el.innerHTML=blocks.map(b=>`<div class="card adv">
+    <div class="advT">${b.t}</div>
+    <div class="advRow"><span class="advDot up"></span><div><s>лучшее</s><b>${b.good}</b></div></div>
+    <div class="advRow"><span class="advDot dn"></span><div><s>худшее</s><b>${b.bad}</b></div></div>
+    <div class="advAct">${b.act}</div>
+  </div>`).join('')+
+  `<div class="disc">Рекомендации пересчитываются при каждом открытии и опираются только на ваш журнал.
+   На выборках меньше двадцати сделок в срезе разница часто случайна.</div>`;
+}
+
+
+/* ═══════════ СТРАТЕГИЧЕСКИЕ ПРОФИЛИ ═══════════ */
+const STRATS={
+  multi:{name:'Мульти-анализ',tag:'базовый',
+    desc:'Все пятнадцать факторов с равным весом. Ровный профиль без перекосов — с него стоит начинать.',
+    mult:{}},
+  smart:{name:'Smart Money',tag:'уровни и структура',
+    desc:'Упор на уровни, объём, дивергенции и старший таймфрейм. Осцилляторы ослаблены: в этом подходе они считаются шумом.',
+    mult:{'Уровень рядом':1.9,'Объём':1.7,'Дивергенция':1.8,'Старший таймфрейм':1.7,
+          'Полосы Боллинджера':1.3,'Сила тренда':1.3,
+          'RSI':0.4,'Стохастик':0.3,'MACD':0.6,'VWAP':1.2,'Пересечение EMA':0.6}},
+  price:{name:'Price Action',tag:'свечи и фигуры',
+    desc:'Главное — свечные формации, фигуры графика и уровни. Индикаторы играют вспомогательную роль.',
+    mult:{'Свечная формация':2.2,'Фигура графика':2.0,'Уровень рядом':1.7,
+          'Тренд EMA':0.8,'MACD':0.5,'RSI':0.5,'Стохастик':0.3,'VWAP':0.6,
+          'Сила тренда':0.8,'Supertrend':0.9,'Пересечение EMA':0.7}}
+};
+let STRAT=(()=>{try{return localStorage.getItem('acs_strat')||'multi'}catch{return 'multi'}})();
+
+function setStrat(k){
+  STRAT=k; try{localStorage.setItem('acs_strat',k)}catch{}
+  haptic('medium'); renderStrat(); PULSE=[]; 
+  toast('Профиль изменён',STRATS[k].name+' — '+STRATS[k].desc,1);
+}
+function renderStrat(){
+  const el=document.getElementById('stratBox'); if(!el)return;
+  el.innerHTML=Object.entries(STRATS).map(([k,v])=>`
+    <div class="stRow ${k===STRAT?'on':''}" onclick="setStrat('${k}')">
+      <div class="stIco">${k==='multi'?'◫':k==='smart'?'◎':'∿'}</div>
+      <div style="flex:1">
+        <b>${v.name} <s>${v.tag}</s></b>
+        <p>${v.desc}</p>
+      </div>
+      <span class="stDot"></span>
+    </div>`).join('');
+}
+
+/* ═══════════ СИЛА ВАЛЮТ ═══════════ */
+const CSPAIRS=['EURUSD','GBPUSD','USDJPY','USDCHF','AUDUSD','USDCAD','NZDUSD'];
+const CURS=['USD','EUR','GBP','JPY','CHF','AUD','CAD','NZD'];
+let csBusy=false;
+
+async function buildStrength(){
+  if(csBusy)return; csBusy=true;
+  const el=document.getElementById('csBox');
+  el.innerHTML='<div class="hint">Считаю по семи парам…</div>';
+  const acc={}, cnt={};
+  CURS.forEach(c=>{acc[c]=0;cnt[c]=0});
+  let got=0, err='';
+  let idx=0;
+  for(const p of CSPAIRS){
+    idx++;
+    el.innerHTML=`<div class="hint">Считаю силу валют · ${idx} из ${CSPAIRS.length}
+      <div class="mapBar" style="margin-top:8px"><i style="width:${idx/CSPAIRS.length*100}%"></i></div></div>`;
+    try{
+      const k=await getCandles(p,S.tf,200);
+      if(!k||k.length<20)continue;
+      const chg=(k[k.length-1].c-k[0].c)/k[0].c*100;
+      const b=p.slice(0,3), q=p.slice(3,6);
+      acc[b]+=chg; cnt[b]++;
+      acc[q]-=chg; cnt[q]++;
+      got++;
+    }catch(e){ err=e.message }
+  }
+  if(!got){
+    el.innerHTML=`<div class="note warn"><div><b>Нет данных по валютам</b>${err||'источник недоступен'}
+      ${TDKEY?'':' Для валютных пар нужен ключ Twelve Data — вставьте его в профиле.'}</div></div>`;
+    csBusy=false; return;
+  }
+  const rows=CURS.map(c=>({c,v:cnt[c]?acc[c]/cnt[c]:0})).sort((a,b)=>b.v-a.v);
+  const max=Math.max(...rows.map(r=>Math.abs(r.v)))||1;
+  const top=rows[0], bot=rows[rows.length-1];
+  el.innerHTML=`
+    <div class="card">
+      ${rows.map(r=>{
+        const w=Math.abs(r.v)/max*50, pos=r.v>=0;
+        return `<div class="csRow">
+          <span class="csCur">${flag(r.c)} ${r.c}</span>
+          <div class="csTrack">
+            <span class="csMid"></span>
+            <i style="left:${pos?50:50-w}%;width:${w}%;background:${pos?'var(--up)':'var(--down)'}"></i>
+          </div>
+          <span class="csVal" style="color:${pos?'var(--up)':'var(--down)'}">${r.v>=0?'+':''}${r.v.toFixed(2)}%</span>
+        </div>`}).join('')}
+      <div class="note" style="margin-top:14px"><div>
+        <b>Сильнее всех ${top.c}, слабее всех ${bot.c}</b>
+        Пара ${top.c}/${bot.c} сейчас в самом выраженном движении из доступных.
+        Покупка сильной валюты против слабой обычно идёт по тренду, а не против него.
+      </div></div>
+      <button class="btn ghost" style="margin-top:12px" onclick="csOpen('${top.c}','${bot.c}')">
+        Разобрать ${top.c}/${bot.c}</button>
+    </div>`;
+  csBusy=false;
+}
+
+function csOpen(a,b){
+  const direct=CSPAIRS.includes(a+b)?a+b:CSPAIRS.includes(b+a)?b+a:null;
+  const id=direct||(REG.forex.find(x=>x.id===a+b||x.id===b+a)||{}).id;
+  if(!id)return toast('Пары нет у источника',`${a}/${b} недоступна. Попробуйте соседние по силе валюты.`);
+  pulseOpenAny(id);
+}
+
+/* ═══════════ МУЛЬТИТАЙМФРЕЙМ ═══════════ */
+const MTFS=['5m','15m','1h'];
+let mtfBusy=false;
+
+async function buildMTF(){
+  if(mtfBusy)return; mtfBusy=true;
+  const el=document.getElementById('mtfBox');
+  const sym=S.asset;
+  el.innerHTML=`<div class="hint">Считаю ${label(sym)} на пяти сроках…</div>`;
+  const res=[];
+  for(const tf of MTFS){
+    try{
+      const [k,h]=await Promise.all([getCandles(sym,tf,200),getCandles(sym,HTF[tf]||tf,120)]);
+      const a=analyze(k,h);
+      const g=groupScore(a,[...OSC,...TRN]);
+      res.push({tf,dir:a.dir,score:a.score,v:g.norm});
+    }catch(e){ res.push({tf,err:e.message}) }
+  }
+  const ok=res.filter(r=>!r.err);
+  if(!ok.length){
+    el.innerHTML=`<div class="note warn"><div><b>Не удалось посчитать</b>${res[0]?.err||''}</div></div>`;
+    mtfBusy=false; return;
+  }
+  const ups=ok.filter(r=>r.v>0.18).length, dns=ok.filter(r=>r.v<-0.18).length;
+  const agree=Math.max(ups,dns), side=ups>dns?'вверх':dns>ups?'вниз':'нет';
+  el.innerHTML=`
+    <div class="card">
+      <div style="display:flex;align-items:center;margin-bottom:12px">
+        <div style="flex:1"><b style="font-size:16px">${label(sym)}</b>
+          <div class="sub2">согласие сроков между собой</div></div>
+        <b class="mono" style="font-size:22px;color:${agree>=4?'var(--up)':agree>=3?'var(--gold)':'var(--tx2)'}">${agree}/${ok.length}</b>
+      </div>
+      ${res.map(r=>r.err
+        ? `<div class="mtfRow"><span class="mtfTf">${r.tf}</span>
+             <span class="sub2" style="flex:1">данные недоступны</span></div>`
+        : `<div class="mtfRow">
+             <span class="mtfTf">${r.tf}</span>
+             <div class="mtfBar"><span class="csMid"></span>
+               <i style="left:${r.v>=0?50:50+r.v*50}%;width:${Math.abs(r.v)*50}%;
+                  background:${r.v>=0?'var(--up)':'var(--down)'}"></i></div>
+             <span class="mtfV" style="color:${r.dir==='CALL'?'var(--up)':r.dir==='PUT'?'var(--down)':'var(--tx3)'}">${r.dir}</span>
+             <span class="mtfS mono">${r.score.toFixed(1)}</span>
+           </div>`).join('')}
+      <div class="note ${agree>=4?'':'warn'}" style="margin-top:12px"><div>
+        <b>${agree>=4?`Сроки согласны: ${side}`:agree>=3?'Согласие частичное':'Сроки противоречат друг другу'}</b>
+        ${agree>=4?'Когда старшие и младшие сроки смотрят в одну сторону, вход по короткой экспирации идёт по общему течению.'
+          :agree>=3?'Часть сроков против. Вход возможен, но с меньшей уверенностью.'
+          :'Младшие сроки идут против старших — это типичная ситуация для входа против тренда и частых потерь.'}
+      </div></div>
+      <button class="btn ghost" style="margin-top:10px" onclick="buildMTF()">Пересчитать</button>
+    </div>`;
+  mtfBusy=false;
+}
+
+/* ═══════════ ГДЕ ЕСТЬ ДВИЖЕНИЕ ═══════════ */
+let volBusy=false;
+
+async function buildVol(){
+  if(volBusy)return; volBusy=true;
+  const el=document.getElementById('volBox');
+  el.innerHTML='<div class="hint">Замеряю размах по инструментам…</div>';
+  let vi=0;
+  const pool=S.cat==='crypto'
+    ? (cryptoLoaded?REG.crypto.slice(0,10).map(a=>a.id):['BTCUSDT','ETHUSDT','SOLUSDT','BNBUSDT','XRPUSDT'])
+    : (REG[S.cat]||[]).filter(a=>a.group==='major').slice(0,7).map(a=>a.id);
+  const rows=[];
+  for(const id of pool){
+    vi++;
+    el.innerHTML=`<div class="hint">Замеряю размах · ${vi} из ${pool.length}
+      <div class="mapBar" style="margin-top:8px"><i style="width:${vi/pool.length*100}%"></i></div></div>`;
+    try{
+      const k=await getCandles(id,S.tf,200);
+      if(!k||k.length<40)continue;
+      const at=ATR(k), px=k[k.length-1].c;
+      const atrPct=at[at.length-1]/px*100;
+      // размах последних 20 свечей в процентах
+      const w=k.slice(-20);
+      const rng=(Math.max(...w.map(c=>c.h))-Math.min(...w.map(c=>c.l)))/px*100;
+      // доля свечей, где тело больше половины диапазона — «направленность»
+      const body=w.filter(c=>Math.abs(c.c-c.o)>(c.h-c.l)*0.5).length/w.length;
+      rows.push({id,atrPct,rng,body});
+    }catch{}
+  }
+  if(!rows.length){ el.innerHTML='<div class="hint">Не удалось получить данные.</div>'; volBusy=false; return }
+  rows.sort((a,b)=>b.atrPct-a.atrPct);
+  const maxA=rows[0].atrPct||1;
+  el.innerHTML=`
+    <div class="card">
+      ${rows.map(r=>`<div class="volRow" onclick="pulseOpenAny('${r.id}')">
+        <span class="volName">${label(r.id)}</span>
+        <div class="volBar"><i style="width:${r.atrPct/maxA*100}%;
+          background:${r.body>0.45?'var(--up)':'var(--gold)'}"></i></div>
+        <span class="volNum mono">${r.atrPct.toFixed(2)}%</span>
+      </div>`).join('')}
+      <div class="note" style="margin-top:12px"><div>
+        <b>Сверху — где размах больше</b>
+        Зелёная полоса означает, что свечи в основном направленные, а не пилообразные.
+        На инструментах из нижней части списка индикаторы чаще дают ложные сигналы:
+        движение меньше спреда и шума.
+      </div></div>
+    </div>`;
+  volBusy=false;
+}
+
+/* ═══════════ ЧАСЫ АКТИВНОСТИ ═══════════ */
+async function buildHours(){
+  const el=document.getElementById('hoursBox');
+  el.innerHTML='<div class="hint">Считаю активность по часам…</div>';
+  try{
+    const k=await getCandles(S.asset,'1h',168);
+    if(!k||k.length<48)throw new Error('мало истории');
+    const m={};
+    k.forEach(c=>{
+      const h=new Date(c.t).getHours();
+      const r=(c.h-c.l)/c.c*100;
+      (m[h]=m[h]||[]).push(r);
+    });
+    const rows=Object.entries(m).map(([h,arr])=>({h:+h,v:arr.reduce((a,b)=>a+b,0)/arr.length}))
+      .sort((a,b)=>a.h-b.h);
+    const max=Math.max(...rows.map(r=>r.v))||1;
+    const best=[...rows].sort((a,b)=>b.v-a.v).slice(0,3).map(r=>String(r.h).padStart(2,'0')+':00');
+    const worst=[...rows].sort((a,b)=>a.v-b.v).slice(0,3).map(r=>String(r.h).padStart(2,'0')+':00');
+    const now=new Date().getHours();
+    el.innerHTML=`
+      <div class="card">
+        <div class="sub2" style="margin-bottom:10px">${label(S.asset)} · средний размах часовой свечи за неделю</div>
+        <div class="hrGrid">
+          ${rows.map(r=>`<div class="hrCol ${r.h===now?'now':''}" title="${r.h}:00">
+            <i style="height:${Math.max(6,r.v/max*54)}px;
+              background:${r.v>max*0.66?'var(--up)':r.v>max*0.33?'var(--gold)':'rgba(255,255,255,.18)'}"></i>
+            <s>${String(r.h).padStart(2,'0')}</s></div>`).join('')}
+        </div>
+        <div class="kv" style="margin-top:12px"><span>Самые активные часы</span><b>${best.join(', ')}</b></div>
+        <div class="kv"><span>Самые тихие</span><b>${worst.join(', ')}</b></div>
+        <div class="hint" style="margin-top:10px">Время по вашему устройству. В тихие часы цена стоит,
+          и короткая экспирация превращается в подбрасывание монеты.</div>
+      </div>`;
+  }catch(e){ el.innerHTML=`<div class="hint">Не удалось посчитать: ${e.message}</div>` }
+}
+
+let overBusy=false;
+async function renderOverview(){
+  renderSessions();
+  const nt=document.getElementById('overNote');
+  if(nt)nt.style.display = S.cat==='crypto' ? 'none' : 'block';
+  if(overBusy)return; overBusy=true;
+  try{ await buildStrength(); await buildMTF(); await buildVol(); await buildHours(); }
+  finally{ overBusy=false }
+}
+
 /* ─────────────── nav & settings ─────────────── */
 function go(t,from){
   if(from)lastTab=from; else if(t!=='detail')lastTab=t;
   document.querySelectorAll('.tab').forEach(x=>x.classList.toggle('on',x.id==='tab-'+t));
   document.querySelectorAll('.nb').forEach(b=>b.classList.toggle('on',b.dataset.t===(t==='detail'?lastTab:t)));
   window.scrollTo(0,0); haptic();
-  if(t==='market')renderMarket(); if(t==='history')renderHistory();
+  if(t==='market'){ mkPane==='pulse'?renderPulse():renderOverview(); } if(t==='history')renderHistory();
   if(t==='chart')mountPage('ifChart','pg-chart');
-  if(t==='analytics'){renderAnalytics();if(anaPane==='auto')renderAuto();if(anaPane==='disc')renderDiscipline();}
+  if(t==='analytics'){renderAnalytics();if(anaPane==='auto')renderAuto();if(anaPane==='advice'){renderAdvice();renderDiscipline()}}
 }
 
 function pick(container,attr,fn){
@@ -3080,11 +3822,15 @@ function pick(container,attr,fn){
     o.classList.add('on'); haptic(); fn(o.dataset[attr]);
   });
 }
-pick('cats','cat',v=>{S.cat=v;mapCells=[];LIVE.i=0;LIVE.found=[];if(LIVE.on)liveStart();catNote();if(v!=='otc'){pickerTab=v;openPicker()}});
-pick('tfs','tf',v=>{S.tf=v;document.getElementById('runTf').textContent=v;mapCells=[];LIVE.i=0});
+pick('cats','cat',v=>{S.cat=v;PULSE=[];LIVE.i=0;LIVE.found=[];if(LIVE.on)liveStart();catNote();if(v!=='otc'){pickerTab=v;openPicker()}});
+pick('tfs','tf',v=>{S.tf=v;document.getElementById('runTf').textContent=v;PULSE=[];
+  document.getElementById('tfNote').innerHTML = ['1m','3m'].includes(v)
+    ? 'На минутных свечах шум сильнее сигнала: индикаторы часто меняют сторону внутри одной свечи. Проверьте статистику по этому сроку в разделе «Итоги».'
+    : ['1d'].includes(v) ? 'Суточные свечи для бинарных опционов подходят редко — экспирация наступит через сутки.' : '';LIVE.i=0});
 pick('payouts','p',v=>{S.payout=+v;saveS();document.getElementById('beVal').textContent=(100/(1+ +v)).toFixed(1)+'%';renderHistory()});
 pick('mins','m',v=>{S.min=+v;saveS()});
 pick('anaNav','v',v=>anaGo(v));
+pick('mkNav','v',v=>mkGo(v));
 const saveS=()=>LS.set('acs_settings',{payout:S.payout,min:S.min});
 
 function catNote(){
@@ -3104,7 +3850,7 @@ document.getElementById('runBtn').removeAttribute('onclick');
 document.getElementById('beVal').textContent=(100/(1+S.payout)).toFixed(1)+'%';
 document.querySelectorAll('#payouts .opt').forEach(o=>o.classList.toggle('on',+o.dataset.p===S.payout));
 document.querySelectorAll('#mins .opt').forEach(o=>o.classList.toggle('on',+o.dataset.m===S.min));
-renderHistory(); renderHome(); renderSess(); renderAuto(); renderLive(); if(AUTO&&AUTO.on)autoLoop(); setLang.init();
+renderHistory(); renderHome(); renderSess(); renderAuto(); renderLive(); renderStrat(); if(AUTO&&AUTO.on)autoLoop(); setLang.init();
 if(TDKEY)document.getElementById('tdKey').value=TDKEY;
 if(AIKEY)document.getElementById('aiKey').value=AIKEY; resolvePending(); setInterval(resolvePending,30000);
 </script>
