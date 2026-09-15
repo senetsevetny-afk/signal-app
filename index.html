@@ -890,6 +890,12 @@ nav{position:fixed;left:0;right:0;bottom:0;background:rgba(8,15,26,.94);
 .msc.PUT svg{animation:mscDown .7s ease-out}
 @keyframes mscUp{0%{transform:translateY(6px)}60%{transform:translateY(-5px)}100%{transform:translateY(0)}}
 @keyframes mscDown{0%{transform:translateY(-6px)}60%{transform:translateY(4px)}100%{transform:translateY(0)}}
+
+.anaGauge{position:relative;width:150px;flex:none}
+.anaVal{text-align:center;margin-top:-8px}
+.anaVal b{font:800 21px 'JetBrains Mono',monospace;display:block}
+.anaVal s{text-decoration:none;font-size:10.5px;color:var(--tx3);display:flex;
+  align-items:center;justify-content:center;gap:5px}
 .disc{font-size:11.5px;color:var(--tx3);line-height:1.5;padding:4px 4px 16px;text-align:center}
 
 /* вердикт над графиком */
@@ -1134,7 +1140,7 @@ nav{position:fixed;left:0;right:0;bottom:0;background:rgba(8,15,26,.94);
     <div class="brand">
       <span class="mark"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1"
         stroke-linecap="round" stroke-linejoin="round"><path d="M2 12h4l3-8 4 16 3-8h6"/></svg></span>
-      <div style="min-width:0"><h1>AI Comfort Signal</h1><span style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;display:block">анализ на реальных данных · <b style="color:var(--gold);font-weight:700">v50 · 14.09 21:06</b></span></div>
+      <div style="min-width:0"><h1>AI Comfort Signal</h1><span style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;display:block">анализ на реальных данных · <b style="color:var(--gold);font-weight:700">v51 · 15.09 04:15</b></span></div>
     </div>
     <button class="bell" onclick="openChat()" aria-label="Помощник"><svg viewBox="0 0 24 24" fill="none"
       stroke="currentColor" stroke-width="2"><path d="M18 8a6 6 0 10-12 0c0 7-3 8-3 8h18s-3-1-3-8"/>
@@ -1401,7 +1407,7 @@ nav{position:fixed;left:0;right:0;bottom:0;background:rgba(8,15,26,.94);
     <div class="sect">ПРОФИЛЬ И НАСТРОЙКИ</div>
     <div class="card">
       <div class="kv"><span>Пользователь</span><b id="pName">Гость</b></div>
-      <div class="kv"><span>Версия сборки</span><b class="mono" style="color:var(--gold)">v50 · 14.09 21:06</b></div>
+      <div class="kv"><span>Версия сборки</span><b class="mono" style="color:var(--gold)">v51 · 15.09 04:15</b></div>
       <div class="kv"><span>Источник данных</span><b>Binance Spot API</b></div>
       <div class="kv"><span>Сигналов в журнале</span><b id="pCount">0</b></div>
     </div>
@@ -2841,8 +2847,17 @@ function renderAnalytics(){
       <div><s>Совпало</s><b style="color:var(--up)">${w}</b></div>
       <div><s>Мимо</s><b style="color:var(--down)">${t-w}</b></div>
     </div>
-    <div class="anaRing">${ring(wr,86,t?(wr>=be?'#2BD98A':'#FF5C6C'):'#3A4658')}
-      <div class="rv"><b>${t?(wr*100).toFixed(1)+'%':'—'}</b><s>точность</s></div></div>`;
+    <div class="anaGauge">
+      ${gaugeArc(t?Math.max(-1,Math.min(1,(wr-be)/Math.max(be,1-be))):0,150,15,'anaNdl')}
+      <div class="anaVal"><b id="anaAcc" style="color:${t?(wr>=be?'var(--up)':'var(--down)'):'var(--tx2)'}">${t?(wr*100).toFixed(1)+'%':'—'}</b>
+        <s>точность ${hlp('journal')}</s></div>
+    </div>`;
+  if(t)requestAnimationFrame(()=>{
+    const el=document.getElementById('anaAcc');
+    if(el){el.textContent='0%'; countUp(el,+(wr*100).toFixed(1),'%',900);
+      setTimeout(()=>el.textContent=(wr*100).toFixed(1)+'%',960);}
+    setNeedle('anaNdl',Math.max(-1,Math.min(1,(wr-be)/Math.max(be,1-be))));
+  });
 
   const cell=(name,s,col)=>`<div class="anaCell" style="border-color:${col}33">
     <s>${name}</s><b style="color:${col}">${s.n?((s.w/s.n)*100).toFixed(0)+'%':'—'}</b>
