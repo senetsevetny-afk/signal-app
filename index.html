@@ -896,6 +896,12 @@ nav{position:fixed;left:0;right:0;bottom:0;background:rgba(8,15,26,.94);
 .anaVal b{font:800 21px 'JetBrains Mono',monospace;display:block}
 .anaVal s{text-decoration:none;font-size:10.5px;color:var(--tx3);display:flex;
   align-items:center;justify-content:center;gap:5px}
+
+.diagRow{display:flex;gap:10px;padding:9px 0;border-bottom:1px solid var(--line2)}
+.diagRow:last-child{border-bottom:0}
+.diagT{font:700 11px 'JetBrains Mono',monospace;color:var(--tx3);flex:none}
+.diagRow b{font-size:12.5px;font-weight:700;display:block;color:var(--gold)}
+.diagRow p{margin:2px 0 0;font-size:12px;color:var(--tx2);line-height:1.45}
 .disc{font-size:11.5px;color:var(--tx3);line-height:1.5;padding:4px 4px 16px;text-align:center}
 
 /* вердикт над графиком */
@@ -1096,7 +1102,7 @@ nav{position:fixed;left:0;right:0;bottom:0;background:rgba(8,15,26,.94);
     },260)}},170);
 
   window.bootLang=function(code){
-    try{localStorage.setItem('acs_lang',code)}catch{}
+    try{localStorage.setItem('acs_lang',code)}catch(e){ logErr('app',e) }
     if(typeof setLang==='function'&&code!=='ru')setLang(code);
     stage('bTour');
     window.Telegram?.WebApp?.HapticFeedback?.impactOccurred?.('medium');
@@ -1114,7 +1120,7 @@ nav{position:fixed;left:0;right:0;bottom:0;background:rgba(8,15,26,.94);
   window.bootFinish=warm;
 
   async function warm(){
-    try{localStorage.setItem('acs_seen','1')}catch{}
+    try{localStorage.setItem('acs_seen','1')}catch(e){ logErr('warm',e) }
     stage('bLoad');
     const msg=document.getElementById('bMsg');
     const steps=[['запрашиваю свечи BTC/USDT…',0],['считаю индикаторы…',450],['проверяю журнал сделок…',900]];
@@ -1140,7 +1146,7 @@ nav{position:fixed;left:0;right:0;bottom:0;background:rgba(8,15,26,.94);
     <div class="brand">
       <span class="mark"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1"
         stroke-linecap="round" stroke-linejoin="round"><path d="M2 12h4l3-8 4 16 3-8h6"/></svg></span>
-      <div style="min-width:0"><h1>AI Comfort Signal</h1><span style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;display:block">анализ на реальных данных · <b style="color:var(--gold);font-weight:700">v51 · 15.09 04:15</b></span></div>
+      <div style="min-width:0"><h1>AI Comfort Signal</h1><span style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;display:block">анализ на реальных данных · <b style="color:var(--gold);font-weight:700">v53 · 15.09 11:35</b></span></div>
     </div>
     <button class="bell" onclick="openChat()" aria-label="Помощник"><svg viewBox="0 0 24 24" fill="none"
       stroke="currentColor" stroke-width="2"><path d="M18 8a6 6 0 10-12 0c0 7-3 8-3 8h18s-3-1-3-8"/>
@@ -1407,7 +1413,7 @@ nav{position:fixed;left:0;right:0;bottom:0;background:rgba(8,15,26,.94);
     <div class="sect">ПРОФИЛЬ И НАСТРОЙКИ</div>
     <div class="card">
       <div class="kv"><span>Пользователь</span><b id="pName">Гость</b></div>
-      <div class="kv"><span>Версия сборки</span><b class="mono" style="color:var(--gold)">v51 · 15.09 04:15</b></div>
+      <div class="kv"><span>Версия сборки</span><b class="mono" style="color:var(--gold)">v53 · 15.09 11:35</b></div>
       <div class="kv"><span>Источник данных</span><b>Binance Spot API</b></div>
       <div class="kv"><span>Сигналов в журнале</span><b id="pCount">0</b></div>
     </div>
@@ -1553,11 +1559,11 @@ function saveHistory(){
   }catch(e){
     history=history.slice(0,60);
     try{localStorage.setItem('acs_history',JSON.stringify(
-      history.map(h=>({...h,a:{...h.a,k:undefined},ov:undefined}))))}catch{}
+      history.map(h=>({...h,a:{...h.a,k:undefined},ov:undefined}))))}catch(e){ logErr('saveHistory',e) }
   }
 }
 const LS={get:(k,d)=>{try{return JSON.parse(localStorage.getItem(k))??d}catch{return d}},
-          set:(k,v)=>{try{localStorage.setItem(k,JSON.stringify(v))}catch{}}};
+          set:(k,v)=>{try{localStorage.setItem(k,JSON.stringify(v))}catch(e){ logErr('saveHistory',e) }}};
 history=LS.get('acs_history',[]);
 Object.assign(S,LS.get('acs_settings',{}));
 
@@ -1587,7 +1593,7 @@ async function jget(url,ms=15000){
   }catch(e){
     if(e.name==='AbortError')throw new Error('биржа не ответила за 15 секунд');
     let host='источник';
-    try{ host=new URL(url).hostname }catch{}
+    try{ host=new URL(url).hostname }catch(e){ logErr('jget',e) }
     throw new Error(e.message==='Failed to fetch'
       ? `нет доступа к ${host} — сеть, провайдер или блокировка запросов со страницы`
       : e.message);
@@ -2043,15 +2049,21 @@ function qsSymbol(id){
   return null;
 }
 
+let qsFailUntil=0, qsFails=0;
 function qsConnect(){
   if(qsSock&&qsSock.readyState===1)return Promise.resolve();
   if(qsReady)return qsReady;
+  if(Date.now()<qsFailUntil)
+    return Promise.reject(new Error('поток недоступен, повтор через '
+      +Math.ceil((qsFailUntil-Date.now())/1000)+' с'));
   qsReady=new Promise((res,rej)=>{
     try{ qsSock=new WebSocket(QS_URL+encodeURIComponent(QS_APP)) }
     catch(e){ qsReady=null; return rej(new Error('поток недоступен: '+e.message)) }
-    const to=setTimeout(()=>{ qsReady=null; try{qsSock.close()}catch{}; rej(new Error('поток не ответил за 12 секунд')) },12000);
-    qsSock.onopen=()=>{ clearTimeout(to); res() };
-    qsSock.onerror=()=>{ clearTimeout(to); qsReady=null; rej(new Error('поток отклонил соединение')) };
+    const to=setTimeout(()=>{ qsReady=null; try{qsSock.close()}catch(e){ logErr('qsConnect',e) }; rej(new Error('поток не ответил за 12 секунд')) },12000);
+    qsSock.onopen=()=>{ clearTimeout(to); qsFails=0; qsFailUntil=0; res() };
+    qsSock.onerror=()=>{ clearTimeout(to); qsReady=null;
+      qsFails++; qsFailUntil=Date.now()+Math.min(60000,5000*qsFails);   // нарастающая пауза
+      rej(new Error('поток отклонил соединение')) };
     qsSock.onclose=()=>{ qsReady=null; qsSock=null;
       qsWait.forEach(w=>w.rej(new Error('соединение закрыто'))); qsWait.clear() };
     qsSock.onmessage=e=>{
@@ -2095,7 +2107,7 @@ async function qsTest(){
   try{
     const d=await qsCandles('EURUSD','5m',60);
     const last=d[d.length-1];
-    try{localStorage.setItem('acs_qsapp',QS_APP)}catch{}
+    try{localStorage.setItem('acs_qsapp',QS_APP)}catch(e){ logErr('qsTest',e) }
     st.innerHTML=`<div class="note"><div><b>Поток работает</b>
       Получено ${d.length} свечей EUR/USD, последняя цена ${last.c.toFixed(5)} в
       ${new Date(last.t).toLocaleTimeString('ru',{hour:'2-digit',minute:'2-digit'})}.
@@ -2593,7 +2605,7 @@ async function scanAll(){
     const syms=S.cat==='crypto'
       ? (cryptoLoaded?REG.crypto.slice(0,6).map(a=>a.id):['BTCUSDT','ETHUSDT','SOLUSDT','BNBUSDT','XRPUSDT'])
       : (REG[S.cat]||[]).filter(a=>['synth','major'].includes(a.group)).slice(0,6).map(a=>a.id);
-    const res=[]; for(const s of syms){ try{res.push(await buildSignal(s,S.tf))}catch{} }
+    const res=[]; for(const s of syms){ try{res.push(await buildSignal(s,S.tf))}catch(e){ logErr('scanAll',e) } }
     signals=res.sort((x,y)=>y.a.score-x.a.score);
     res.filter(s=>s.a.dir!=='WAIT').forEach(s=>history.unshift(s));
     history=history.slice(0,200); saveHistory();
@@ -2642,7 +2654,7 @@ async function resolvePending(){
       if(!p)continue;
       s.exit=p;
       s.result = p===s.entry?'tie':((s.a.dir==='CALL')===(p>s.entry)?'win':'loss');
-    }catch{}
+    }catch(e){ logErr('resolvePending',e) }
   }
   if(due.length){saveHistory(); renderHistory()}
 }
@@ -3084,7 +3096,7 @@ function applyLang(root){
   i18nBusy=false;
 }
 function setLang(code){
-  LANG=code; try{localStorage.setItem('acs_lang',code)}catch{}
+  LANG=code; try{localStorage.setItem('acs_lang',code)}catch(e){ logErr('setLang',e) }
   document.documentElement.lang=code;
   const l=LANGS.find(x=>x[0]===code);
   const b=document.getElementById('langBtn'); if(b)b.textContent=l[2];
@@ -3271,7 +3283,7 @@ function renderSess(){
 
 function saveKey(){
   const v=document.getElementById('tdKey').value.trim();
-  TDKEY=v; try{localStorage.setItem('acs_tdkey',v)}catch{}
+  TDKEY=v; try{localStorage.setItem('acs_tdkey',v)}catch(e){ logErr('saveKey',e) }
   haptic('medium');
   document.getElementById('keyState').innerHTML=v
     ?'<div class="note"><div><b>Ключ сохранён</b>Форекс теперь берётся у Twelve Data, резервные прокси остаются как запасной путь.</div></div>'
@@ -3286,7 +3298,7 @@ async function testKey(){
     const d=await tdCandles('EURUSD','5m',60);
     const last=d[d.length-1];
     st.innerHTML=`<div class="note"><div><b>Ключ работает</b>Получено ${d.length} свечей EUR/USD, последняя цена ${last.c.toFixed(5)} в ${new Date(last.t).toLocaleTimeString('ru',{hour:'2-digit',minute:'2-digit'})}.</div></div>`;
-    try{localStorage.setItem('acs_tdkey',v)}catch{}
+    try{localStorage.setItem('acs_tdkey',v)}catch(e){ logErr('testKey',e) }
   }catch(e){
     st.innerHTML=`<div class="note warn"><div><b>Не получилось</b>${e.message}</div></div>`;
   }
@@ -3329,7 +3341,7 @@ async function autoScan(){
       AUTO.trades.unshift({id:sig.id,sym,tf:sig.tf,dir:sig.a.dir,score:sig.a.score,
         entry:sig.a.price,ts:Date.now(),expiry:sig.expiry,stake,res:null});
       AUTO.trades=AUTO.trades.slice(0,300); autoSave(); renderAuto();
-    }catch{}
+    }catch(e){ logErr('autoScan',e) }
   }
 }
 
@@ -3357,7 +3369,7 @@ async function autoResolve(){
       AUTO.equity.push({t:Date.now(),v:AUTO.bal});
       if(AUTO.equity.length>400)AUTO.equity=AUTO.equity.slice(-400);
       changed=true;
-    }catch{}
+    }catch(e){ logErr('autoResolve',e) }
   }
   if(changed){autoSave();renderAuto()}
 }
@@ -3572,7 +3584,7 @@ async function aiAsk(question){
 
 function saveAI(){
   const v=document.getElementById('aiKey').value.trim();
-  AIKEY=v; try{localStorage.setItem('acs_aikey',v)}catch{}
+  AIKEY=v; try{localStorage.setItem('acs_aikey',v)}catch(e){ logErr('saveAI',e) }
   const st=document.getElementById('aiState');
   st.innerHTML=v?`<div class="note"><div><b>Ключ сохранён · ${aiKind(v)==='anthropic'?'Claude':aiKind(v)==='openai'?'GPT':'формат не распознан'}</b>Помощник теперь отвечает моделью и опирается на ваши реальные цифры.</div></div>`
     :'<div class="note warn"><div><b>Ключ удалён</b>Помощник вернулся к встроенным объяснениям без модели.</div></div>';
@@ -3586,7 +3598,7 @@ async function testAI(){
   try{
     const a=await aiAsk('Ответь одним словом: работает?');
     st.innerHTML=`<div class="note"><div><b>Модель отвечает</b>${a.slice(0,120)}</div></div>`;
-    try{localStorage.setItem('acs_aikey',AIKEY)}catch{}
+    try{localStorage.setItem('acs_aikey',AIKEY)}catch(e){ logErr('testAI',e) }
   }catch(e){ st.innerHTML=`<div class="note warn"><div><b>Не получилось</b>${e.message}</div></div>` }
 }
 
@@ -3822,13 +3834,6 @@ function countUp(el,to,suffix,ms){
     if(k<1)requestAnimationFrame(step);
   };
   requestAnimationFrame(step);
-}
-
-/* плавный поворот уже отрисованной стрелки */
-function setNeedle(id,v){
-  const g=document.getElementById(id); if(!g)return;
-  const deg=90*Math.max(-1,Math.min(1,v||0));
-  g.style.transform=`rotate(${deg}deg)`;
 }
 
 let PULSE=[], pulseBusy=false, pulseSym=null;
@@ -4191,7 +4196,7 @@ const STRATS={
 let STRAT=(()=>{try{return localStorage.getItem('acs_strat')||'multi'}catch{return 'multi'}})();
 
 function setStrat(k){
-  STRAT=k; try{localStorage.setItem('acs_strat',k)}catch{}
+  STRAT=k; try{localStorage.setItem('acs_strat',k)}catch(e){ logErr('setStrat',e) }
   haptic('medium'); renderStrat(); PULSE=[]; 
   toast('Профиль изменён',STRATS[k].name+' — '+STRATS[k].desc,1);
 }
@@ -4354,7 +4359,7 @@ async function buildVol(){
       // доля свечей, где тело больше половины диапазона — «направленность»
       const body=w.filter(c=>Math.abs(c.c-c.o)>(c.h-c.l)*0.5).length/w.length;
       rows.push({id,atrPct,rng,body});
-    }catch{}
+    }catch(e){ logErr('buildVol',e) }
   }
   if(!rows.length){ el.innerHTML='<div class="hint">Не удалось получить данные.</div>'; volBusy=false; return }
   rows.sort((a,b)=>b.atrPct-a.atrPct);
@@ -4461,7 +4466,7 @@ async function pulseTick(){
     });
     const st=document.getElementById('pulseTick');
     if(st)st.textContent='обновлено только что';
-  }catch{}
+  }catch(e){ logErr('pulseTick',e) }
 }
 
 /* пересчёт открытой шторки: стрелки плавно доезжают */
@@ -4504,7 +4509,7 @@ async function sheetTick(){
     put('shStoch',stc.k[nn].toFixed(2));
     const ts=document.getElementById('shTime');
     if(ts)ts.textContent='обновлено '+new Date().toLocaleTimeString('ru',{hour:'2-digit',minute:'2-digit',second:'2-digit'});
-  }catch{}
+  }catch(e){ logErr('sheetTick',e) }
 }
 
 function startLiveTimers(){
@@ -4572,7 +4577,7 @@ function setMascot(state){
 const FEATURES=[
   ['📊','Аналитика','итог, что менять, симулятор',"go('analytics')",'bt'],
   ['📡','Пульс рынка','все инструменты и спидометры',"go('market')",'gauges'],
-  ['📈','Живой график','свечи в реальном времени',"openLive&&openLive()",'chart'],
+  ['📈','Живой график','свечи в реальном времени',"go('chart')",'chart'],
   ['🤖','Помощник','объяснит сигнал словами',"openChat()",'why'],
   ['📜','Журнал','сделки и их исход',"go('history')",'journal'],
   ['🧪','Проверка на истории','бэктест текущей связки',"go('signals')",'bt'],
@@ -4785,7 +4790,7 @@ function openHelp(k){
     <div class="artSec"><div class="artT">${title}</div>
       ${items.map(p=>`<p>${p}</p>`).join('')}</div>`:'';
   let cur='';
-  try{ cur=a.val?a.val():'' }catch{}
+  try{ cur=a.val?a.val():'' }catch(e){ logErr('openHelp',e) }
   const w=document.getElementById('helpWrap');
   w.innerHTML=`<div class="artCard">
     <div class="artHead">
@@ -4837,6 +4842,33 @@ function openHelpScreen(){
   openOv('helpScr');
 }
 
+
+
+/* ═══════════ ЖУРНАЛ ДИАГНОСТИКИ ═══════════ */
+/* Ошибки не проглатываются: каждая попадает сюда и видна в профиле. */
+const DIAG=[];
+function logErr(ctx,e){
+  const msg=(e&&e.message)||String(e||'неизвестно');
+  DIAG.unshift({t:Date.now(),ctx,msg});
+  if(DIAG.length>60)DIAG.pop();
+  if(window.console&&console.debug)console.debug('[acs]',ctx,msg);
+}
+function openDiag(){
+  const w=document.getElementById('setWrap');
+  w.innerHTML=`<div class="sheet">
+    <div class="shHead"><div style="flex:1"><b>Диагностика</b>
+      <div class="sub2">последние ${DIAG.length} событий</div></div>
+      <button class="shX" onclick="closeOv('setWrap')">✕</button></div>
+    <div class="shBody">
+      ${DIAG.length?DIAG.slice(0,40).map(d=>`<div class="diagRow">
+        <span class="diagT">${new Date(d.t).toLocaleTimeString('ru',{hour:'2-digit',minute:'2-digit',second:'2-digit'})}</span>
+        <div style="flex:1"><b>${d.ctx}</b><p>${d.msg}</p></div></div>`).join('')
+        :'<div class="hint">Пока ничего не сломалось — список пуст.</div>'}
+      <div class="hint" style="margin-top:12px">Здесь оседают сбои источников данных и отдельных блоков.
+        Приложение продолжает работать, а причина остаётся видимой.</div>
+    </div></div>`;
+  openOv('setWrap');
+}
 
 /* ═══════════ СОСТОЯНИЯ МАСКОТА ═══════════ */
 const MSTATE={
@@ -4951,6 +4983,9 @@ function renderProfile(){
       <div style="flex:1"><b>Справка и поддержка</b></div><span class="chev">›</span></div>
     <div class="setRow" onclick="openAbout()"><span class="setIc">ℹ️</span>
       <div style="flex:1"><b>О приложении</b></div><span class="chev">›</span></div>
+    <div class="setRow" onclick="openDiag()"><span class="setIc">🩺</span>
+      <div style="flex:1"><b>Диагностика</b></div>
+      <span class="setV">${DIAG.length?DIAG.length+' событий':'чисто'}</span><span class="chev">›</span></div>
     <div class="setRow" onclick="openSupport()"><span class="setIc">✈️</span>
       <div style="flex:1"><b>Чат поддержки</b></div>
       <span class="setV">@${SUPPORT}</span><span class="chev">›</span></div>
@@ -5088,7 +5123,7 @@ let FAV=(()=>{try{return new Set(JSON.parse(localStorage.getItem('acs_fav')||'[]
 function favToggle(id,ev){
   if(ev)ev.stopPropagation();
   FAV.has(id)?FAV.delete(id):FAV.add(id);
-  try{localStorage.setItem('acs_fav',JSON.stringify([...FAV]))}catch{}
+  try{localStorage.setItem('acs_fav',JSON.stringify([...FAV]))}catch(e){ logErr('favToggle',e) }
   haptic(); renderPicker();
 }
 
@@ -5127,10 +5162,10 @@ function sigExtras(sig){
   const a=sig.a, k=a.k;
   const at=ATR(k)[k.length-1];
   let lv={},fg=null,cp=[],dv=null;
-  try{ lv=levels(k,at) }catch{}
-  try{ fg=figure(k) }catch{}
-  try{ cp=candlePatterns(k) }catch{}
-  try{ dv=divergence(k) }catch{}
+  try{ lv=levels(k,at) }catch(e){ logErr('sigExtras',e) }
+  try{ fg=figure(k) }catch(e){ logErr('sigExtras',e) }
+  try{ cp=candlePatterns(k) }catch(e){ logErr('sigExtras',e) }
+  try{ dv=divergence(k) }catch(e){ logErr('sigExtras',e) }
   sigOv={lv,fig:fg};
   const osc=groupScore(a,OSC), trn=groupScore(a,TRN), all=groupScore(a,[...OSC,...TRN]);
   const votes=a.factors.filter(f=>f.dir!=='flat').length;
@@ -5317,7 +5352,7 @@ function drawSigChart(){
     if(sigOv.fig){
       x.lineWidth=1.8; x.strokeStyle='rgba(255,92,108,.75)';
       [sigOv.fig.up,sigOv.fig.dn].forEach(l=>{
-        try{ x.beginPath(); x.moveTo(X(0),Y(l.at(0))); x.lineTo(X(N-1),Y(l.at(N-1))); x.stroke() }catch{}
+        try{ x.beginPath(); x.moveTo(X(0),Y(l.at(0))); x.lineTo(X(N-1),Y(l.at(N-1))); x.stroke() }catch(e){ logErr('drawSigChart',e) }
       });
     }
     x.setLineDash([4,4]); x.lineWidth=1; x.font='700 9px JetBrains Mono, monospace';
@@ -5651,6 +5686,11 @@ body{margin:0;background:var(--bg);color:var(--tx);font-family:'Manrope',system-
   font-weight:800;font-size:12.5px;cursor:pointer;color:var(--tx2)}
 .tf.on{background:rgba(245,185,66,.12);border-color:var(--gold);color:var(--gold)}
 
+.chartErr{position:absolute;inset:6px;background:rgba(5,10,18,.94);border-radius:14px;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;padding:16px;text-align:center}
+.chartErr b{font-size:14px} .chartErr p{margin:0;font-size:12px;color:var(--tx2)}
+.chartErr button{margin-top:6px;background:rgba(245,185,66,.14);border:1px solid rgba(245,185,66,.4);
+  color:var(--gold);border-radius:10px;padding:9px 18px;font:700 12.5px Manrope,sans-serif;cursor:pointer}
 .chartwrap{position:relative;background:#070D16;border:1px solid var(--line);border-radius:16px;
   padding:6px;margin-bottom:10px;touch-action:pan-y}
 canvas{width:100%;display:block}
@@ -5935,7 +5975,23 @@ document.getElementById('symList').onclick=e=>{const o=e.target.closest('.opt');
   dlg.close();restart()};
 dlg.onclick=e=>{if(e.target===dlg)dlg.close()};
 
-async function restart(){ prevPx=null; await loadHistory(); connect(); dirty=true }
+async function restart(){
+  prevPx=null;
+  try{
+    await loadHistory(); connect(); dirty=true;
+    const e=document.getElementById('chartErr'); if(e)e.remove();
+  }catch(err){
+    const box=document.querySelector('.chartwrap');
+    if(box&&!document.getElementById('chartErr')){
+      const d=document.createElement('div');
+      d.id='chartErr'; d.className='chartErr';
+      d.innerHTML='<b>Не удалось получить данные рынка</b>'+
+        '<p>'+(err.message||'источник недоступен')+'</p>'+
+        '<button onclick="restart()">Повторить</button>';
+      box.appendChild(d);
+    }
+  }
+}
 addEventListener('resize',()=>dirty=true);
 document.addEventListener('visibilitychange',()=>{ if(!document.hidden&&ws?.readyState!==1)restart() });
 
