@@ -877,6 +877,19 @@ nav{position:fixed;left:0;right:0;bottom:0;background:rgba(8,15,26,.94);
   filter:drop-shadow(0 8px 16px rgba(0,0,0,.5))}
 .ndl{transition:transform 1.05s cubic-bezier(.16,1,.3,1)}
 @media (prefers-reduced-motion:reduce){.g3d svg{transform:none}.ndl{transition:none}}
+
+.sw{width:42px;height:24px;border-radius:999px;background:rgba(255,255,255,.12);position:relative;flex:none;
+  transition:background .25s}
+.sw:after{content:"";position:absolute;top:3px;left:3px;width:18px;height:18px;border-radius:50%;
+  background:#8FA3B8;transition:transform .25s,background .25s}
+.sw.on{background:rgba(43,217,138,.35)}
+.sw.on:after{transform:translateX(18px);background:var(--up)}
+.msc.analytics svg,.msc.history svg{animation:mscBreath 5s ease-in-out infinite}
+.msc.think svg{animation:mscSpin 3.4s ease-in-out infinite}
+.msc.CALL svg{animation:mscUp .7s ease-out}
+.msc.PUT svg{animation:mscDown .7s ease-out}
+@keyframes mscUp{0%{transform:translateY(6px)}60%{transform:translateY(-5px)}100%{transform:translateY(0)}}
+@keyframes mscDown{0%{transform:translateY(-6px)}60%{transform:translateY(4px)}100%{transform:translateY(0)}}
 .disc{font-size:11.5px;color:var(--tx3);line-height:1.5;padding:4px 4px 16px;text-align:center}
 
 /* вердикт над графиком */
@@ -1121,7 +1134,7 @@ nav{position:fixed;left:0;right:0;bottom:0;background:rgba(8,15,26,.94);
     <div class="brand">
       <span class="mark"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1"
         stroke-linecap="round" stroke-linejoin="round"><path d="M2 12h4l3-8 4 16 3-8h6"/></svg></span>
-      <div style="min-width:0"><h1>AI Comfort Signal</h1><span style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;display:block">анализ на реальных данных · <b style="color:var(--gold);font-weight:700">v45 · 14.09 20:46</b></span></div>
+      <div style="min-width:0"><h1>AI Comfort Signal</h1><span style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;display:block">анализ на реальных данных · <b style="color:var(--gold);font-weight:700">v50 · 14.09 21:06</b></span></div>
     </div>
     <button class="bell" onclick="openChat()" aria-label="Помощник"><svg viewBox="0 0 24 24" fill="none"
       stroke="currentColor" stroke-width="2"><path d="M18 8a6 6 0 10-12 0c0 7-3 8-3 8h18s-3-1-3-8"/>
@@ -1356,6 +1369,7 @@ nav{position:fixed;left:0;right:0;bottom:0;background:rgba(8,15,26,.94);
   <!-- ================= HISTORY ================= -->
   <section class="tab" id="tab-history">
     <div class="rowHead" style="margin:2px 0 12px">
+      <div id="histMsc" data-msc="1" data-size="46" style="margin-right:10px"></div>
       <div><div style="font-size:21px;font-weight:800">Журнал сделок</div>
         <div class="sub2">исход проставляется после экспирации</div></div>
       <span id="hHelp"></span>
@@ -1387,7 +1401,7 @@ nav{position:fixed;left:0;right:0;bottom:0;background:rgba(8,15,26,.94);
     <div class="sect">ПРОФИЛЬ И НАСТРОЙКИ</div>
     <div class="card">
       <div class="kv"><span>Пользователь</span><b id="pName">Гость</b></div>
-      <div class="kv"><span>Версия сборки</span><b class="mono" style="color:var(--gold)">v45 · 14.09 20:46</b></div>
+      <div class="kv"><span>Версия сборки</span><b class="mono" style="color:var(--gold)">v50 · 14.09 21:06</b></div>
       <div class="kv"><span>Источник данных</span><b>Binance Spot API</b></div>
       <div class="kv"><span>Сигналов в журнале</span><b id="pCount">0</b></div>
     </div>
@@ -2958,7 +2972,7 @@ function chatSend(){
 const LANGS=[['ru','Русский','🇷🇺'],['uk','Українська','🇺🇦'],['en','English','🇬🇧'],
              ['es','Español','🇪🇸'],['de','Deutsch','🇩🇪']];
 const DICT={
-uk:{"Главная":"Головна","Сигналы":"Сигнали","Аналитика":"Аналітика","История":"Історія","Профиль":"Профіль",
+uk:{"Пульс":"Пульс","Итоги":"Підсумки","Журнал":"Журнал","Настройки":"Налаштування","Получить сигнал":"Отримати сигнал","Профиль":"Профіль","Главная":"Головна","Сигналы":"Сигнали","Аналитика":"Аналітика","История":"Історія","Профиль":"Профіль",
 "Анализировать":"Аналізувати","Рынок":"Ринок","Актив":"Актив","Срок экспирации":"Строк експірації",
 "РЫНОК":"РИНОК","АКТИВ":"АКТИВ","СРОК ЭКСПИРАЦИИ":"СТРОК ЕКСПІРАЦІЇ","НОВЫЙ АНАЛИЗ":"НОВИЙ АНАЛІЗ",
 "Пробный доступ":"Пробний доступ","вход по сигналам без ограничений":"вхід за сигналами без обмежень",
@@ -2976,7 +2990,7 @@ uk:{"Главная":"Головна","Сигналы":"Сигнали","Ана�
 "Растёт":"Зростає","Слабеет":"Слабшає","Падает":"Падає","Стабильно":"Стабільно","Волатильно":"Волатильно",
 "Дальше":"Далі","Пропустить":"Пропустити","Всё понятно, начать":"Все зрозуміло, почати","Язык":"Мова"},
 
-en:{"Главная":"Home","Сигналы":"Signals","Аналитика":"Analytics","История":"History","Профиль":"Profile",
+en:{"Пульс":"Pulse","Итоги":"Results","Журнал":"Journal","Настройки":"Settings","Получить сигнал":"Get signal","Профиль":"Profile","Главная":"Home","Сигналы":"Signals","Аналитика":"Analytics","История":"History","Профиль":"Profile",
 "Анализировать":"Analyze","Рынок":"Market","Актив":"Asset","Срок экспирации":"Expiry",
 "РЫНОК":"MARKET","АКТИВ":"ASSET","СРОК ЭКСПИРАЦИИ":"EXPIRY","НОВЫЙ АНАЛИЗ":"NEW ANALYSIS",
 "Пробный доступ":"Trial access","вход по сигналам без ограничений":"unlimited signal access",
@@ -2994,7 +3008,7 @@ en:{"Главная":"Home","Сигналы":"Signals","Аналитика":"Ana
 "Растёт":"Rising","Слабеет":"Fading","Падает":"Falling","Стабильно":"Stable","Волатильно":"Volatile",
 "Дальше":"Next","Пропустить":"Skip","Всё понятно, начать":"Got it, start","Язык":"Language"},
 
-es:{"Главная":"Inicio","Сигналы":"Señales","Аналитика":"Analítica","История":"Historial","Профиль":"Perfil",
+es:{"Пульс":"Pulso","Итоги":"Resultados","Журнал":"Registro","Настройки":"Ajustes","Получить сигнал":"Obtener señal","Профиль":"Perfil","Главная":"Inicio","Сигналы":"Señales","Аналитика":"Analítica","История":"Historial","Профиль":"Perfil",
 "Анализировать":"Analizar","Рынок":"Mercado","Актив":"Activo","Срок экспирации":"Vencimiento",
 "РЫНОК":"MERCADO","АКТИВ":"ACTIVO","СРОК ЭКСПИРАЦИИ":"VENCIMIENTO","НОВЫЙ АНАЛИЗ":"NUEVO ANÁLISIS",
 "Пробный доступ":"Acceso de prueba","вход по сигналам без ограничений":"señales sin límite",
@@ -3012,7 +3026,7 @@ es:{"Главная":"Inicio","Сигналы":"Señales","Аналитика":"
 "Растёт":"Sube","Слабеет":"Se debilita","Падает":"Baja","Стабильно":"Estable","Волатильно":"Volátil",
 "Дальше":"Siguiente","Пропустить":"Omitir","Всё понятно, начать":"Entendido, empezar","Язык":"Idioma"},
 
-de:{"Главная":"Start","Сигналы":"Signale","Аналитика":"Analyse","История":"Verlauf","Профиль":"Profil",
+de:{"Пульс":"Puls","Итоги":"Ergebnisse","Журнал":"Journal","Настройки":"Einstellungen","Получить сигнал":"Signal holen","Профиль":"Profil","Главная":"Start","Сигналы":"Signale","Аналитика":"Analyse","История":"Verlauf","Профиль":"Profil",
 "Анализировать":"Analysieren","Рынок":"Markt","Актив":"Wert","Срок экспирации":"Laufzeit",
 "РЫНОК":"MARKT","АКТИВ":"WERT","СРОК ЭКСПИРАЦИИ":"LAUFZEIT","НОВЫЙ АНАЛИЗ":"NEUE ANALYSE",
 "Пробный доступ":"Testzugang","вход по сигналам без ограничений":"Signale ohne Limit",
@@ -4519,11 +4533,18 @@ function renderAllSignals(){
 async function getSignal(){
   const b=document.getElementById('bigRun');
   const old=b.innerHTML;
-  b.disabled=true; b.innerHTML='<span class="spin"></span> считаю…';
-  setMascot('loading');
+  b.disabled=true;
+  setMascot('loading'); setMascotState('loading');
+  const stages=['СКАНИРУЮ РЫНОК','СЧИТАЮ ИНДИКАТОРЫ','СВЕРЯЮ СТАРШИЙ СРОК','СОБИРАЮ ВЕРДИКТ'];
+  let si=0;
+  b.innerHTML=`<span class="spin"></span> ${stages[0]}`;
+  const stTimer=setInterval(()=>{si=(si+1)%stages.length;
+    b.innerHTML=`<span class="spin"></span> ${stages[si]}`},700);
   await sigLoad(S.asset,S.tf);
+  clearInterval(stTimer);
   b.disabled=false; b.innerHTML=old;
-  setMascot(sigState.sig?sigState.sig.a.dir:'idle');
+  const dir=sigState.sig?sigState.sig.a.dir:'idle';
+  setMascot(dir); setMascotState(dir==='CALL'?'CALL':dir==='PUT'?'PUT':'WAIT');
   const w=document.getElementById('sigWrap');
   if(w&&sigState.sig)setTimeout(()=>w.scrollIntoView({behavior:'smooth',block:'start'}),80);
 }
@@ -4782,6 +4803,7 @@ function openArticleFallback(k){
 const showHelp=openHelp;
 
 function openHelpScreen(){
+  setMascotState('help');
   const w=document.getElementById('helpScr');
   w.innerHTML=`<div class="sheet">
     <div class="shHead"><div style="flex:1"><b>Справка и поддержка</b>
@@ -4800,12 +4822,89 @@ function openHelpScreen(){
   openOv('helpScr');
 }
 
+
+/* ═══════════ СОСТОЯНИЯ МАСКОТА ═══════════ */
+const MSTATE={
+  home:'idle', loading:'loading', CALL:'CALL', PUT:'PUT', WAIT:'wait',
+  analytics:'analytics', history:'history', profile:'idle', help:'listen',
+  about:'hero', strategy:'think', risk:'shield', lang:'globe', notif:'bell',
+  support:'wave', error:'error'
+};
+let MASCOT_STATE='idle';
+function setMascotState(key){
+  MASCOT_STATE=MSTATE[key]||key||'idle';
+  document.querySelectorAll('[data-msc]').forEach(el=>{
+    el.innerHTML=mascot(MASCOT_STATE,+el.dataset.size||70);
+  });
+}
+/* маскот в шапках экранов */
+function mountMascots(){
+  [['profMsc','profile'],['anaMsc','analytics'],['histMsc','history']].forEach(([id])=>{
+    const el=document.getElementById(id);
+    if(el&&!el.dataset.msc){el.dataset.msc='1';el.dataset.size='62'}
+  });
+}
+
+/* ═══════════ ЯЗЫК: ОТДЕЛЬНОЕ ОКНО ═══════════ */
+function openLangSheet(){
+  setMascotState('lang');
+  const w=document.getElementById('setWrap');
+  w.innerHTML=`<div class="sheet">
+    <div class="shHead"><div style="flex:1"><b>Язык интерфейса</b>
+      <div class="sub2">переключается сразу, без перезагрузки</div></div>
+      <button class="shX" onclick="closeOv('setWrap')">✕</button></div>
+    <div class="shBody">
+      <div style="text-align:center;padding:2px 0 14px" data-msc="1" data-size="66">${mascot('globe',66)}</div>
+      ${LANGS.map(l=>`<div class="setOpt ${l[0]===LANG?'on':''}" onclick="pickLang('${l[0]}')">
+        <span style="font-size:19px">${l[2]}</span>
+        <b style="flex:1">${l[1]}</b>
+        <span class="stDot"></span></div>`).join('')}
+      <div class="hint" style="margin-top:10px">Переведены названия разделов, кнопки и значения.
+        Длинные пояснительные тексты пока остаются на русском.
+        Возврат на русский перезагружает интерфейс — перевод правит текст на месте
+        и восстанавливается только заново.</div>
+    </div></div>`;
+  openOv('setWrap');
+}
+function pickLang(code){
+  setLang(code);                     // существующая система перевода
+  ['profMain'].forEach(id=>{const e=document.getElementById(id);if(e&&typeof renderProfile==='function')renderProfile()});
+  openLangSheet();                   // перерисовываем с новой отметкой
+  haptic('medium');
+}
+
+/* ═══════════ УВЕДОМЛЕНИЯ ═══════════ */
+let NOTIF=LS.get('acs_notif',{sound:true,alertOnSignal:true});
+const notifSave=()=>LS.set('acs_notif',NOTIF);
+function openNotifSheet(){
+  setMascotState('notif');
+  const row=(k,title,desc)=>`<div class="setOpt ${NOTIF[k]?'on':''}" onclick="NOTIF['${k}']=!NOTIF['${k}'];notifSave();openNotifSheet();renderProfile()">
+    <div style="flex:1"><b>${title}</b><p class="sub2" style="margin:4px 0 0">${desc}</p></div>
+    <span class="sw ${NOTIF[k]?'on':''}"></span></div>`;
+  const w=document.getElementById('setWrap');
+  w.innerHTML=`<div class="sheet">
+    <div class="shHead"><div style="flex:1"><b>Уведомления</b>
+      <div class="sub2">что происходит при появлении сигнала</div></div>
+      <button class="shX" onclick="closeOv('setWrap')">✕</button></div>
+    <div class="shBody">
+      <div style="text-align:center;padding:2px 0 14px" data-msc="1" data-size="66">${mascot('bell',66)}</div>
+      ${row('alertOnSignal','Оповещение о входе','Когда лента бота находит сигнал выше порога, приходит заметное сообщение внутри приложения.')}
+      ${row('sound','Вибрация и отклик','Короткая вибрация при вердикте и нажатиях — если устройство её поддерживает.')}
+      <div class="note warn" style="margin-top:12px"><div>
+        <b>Пуш при закрытом приложении невозможен</b>
+        Мини-приложение живёт только пока открыто. Чтобы сообщения приходили в чат при закрытом окне,
+        нужен отдельный бот-сервер — это отдельная часть проекта, не входящая в приложение.</div></div>
+    </div></div>`;
+  openOv('setWrap');
+}
+
 /* ═══════════ ПРОФИЛЬ ═══════════ */
 const SETROWS=()=>[
   ['🎯','Сила сигнала',S.min+' / 10','openSetting("min")','score'],
   ['💰','Выплата брокера',(S.payout*100).toFixed(0)+'%','openSetting("payout")','payout'],
   ['🛡','Риск и лимиты',SESS?'сессия идёт':'не задано','go(\'signals\')','sess'],
-  ['🌐','Язык',(LANGS.find(l=>l[0]===LANG)||LANGS[0])[1],'toggleLangMenu()',null],
+  ['🔔','Уведомления',(NOTIF.alertOnSignal?'включены':'выключены'),'openNotifSheet()','flow'],
+  ['🌐','Язык',(LANGS.find(l=>l[0]===LANG)||LANGS[0])[1],'openLangSheet()','markets'],
   ['🎯','Стратегия',STRATS[STRAT].name,'openSetting("strat")','strat']
 ];
 
@@ -4816,7 +4915,7 @@ function renderProfile(){
   const done=history.filter(h=>h.result==='win'||h.result==='loss').length;
   el.innerHTML=`
   <div class="profHero">
-    ${mascot('idle',78)}
+    <div data-msc="1" data-size="78">${mascot(MASCOT_STATE,78)}</div>
     <b>AI Comfort Signal</b>
     <span class="sub2">${u?.username?'@'+u.username:name}</span>
     <span class="bdgTrial">Пробный доступ</span>
@@ -4859,7 +4958,7 @@ function openSetting(kind){
       `S.payout=${p};saveS();openSetting('payout');renderProfile();renderHistory();renderAnalytics();`)).join('')
       +`<div class="note" style="margin-top:12px"><div><b>Точка безубыточности: ${(100/(1+S.payout)).toFixed(1)}%</b>
         Формула 1/(1+выплата). Новая выплата применяется к будущим сигналам — у прошлых сохраняется та, что была на момент входа.</div></div>`;
-  } else if(kind==='strat'){ title='Стратегия';
+  } else if(kind==='strat'){ setMascotState('strategy'); title='Стратегия';
     body=Object.entries(STRATS).map(([k,v])=>`<div class="setOpt ${k===STRAT?'on':''}"
       onclick="setStrat('${k}');openSetting('strat');renderProfile();">
       <div style="flex:1"><b>${v.name}</b><p class="sub2" style="margin:4px 0 0">${v.desc}</p></div>
@@ -4878,6 +4977,7 @@ function openSetting(kind){
 /* ═══════════ О БОТЕ И ПОДДЕРЖКА ═══════════ */
 const SUPPORT='marketaisupport';
 function openSupport(){
+  setMascotState('support');
   const url=`https://t.me/${SUPPORT}?text=`+encodeURIComponent(
     'Здравствуйте! Мне нужна помощь с AI Comfort Signal.');
   haptic('medium');
@@ -4888,6 +4988,7 @@ const openOv=id=>{const e=document.getElementById(id);if(e){e.classList.add('on'
 const closeOv=id=>{const e=document.getElementById(id);if(e){e.classList.remove('on');haptic()}};
 
 function openAbout(){
+  setMascotState('about');
   const w=document.getElementById('aboutWrap');
   w.innerHTML=`<div class="sheet">
     <div class="shHead">
@@ -4917,9 +5018,15 @@ function openAbout(){
 /* ═══════════ МАСКОТ ═══════════ */
 function mascot(state,size){
   const S2=size||72;
+  const ACC={CALL:'#21D07A',PUT:'#F4515F',wait:'#5AC8E8',error:'#F4515F',analytics:'#5AC8E8',
+             history:'#8FA3BF',think:'#B08CFF',shield:'#21D07A',globe:'#5AC8E8',
+             bell:'#E8B23A',wave:'#21D07A',listen:'#5AC8E8',hero:'#E8B23A',loading:'#E8B23A'};
   const eye=state==='loading'?'<animate attributeName="ry" values="5;1;5" dur="1.4s" repeatCount="indefinite"/>':'';
-  const col=state==='CALL'?'#21D07A':state==='PUT'?'#F4515F':state==='error'?'#F4515F':'#E8B23A';
-  const mouth=state==='CALL'?'M26 44 q10 9 20 0':state==='PUT'?'M26 47 q10 -6 20 0':'M28 45 h16';
+  const col=ACC[state]||'#E8B23A';
+  const mouth=state==='CALL'||state==='wave'||state==='hero'?'M26 44 q10 9 20 0'
+    :state==='PUT'||state==='error'?'M26 47 q10 -6 20 0':'M28 45 h16';
+  const badge={analytics:'▤',history:'▦',think:'◈',shield:'⬡',globe:'◍',bell:'◔',
+               listen:'◌',hero:'★',wave:'✦',wait:'◷'}[state]||'';
   return `<span class="msc ${state||'idle'}" style="width:${S2}px;height:${S2}px">
     <svg viewBox="0 0 72 72" style="width:100%;height:100%">
       <defs><radialGradient id="mg${S2}"><stop offset="0" stop-color="${col}" stop-opacity=".30"/>
@@ -4933,6 +5040,8 @@ function mascot(state,size){
       <path d="${mouth}" stroke="${col}" stroke-width="2.4" fill="none" stroke-linecap="round"/>
       <rect x="4" y="30" width="6" height="14" rx="3" fill="${col}" opacity=".55"/>
       <rect x="62" y="30" width="6" height="14" rx="3" fill="${col}" opacity=".55"/>
+      ${badge?`<text x="36" y="66" text-anchor="middle" font-size="9" fill="${col}"
+        opacity=".85">${badge}</text>`:''}
     </svg></span>`;
 }
 
@@ -5430,12 +5539,12 @@ function go(t,from){
   document.querySelectorAll('.tab').forEach(x=>x.classList.toggle('on',x.id==='tab-'+t));
   document.querySelectorAll('.nb').forEach(b=>b.classList.toggle('on',b.dataset.t===(t==='detail'?lastTab:t)));
   window.scrollTo(0,0); haptic();
-  if(t==='market'){ mkPane==='pulse'?renderPulse():renderOverview(); } if(t==='history')renderHistory();
+  if(t==='market'){ mkPane==='pulse'?renderPulse():renderOverview(); } if(t==='history'){setMascotState('history');renderHistory()}
   if(t==='home'){ sigSyncHead(); renderSignals(); renderHome(); renderExtras(); renderTicker(); setMascot(sigState.sig?sigState.sig.a.dir:'idle'); }
-  if(t==='profile')renderProfile();
+  if(t==='profile'){renderProfile();setMascotState('profile')}
   if(t==='chart')mountPage('ifChart','pg-chart');
   if(t==='signals'){renderEngine();renderAllSignals();renderLive();renderSess();}
-  if(t==='analytics'){renderAnalytics();if(anaPane==='auto')renderAuto();if(anaPane==='advice'){renderAdvice();renderDiscipline()}}
+  if(t==='analytics'){setMascotState('analytics');renderAnalytics();if(anaPane==='auto')renderAuto();if(anaPane==='advice'){renderAdvice();renderDiscipline()}}
 }
 
 function pick(container,attr,fn){
