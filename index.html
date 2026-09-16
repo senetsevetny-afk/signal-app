@@ -19,7 +19,8 @@
   --r:18px;
 }
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
-html,body{margin:0;padding:0}
+html,html,body{max-width:100%;overflow-x:hidden}
+body{margin:0;padding:0}
 body{
   background:
     radial-gradient(1000px 460px at 78% -8%, rgba(245,185,66,.10), transparent 62%),
@@ -35,7 +36,9 @@ body{
 .wrap{max-width:520px;margin:0 auto;padding:0 14px}
 
 /* header */
-.top{display:flex;align-items:center;gap:12px;padding:16px 4px 12px}
+.top{display:flex;align-items:center;gap:10px;padding:16px 4px 12px;max-width:100%;overflow:hidden}
+.top>.brand{min-width:0;flex:1}
+.top .bell,.top .icb,.top .burger{flex:none}
 .burger{width:26px;display:flex;flex-direction:column;gap:5px;cursor:pointer}
 .burger i{height:2px;background:var(--tx);border-radius:2px;display:block}
 .burger i:nth-child(2){width:74%}
@@ -1090,6 +1093,52 @@ nav{position:fixed;left:0;right:0;bottom:0;background:rgba(8,15,26,.94);
 .myLegend{display:flex;gap:14px;margin-top:9px;font-size:11px;color:var(--tx3)}
 .myLegend i{display:inline-block;width:8px;height:8px;border-radius:2px;margin-right:5px}
 .myLegend i.w{background:var(--up)} .myLegend i.l{background:var(--down)} .myLegend i.be{background:var(--gold)}
+
+/* экран анализа */
+#scanWrap{align-items:center;justify-content:center;padding:20px}
+#scanWrap.on{display:flex}
+.scanCard{background:var(--card);border:1px solid var(--line);border-radius:24px;padding:18px;
+  width:100%;max-width:420px;animation:popIn .3s cubic-bezier(.2,1.1,.4,1)}
+.scanHead{display:flex;align-items:center;gap:12px;margin-bottom:14px}
+.scanHead b{font-size:17px;font-weight:800}
+.scanBox{position:relative;border-radius:16px;overflow:hidden;background:rgba(0,0,0,.35);
+  border:1px solid var(--line2)}
+.scanBeam{position:absolute;top:0;bottom:0;width:70px;pointer-events:none;
+  background:linear-gradient(90deg,transparent,rgba(43,217,138,.20),rgba(255,255,255,.28),rgba(43,217,138,.20),transparent);
+  animation:beam 1.9s ease-in-out infinite}
+@keyframes beam{0%{left:-70px}100%{left:100%}}
+.scanStep{margin-top:14px;font-size:14px;font-weight:700;text-align:center}
+.scanBar{height:5px;border-radius:3px;background:rgba(255,255,255,.08);margin-top:10px;overflow:hidden}
+.scanBar i{display:block;height:100%;width:8%;border-radius:3px;
+  background:linear-gradient(90deg,var(--gold),var(--up));transition:width .5s ease}
+.scanFoot{margin-top:12px;font-size:11.5px;color:var(--tx3);text-align:center;line-height:1.5}
+/* график + стрелка */
+.sigSplit{display:grid;grid-template-columns:1fr 118px;gap:12px;align-items:stretch;margin-bottom:14px}
+.sigChartCol{min-width:0}
+.arrPanel{display:flex;flex-direction:column;align-items:center;justify-content:center;
+  border-radius:18px;padding:12px 8px;border:1px solid var(--line2);background:var(--card2)}
+.arrPanel.CALL{border-color:rgba(43,217,138,.4);background:linear-gradient(180deg,rgba(43,217,138,.12),var(--card2))}
+.arrPanel.PUT{border-color:rgba(255,92,108,.4);background:linear-gradient(180deg,rgba(255,92,108,.12),var(--card2))}
+.arrCircle{position:relative;width:74px;height:74px;display:grid;place-items:center;margin-bottom:8px}
+.arrCircle.CALL{color:var(--up)} .arrCircle.PUT{color:var(--down)} .arrCircle.WAIT{color:var(--tx2)}
+.arrRing{position:absolute;inset:0;width:100%;height:100%}
+.arrProg{transition:stroke-dashoffset 1s cubic-bezier(.2,1,.3,1)}
+.arrIco{font-size:30px;font-weight:800;color:currentColor}
+.arrPanel.CALL .arrIco{animation:arrUp 2.4s ease-in-out infinite}
+.arrPanel.PUT .arrIco{animation:arrDn 2.4s ease-in-out infinite}
+@keyframes arrUp{0%,100%{transform:translateY(0)}50%{transform:translateY(-6px)}}
+@keyframes arrDn{0%,100%{transform:translateY(0)}50%{transform:translateY(6px)}}
+.arrWord{font-size:15px;font-weight:800;letter-spacing:.02em}
+.arrPanel.CALL .arrWord{color:var(--up)} .arrPanel.PUT .arrWord{color:var(--down)}
+.arrSub{text-decoration:none;font-size:10.5px;color:var(--tx3);margin-bottom:8px}
+.arrScore b{font:800 18px 'JetBrains Mono',monospace}
+.arrScore s{text-decoration:none;font-size:9.5px;color:var(--tx3);display:block;text-align:center}
+.arrConf{width:100%;height:5px;border-radius:3px;background:rgba(255,255,255,.1);margin-top:9px;overflow:hidden}
+.arrConf i{display:block;height:100%;border-radius:3px;background:currentColor;
+  background:linear-gradient(90deg,var(--gold),var(--up));transition:width .8s ease}
+.arrConfT{font-size:9.5px;color:var(--tx3);margin-top:5px}
+@media (max-width:340px){.sigSplit{grid-template-columns:1fr 100px}}
+@media (prefers-reduced-motion:reduce){.scanBeam,.arrIco{animation:none}}
 .disc{font-size:11.5px;color:var(--tx3);line-height:1.5;padding:4px 4px 16px;text-align:center}
 
 /* вердикт над графиком */
@@ -1351,7 +1400,7 @@ nav{position:fixed;left:0;right:0;bottom:0;background:rgba(8,15,26,.94);
     <div class="brand">
       <span class="mark"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1"
         stroke-linecap="round" stroke-linejoin="round"><path d="M2 12h4l3-8 4 16 3-8h6"/></svg></span>
-      <div style="min-width:0"><h1>AI Comfort Signal</h1><span style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;display:block">анализ на реальных данных · <b id="verTap" onclick="versionTap()" style="color:var(--gold);font-weight:700;cursor:pointer">v71 · 16.09 11:35</b></span></div>
+      <div style="min-width:0"><h1>AI Comfort Signal</h1><span style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;display:block">анализ на реальных данных · <b id="verTap" onclick="versionTap()" style="color:var(--gold);font-weight:700;cursor:pointer">v74 · 16.09 12:22</b></span></div>
     </div>
     <button class="bell" onclick="openChat()" aria-label="Помощник"><svg viewBox="0 0 24 24" fill="none"
       stroke="currentColor" stroke-width="2"><path d="M18 8a6 6 0 10-12 0c0 7-3 8-3 8h18s-3-1-3-8"/>
@@ -1622,7 +1671,7 @@ nav{position:fixed;left:0;right:0;bottom:0;background:rgba(8,15,26,.94);
     <div class="sect">ПРОФИЛЬ И НАСТРОЙКИ</div>
     <div class="card">
       <div class="kv"><span>Пользователь</span><b id="pName">Гость</b></div>
-      <div class="kv"><span>Версия сборки</span><b class="mono" style="color:var(--gold)">v71 · 16.09 11:35</b></div>
+      <div class="kv"><span>Версия сборки</span><b class="mono" style="color:var(--gold)">v74 · 16.09 12:22</b></div>
       <div class="kv"><span>Источник данных</span><b>Binance Spot API</b></div>
       <div class="kv"><span>Сигналов в журнале</span><b id="pCount">0</b></div>
     </div>
@@ -1733,6 +1782,7 @@ nav{position:fixed;left:0;right:0;bottom:0;background:rgba(8,15,26,.94);
 </div>
 <div id="pulseWrap"><div id="pulseSheet"></div></div>
 <div class="ov" id="aboutWrap" onclick="if(event.target.id==='aboutWrap')closeOv('aboutWrap')"></div>
+<div class="ov" id="scanWrap"></div>
 <div class="ov" id="visWrap" onclick="if(event.target.id==='visWrap')closeOv('visWrap')">
   <div class="sheet">
     <div class="shHead"><div style="flex:1"><b>Визуальный разбор</b>
@@ -4815,13 +4865,14 @@ async function getSignal(){
   const old=b.innerHTML;
   b.disabled=true;
   setMascot('loading'); setMascotState('loading');
+  openScan(S.asset,S.tf);
   const stages=['СКАНИРУЮ РЫНОК','СЧИТАЮ ИНДИКАТОРЫ','СВЕРЯЮ СТАРШИЙ СРОК','СОБИРАЮ ВЕРДИКТ'];
   let si=0;
   b.innerHTML=`<span class="spin"></span> ${stages[0]}`;
   const stTimer=setInterval(()=>{si=(si+1)%stages.length;
     b.innerHTML=`<span class="spin"></span> ${stages[si]}`},700);
   await sigLoad(S.asset,S.tf);
-  clearInterval(stTimer);
+  clearInterval(stTimer); closeScan();
   b.disabled=false; b.innerHTML=old;
   const dir=sigState.sig?sigState.sig.a.dir:'idle';
   setMascot(dir); setMascotState(dir==='CALL'?'CALL':dir==='PUT'?'PUT':'WAIT');
@@ -5107,7 +5158,7 @@ function openHelpScreen(){
 /* ═══════════ ЖУРНАЛ ДИАГНОСТИКИ ═══════════ */
 /* Ошибки не проглатываются: каждая попадает сюда и видна в профиле. */
 const DIAG=[];
-const BUILD='v71';
+const BUILD='v74';
 function logErr(ctx,e){
   const msg=(e&&e.message)||String(e||'неизвестно');
   DIAG.unshift({t:Date.now(),ctx,msg});
@@ -6344,6 +6395,95 @@ document.addEventListener('visibilitychange',()=>{
   else if(sigState.sig)lfStart(sigState.sym,sigState.tf);
 });
 
+/* ═══════════ ЭКРАН АНАЛИЗА ═══════════ */
+/* Пока идёт расчёт, показываем свечи и луч сканирования.
+   Этапы соответствуют тому, что реально происходит в движке. */
+const SCAN_STEPS=[
+  'загружаю свечи',
+  'считаю скользящие и импульс',
+  'проверяю осцилляторы',
+  'ищу уровни и фигуры',
+  'сверяю старший таймфрейм',
+  'собираю вердикт'
+];
+let scanRAF=null, scanT0=0, scanStep=0, scanTimer=null;
+
+function openScan(sym,tf){
+  const w=document.getElementById('scanWrap');
+  w.innerHTML=`<div class="scanCard">
+    <div class="scanHead">
+      <div data-msc="1" data-size="54">${mascot('loading',54)}</div>
+      <div style="flex:1"><b>${label(sym)}</b><div class="sub2">${tf} · идёт разбор</div></div>
+    </div>
+    <div class="scanBox"><canvas id="scanCv"></canvas><div class="scanBeam"></div></div>
+    <div class="scanStep" id="scanStep">${SCAN_STEPS[0]}…</div>
+    <div class="scanBar"><i id="scanBar"></i></div>
+    <div class="scanFoot">Считается по реальным свечам. Если факторы не сойдутся — будет ЖДАТЬ.</div>
+  </div>`;
+  w.classList.add('on');
+  scanT0=Date.now(); scanStep=0;
+  clearInterval(scanTimer);
+  scanTimer=setInterval(()=>{
+    scanStep=Math.min(SCAN_STEPS.length-1,scanStep+1);
+    const el=document.getElementById('scanStep');
+    if(el){ el.textContent=SCAN_STEPS[scanStep]+'…'; el.style.animation='none';
+      void el.offsetWidth; el.style.animation='slideUp .3s ease' }
+    const bar=document.getElementById('scanBar');
+    if(bar)bar.style.width=Math.min(92,(scanStep+1)/SCAN_STEPS.length*100)+'%';
+  },520);
+  drawScan();
+}
+
+function drawScan(){
+  const cv=document.getElementById('scanCv');
+  if(!cv){ scanRAF=null; return }
+  const dpr=devicePixelRatio||1, W=cv.clientWidth||320, H=132;
+  cv.width=W*dpr; cv.height=H*dpr; cv.style.height=H+'px';
+  const x=cv.getContext('2d'); x.setTransform(dpr,0,0,dpr,0,0); x.clearRect(0,0,W,H);
+  const t=(Date.now()-scanT0)/1000;
+  const N=26, cw=W/N;
+  // синтетический ряд только для анимации ожидания — не котировки
+  for(let i=0;i<N;i++){
+    const ph=i*0.6+t*0.9;
+    const mid=H/2+Math.sin(ph)*24+Math.sin(ph*0.37)*12;
+    const body=10+Math.abs(Math.sin(ph*1.3))*16;
+    const up=Math.sin(ph*1.1)>0;
+    const X=i*cw+cw/2, yO=mid-body/2, yC=mid+body/2;
+    candle3D(X,cw,up?yC:yO,up?yO:yC,mid-body/2-9,mid+body/2+9,up,x);
+  }
+  scanRAF=requestAnimationFrame(drawScan);
+}
+
+function closeScan(){
+  clearInterval(scanTimer);
+  if(scanRAF)cancelAnimationFrame(scanRAF);
+  scanRAF=null;
+  const bar=document.getElementById('scanBar'); if(bar)bar.style.width='100%';
+  setTimeout(()=>document.getElementById('scanWrap').classList.remove('on'),260);
+}
+
+/* ═══════════ КАРТОЧКА: ГРАФИК СЛЕВА, СТРЕЛКА СПРАВА ═══════════ */
+function arrowPanel(a,sig){
+  const up=a.dir==='CALL', wait=a.dir==='WAIT';
+  const conf=Math.round(a.score*10);
+  return `<div class="arrPanel ${a.dir}">
+    <div class="arrCircle ${a.dir}">
+      <span class="arrIco">${up?'↑':wait?'◷':'↓'}</span>
+      <svg class="arrRing" viewBox="0 0 100 100">
+        <circle cx="50" cy="50" r="45" fill="none" stroke="currentColor" stroke-opacity=".18" stroke-width="4"/>
+        <circle class="arrProg" cx="50" cy="50" r="45" fill="none" stroke="currentColor" stroke-width="4"
+          stroke-linecap="round" stroke-dasharray="283"
+          stroke-dashoffset="${283-283*Math.min(1,a.score/10)}" transform="rotate(-90 50 50)"/>
+      </svg>
+    </div>
+    <b class="arrWord">${up?'ВВЕРХ':wait?'ЖДАТЬ':'ВНИЗ'}</b>
+    <s class="arrSub">${up?'CALL':wait?'WAIT':'PUT'}</s>
+    <div class="arrScore"><b class="mono">${a.score.toFixed(1)}</b><s>/10 · порог ${S.min}</s></div>
+    <div class="arrConf"><i style="width:${conf}%"></i></div>
+    <div class="arrConfT">согласие ${conf}%</div>
+  </div>`;
+}
+
 /* ═══════════ ЭКРАН СИГНАЛОВ ═══════════ */
 const SIG_TFS=['1m','5m','15m','30m','1h'];
 let sigState={sym:null,tf:null,sig:null,busy:false,chartTimer:null};
@@ -6483,6 +6623,17 @@ function renderSignals(){
 
   wrap.innerHTML=`
   <div class="sigCard ${a.dir}">
+    <div class="sigSplit">
+      <div class="sigChartCol">
+        <div class="chartHead">
+          <b>График ${sig.tf}</b>${hlp('chart')}
+          <button class="mkBtn on" id="mkBtn" onclick="sigToggleMarks()">разметка</button>
+        </div>
+        <div class="sigChartBox"><canvas id="sigChart"></canvas></div>
+      </div>
+      ${arrowPanel(a,sig)}
+    </div>
+
     <div class="sigTop">
       <div class="sigPair">${assetIcon(REG[marketOf(sig.sym)]?.find(x=>x.id===sig.sym)
         ||{id:sig.sym,market:marketOf(sig.sym),base:sig.sym.replace('USDT','')})}
@@ -6513,12 +6664,6 @@ function renderSignals(){
 
     <div class="sigTfs">${SIG_TFS.map(t=>
       `<button class="sigTf ${t===sig.tf?'on':''}" onclick="sigLoad('${sig.sym}','${t}')">${t.toUpperCase()}</button>`).join('')}</div>
-
-    <div class="chartHead">
-      <b>График ${sig.tf}</b>${hlp('chart')}
-      <button class="mkBtn on" id="mkBtn" onclick="sigToggleMarks()">разметка</button>
-    </div>
-    <div class="sigChartBox"><canvas id="sigChart"></canvas></div>
 
     <div class="sigInd">
       <div><s>RSI</s><b style="color:${a.rsi>70?'var(--down)':a.rsi<30?'var(--up)':'var(--tx)'}">${a.rsi.toFixed(1)}</b></div>
@@ -6741,6 +6886,7 @@ if(AIKEY)document.getElementById('aiKey').value=AIKEY; resolvePending(); setInte
   --gold:#F5B942; --up:#2BD98A; --down:#FF5C6C; --tx:#E9F0FA; --tx2:#93A6C0; --tx3:#617693;
 }
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{max-width:100%;overflow-x:hidden}
 body{margin:0;background:var(--bg);color:var(--tx);font-family:'Manrope',system-ui,sans-serif;
   font-size:14px;max-width:520px;margin:0 auto;padding:12px 12px 30px;overscroll-behavior:none}
 .mono{font-family:'JetBrains Mono',monospace}
