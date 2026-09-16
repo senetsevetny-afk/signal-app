@@ -1139,6 +1139,51 @@ nav{position:fixed;left:0;right:0;bottom:0;background:rgba(8,15,26,.94);
 .arrConfT{font-size:9.5px;color:var(--tx3);margin-top:5px}
 @media (max-width:340px){.sigSplit{grid-template-columns:1fr 100px}}
 @media (prefers-reduced-motion:reduce){.scanBeam,.arrIco{animation:none}}
+
+/* живые кнопки: блик по поверхности и обводка по контуру */
+.btn,.bigRun,.actBtn.main{position:relative;overflow:hidden;isolation:isolate}
+.btn:after,.actBtn.main:after{content:"";position:absolute;top:0;bottom:0;width:38%;
+  left:-45%;z-index:1;pointer-events:none;
+  background:linear-gradient(105deg,transparent,rgba(255,255,255,.34),transparent);
+  animation:shine 4.6s ease-in-out infinite}
+@keyframes shine{0%{left:-45%}28%{left:120%}100%{left:120%}}
+.bigRun{position:relative}
+.bigRun:before{content:"";position:absolute;inset:-2px;border-radius:inherit;z-index:-1;
+  background:conic-gradient(from 0deg,rgba(43,217,138,0),rgba(43,217,138,.85),
+    rgba(245,185,66,.7),rgba(43,217,138,0));
+  animation:ring 3.6s linear infinite;filter:blur(5px);opacity:.75}
+@keyframes ring{to{transform:rotate(1turn)}}
+.miniRow{display:flex;align-items:center;gap:11px;width:100%;background:var(--card2);
+  border:1px solid var(--line2);border-radius:14px;padding:12px 13px;cursor:pointer;
+  color:var(--tx);font-family:inherit;text-align:left;margin-top:8px;transition:border-color .25s}
+.miniRow:active{transform:scale(.99)}
+.mrIc{width:30px;height:30px;border-radius:10px;display:grid;place-items:center;flex:none;
+  background:rgba(245,185,66,.12);border:1px solid rgba(245,185,66,.3);color:var(--gold)}
+.mrT{flex:1}
+.mrT b{display:block;font-size:14px;font-weight:700}
+.mrT s{text-decoration:none;font-size:11px;color:var(--tx3)}
+@media (prefers-reduced-motion:reduce){
+  .btn:after,.actBtn.main:after,.bigRun:before{animation:none;opacity:0}}
+
+.setIntro{background:var(--card2);border:1px solid var(--line2);border-radius:16px;padding:14px;
+  margin-bottom:6px;animation:slideUp .4s ease both}
+.siTop{display:flex;align-items:center;gap:10px;margin-bottom:9px}
+.siTop b{font-size:15px;font-weight:800}
+.siIc{width:30px;height:30px;border-radius:10px;display:grid;place-items:center;flex:none;
+  background:rgba(245,185,66,.12);border:1px solid rgba(245,185,66,.3);font-size:14px}
+.setIntro p{margin:0 0 8px;font-size:13px;line-height:1.55;color:var(--tx2);
+  opacity:0;animation:slideUp .42s ease forwards}
+.setIntro p:last-child{margin-bottom:0}
+.sheet .setOpt{animation:slideUp .35s ease both}
+.sheet .setOpt:nth-child(2){animation-delay:.04s}
+.sheet .setOpt:nth-child(3){animation-delay:.08s}
+.sheet .setOpt:nth-child(4){animation-delay:.12s}
+@media (prefers-reduced-motion:reduce){.setIntro,.setIntro p,.sheet .setOpt{animation:none;opacity:1}}
+
+.favTip{display:flex;align-items:center;gap:10px;background:var(--card);border:1px dashed var(--line2);
+  border-radius:14px;padding:12px 13px;font-size:12.5px;color:var(--tx3);cursor:pointer;margin-bottom:12px}
+.favTip span{color:var(--gold);font-size:15px}
+.favTip i{margin-left:auto;font-style:normal}
 .disc{font-size:11.5px;color:var(--tx3);line-height:1.5;padding:4px 4px 16px;text-align:center}
 
 /* вердикт над графиком */
@@ -1400,7 +1445,7 @@ nav{position:fixed;left:0;right:0;bottom:0;background:rgba(8,15,26,.94);
     <div class="brand">
       <span class="mark"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1"
         stroke-linecap="round" stroke-linejoin="round"><path d="M2 12h4l3-8 4 16 3-8h6"/></svg></span>
-      <div style="min-width:0"><h1>AI Comfort Signal</h1><span style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;display:block">анализ на реальных данных · <b id="verTap" onclick="versionTap()" style="color:var(--gold);font-weight:700;cursor:pointer">v74 · 16.09 12:22</b></span></div>
+      <div style="min-width:0"><h1>AI Comfort Signal</h1><span style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;display:block">анализ на реальных данных · <b id="verTap" onclick="versionTap()" style="color:var(--gold);font-weight:700;cursor:pointer">v76 · 16.09 12:38</b></span></div>
     </div>
     <button class="bell" onclick="openChat()" aria-label="Помощник"><svg viewBox="0 0 24 24" fill="none"
       stroke="currentColor" stroke-width="2"><path d="M18 8a6 6 0 10-12 0c0 7-3 8-3 8h18s-3-1-3-8"/>
@@ -1432,15 +1477,15 @@ nav{position:fixed;left:0;right:0;bottom:0;background:rgba(8,15,26,.94);
       <button class="sigAsset" id="sigAsset" onclick="sigPickAsset()"></button>
     </div>
 
-      <div class="startLbl">СТРАТЕГИЧЕСКИЙ ПРОФИЛЬ <span id="hStrat"></span></div>
-      <div id="stratMini"></div>
+      <button class="miniRow" onclick="openSetting('strat')">
+        <span class="mrIc">◎</span>
+        <span class="mrT"><b id="mrStrat"></b><s>стратегия расчёта</s></span>
+        <span class="chev">›</span></button>
 
       <div class="startLbl">СРОК ЭКСПИРАЦИИ <span id="hTf"></span></div>
       <div class="tfRow" id="tfRow"></div>
 
       <button class="btn bigRun" id="bigRun" onclick="getSignal()">⚡ ПОЛУЧИТЬ СИГНАЛ</button>
-      <button class="btn secRun" onclick="go('signals');setTimeout(()=>{if(!sigState.sig)getSignal()},50)">
-        🔍 Анализировать подробно</button>
 
       <button class="howBtn" onclick="openHelp('flow')">❔ Как это работает<span class="howPulse"></span></button>
     </div>
@@ -1671,7 +1716,7 @@ nav{position:fixed;left:0;right:0;bottom:0;background:rgba(8,15,26,.94);
     <div class="sect">ПРОФИЛЬ И НАСТРОЙКИ</div>
     <div class="card">
       <div class="kv"><span>Пользователь</span><b id="pName">Гость</b></div>
-      <div class="kv"><span>Версия сборки</span><b class="mono" style="color:var(--gold)">v74 · 16.09 12:22</b></div>
+      <div class="kv"><span>Версия сборки</span><b class="mono" style="color:var(--gold)">v76 · 16.09 12:38</b></div>
       <div class="kv"><span>Источник данных</span><b>Binance Spot API</b></div>
       <div class="kv"><span>Сигналов в журнале</span><b id="pCount">0</b></div>
     </div>
@@ -5158,7 +5203,7 @@ function openHelpScreen(){
 /* ═══════════ ЖУРНАЛ ДИАГНОСТИКИ ═══════════ */
 /* Ошибки не проглатываются: каждая попадает сюда и видна в профиле. */
 const DIAG=[];
-const BUILD='v74';
+const BUILD='v76';
 function logErr(ctx,e){
   const msg=(e&&e.message)||String(e||'неизвестно');
   DIAG.unshift({t:Date.now(),ctx,msg});
@@ -5213,7 +5258,11 @@ function openLangSheet(){
       <div class="sub2">переключается сразу, без перезагрузки</div></div>
       <button class="shX" onclick="closeOv('setWrap')">✕</button></div>
     <div class="shBody">
-      <div style="text-align:center;padding:2px 0 14px" data-msc="1" data-size="66">${mascot('globe',66)}</div>
+      <div style="text-align:center;padding:2px 0 12px" data-msc="1" data-size="66">${mascot('globe',66)}</div>
+      ${setIntro('🌐','Что меняет язык',[
+        'Переводятся названия разделов, кнопки и значения — примерно восемьдесят фраз на язык.',
+        'Длинные пояснительные статьи пока остаются на русском.',
+        'Возврат на русский перезагружает интерфейс: перевод правит текст на месте и восстанавливается только заново.'])}
       ${LANGS.map(l=>`<div class="setOpt ${l[0]===LANG?'on':''}" onclick="pickLang('${l[0]}')">
         <span style="font-size:19px">${l[2]}</span>
         <b style="flex:1">${l[1]}</b>
@@ -5246,7 +5295,10 @@ function openNotifSheet(){
       <div class="sub2">что происходит при появлении сигнала</div></div>
       <button class="shX" onclick="closeOv('setWrap')">✕</button></div>
     <div class="shBody">
-      <div style="text-align:center;padding:2px 0 14px" data-msc="1" data-size="66">${mascot('bell',66)}</div>
+      <div style="text-align:center;padding:2px 0 12px" data-msc="1" data-size="66">${mascot('bell',66)}</div>
+      ${setIntro('🔔','Как это работает',[
+        'Оповещение срабатывает, когда живая лента или автоскан избранного находит вход выше вашего порога.',
+        'Вибрация дублирует вердикт и нажатия, если устройство её поддерживает.'])}
       ${row('alertOnSignal','Оповещение о входе','Когда лента бота находит сигнал выше порога, приходит заметное сообщение внутри приложения.')}
       ${row('sound','Вибрация и отклик','Короткая вибрация при вердикте и нажатиях — если устройство её поддерживает.')}
       <div class="note warn" style="margin-top:12px"><div>
@@ -5392,6 +5444,57 @@ function versionTap(){
 }
 
 
+
+/* ═══════════ РИСК И ЛИМИТЫ ═══════════ */
+function openRiskSheet(){
+  setMascotState('risk');
+  const st=SESS?sessStats():null;
+  const w=document.getElementById('setWrap');
+  w.innerHTML=`<div class="sheet">
+    <div class="shHead"><div style="flex:1"><b>Риск и лимиты</b>
+      <div class="sub2">рамки, которые вы ставите себе заранее</div></div>
+      <button class="shX" onclick="closeOv('setWrap')">✕</button></div>
+    <div class="shBody">
+      <div style="text-align:center;padding:2px 0 12px" data-msc="1" data-size="66">${mascot('shield',66)}</div>
+
+      ${setIntro('🛡','Зачем это нужно',[
+        'Лимит ограничивает число сделок за сессию. Остановка после серии убытков не даёт отыгрываться на эмоциях — именно там теряют больше всего.',
+        'Когда предел достигнут, анализ блокируется до конца сессии. Снять блокировку можно только завершив сессию вручную.',
+        'Управление риском не делает стратегию прибыльной. Оно растягивает срок жизни счёта и убирает разовые провалы.'])}
+
+      ${SESS?`
+        <div class="card" style="margin-top:14px">
+          <div class="listHead"><span>●</span><b>Сессия идёт</b></div>
+          <div class="kv"><span>Сделок сделано</span><b>${st.done} из ${SESS.limit}</b></div>
+          <div class="kv"><span>Плюс / минус</span><b><span style="color:var(--up)">${st.w}</span> · <span style="color:var(--down)">${st.l}</span></b></div>
+          <div class="kv"><span>Серия убытков</span><b style="color:${st.streak>=SESS.stopAfter?'var(--down)':'var(--tx)'}">${st.streak} из ${SESS.stopAfter}</b></div>
+          <div class="myBar" style="margin-top:12px">
+            <i class="w" style="width:${SESS.limit?st.done/SESS.limit*100:0}%"></i></div>
+          ${st.blocked?`<div class="note warn" style="margin-top:12px"><div><b>Анализ заблокирован</b>
+            Предел достигнут. Это ваше собственное правило — завершите сессию, если решите продолжить.</div></div>`:''}
+          <button class="btn qt2" onclick="sessEnd();openRiskSheet();renderProfile()">Завершить сессию</button>
+        </div>`
+      :`
+        <div class="card" style="margin-top:14px">
+          <div class="listHead"><span>⚙</span><b>Настройка</b></div>
+          <div class="lbl2" style="margin:10px 0 7px">СДЕЛОК ЗА СЕССИЮ</div>
+          <div class="mkTabs" style="grid-template-columns:repeat(4,1fr)">
+            ${[5,10,15,20].map(n=>`<button class="${n===10?'on':''}" data-lim="${n}"
+              onclick="document.querySelectorAll('[data-lim]').forEach(b=>b.classList.remove('on'));this.classList.add('on');document.getElementById('sLimit').value=${n}">${n}</button>`).join('')}
+          </div>
+          <div class="lbl2" style="margin:14px 0 7px">СТОП ПОСЛЕ УБЫТКОВ ПОДРЯД</div>
+          <div class="mkTabs" style="grid-template-columns:repeat(4,1fr)">
+            ${[2,3,4,5].map(n=>`<button class="${n===2?'on':''}" data-stop="${n}"
+              onclick="document.querySelectorAll('[data-stop]').forEach(b=>b.classList.remove('on'));this.classList.add('on');document.getElementById('sStop').value=${n}">${n}</button>`).join('')}
+          </div>
+          <input type="hidden" id="sLimit" value="10"><input type="hidden" id="sStop" value="2">
+          <button class="btn" style="margin-top:16px" onclick="sessStart();openRiskSheet();renderProfile()">Начать сессию</button>
+        </div>`}
+      <div class="disc">Лимиты хранятся на устройстве и действуют до завершения сессии.</div>
+    </div></div>`;
+  openOv('setWrap');
+}
+
 /* ═══════════ ЛИЧНАЯ СТАТИСТИКА В ПРОФИЛЕ ═══════════ */
 function myStats(){
   const all=history;
@@ -5480,17 +5583,25 @@ function renderMyStats(){
 const SETROWS=()=>[
   ['🎯','Сила сигнала',S.min+' / 10','min','score'],
   ['💰','Выплата брокера',(S.payout*100).toFixed(0)+'%','payout','payout'],
-  ['🛡','Риск и лимиты',SESS?'сессия идёт':'не задано','risk','sess'],
-  ['🔔','Уведомления',(NOTIF.alertOnSignal?'включены':'выключены'),'notif','flow'],
-  ['🌐','Язык',(LANGS.find(l=>l[0]===LANG)||LANGS[0])[1],'lang','markets'],
-  ['🎯','Стратегия',STRATS[STRAT].name,'strat','strat']
+  ['🛡','Риск и лимиты',SESS?`${SESS.ids.length} из ${SESS.limit}`:'не заданы','risk',null],
+  ['🔔','Уведомления',(NOTIF.alertOnSignal?'включены':'выключены'),'notif',null],
+  ['🌐','Язык',(LANGS.find(l=>l[0]===LANG)||LANGS[0])[1],'lang',null],
+  ['🎯','Стратегия',STRATS[STRAT].name,'strat',null]
 ];
+
+/* шапка окна настройки: сначала объясняем, потом настраиваем */
+function setIntro(ic,title,lines){
+  return `<div class="setIntro">
+    <div class="siTop"><span class="siIc">${ic}</span><b>${title}</b></div>
+    ${lines.map((l,i)=>`<p style="animation-delay:${.06+i*.08}s">${l}</p>`).join('')}
+  </div>`;
+}
 
 /* одна точка входа для всех строк профиля */
 function profAction(act){
   switch(act){
     case 'min': case 'payout': case 'strat': return openSetting(act);
-    case 'risk':  return go('signals');
+    case 'risk':  return openRiskSheet();
     case 'notif': return openNotifSheet();
     case 'lang':  return openLangSheet();
     case 'help':  return openHelpScreen();
@@ -5565,16 +5676,26 @@ function openSetting(kind){
     <b>${label}</b><span class="stDot"></span></div>`;
   let title='',body='';
   if(kind==='min'){ title='Минимальная сила сигнала';
-    body=[4,5.5,6.5,7.5].map(m=>opt(m,S.min,m+' / 10',
+    body=setIntro('🎯','Что это',[
+      'Сила от нуля до десяти показывает, насколько пятнадцать факторов согласны между собой.',
+      'Всё, что ниже порога, помечается как ЖДАТЬ и в журнал не попадает.',
+      'Низкий порог даёт много сигналов и много шума, высокий — редкие сигналы и маленькую выборку.'])+[4,5.5,6.5,7.5].map(m=>opt(m,S.min,m+' / 10',
       `S.min=${m};saveS();openSetting('min');renderProfile();`)).join('')
       +`<div class="hint" style="margin-top:12px">Ниже порога сигнал помечается как WAIT. Выше порог — реже сигналы и меньше выборка для статистики.</div>`;
   } else if(kind==='payout'){ title='Выплата брокера';
-    body=[0.7,0.8,0.85,0.9].map(p=>opt(p,S.payout,(p*100).toFixed(0)+'%',
+    body=setIntro('💰','Что это',[
+      'Процент, который брокер начисляет при выигрыше. Проигрыш при этом забирает всю ставку.',
+      'Из-за этой асимметрии точка безубыточности лежит выше половины.',
+      'Прошлые сделки сохраняют ту выплату, что действовала в момент входа.'])+[0.7,0.8,0.85,0.9].map(p=>opt(p,S.payout,(p*100).toFixed(0)+'%',
       `S.payout=${p};saveS();openSetting('payout');renderProfile();renderHistory();renderAnalytics();`)).join('')
       +`<div class="note" style="margin-top:12px"><div><b>Точка безубыточности: ${(100/(1+S.payout)).toFixed(1)}%</b>
         Формула 1/(1+выплата). Новая выплата применяется к будущим сигналам — у прошлых сохраняется та, что была на момент входа.</div></div>`;
   } else if(kind==='strat'){ setMascotState('strategy'); title='Стратегия';
-    body=Object.entries(STRATS).map(([k,v])=>`<div class="setOpt ${k===STRAT?'on':''}"
+    body=`<div style="text-align:center;padding:2px 0 12px" data-msc="1" data-size="66">${mascot('think',66)}</div>`
+      +setIntro('◎','Что меняет профиль',[
+      'Профиль меняет вес факторов в расчёте, а не сами индикаторы. Новых источников данных он не добавляет.',
+      'Один и тот же график при разных подходах может дать разный вердикт — это нормально, подходы действительно расходятся.',
+      'Не переключайте профиль в поисках нужного ответа: выберите один и наберите статистику.'])+Object.entries(STRATS).map(([k,v])=>`<div class="setOpt ${k===STRAT?'on':''}"
       onclick="setStrat('${k}');openSetting('strat');renderProfile();">
       <div style="flex:1"><b>${v.name}</b><p class="sub2" style="margin:4px 0 0">${v.desc}</p></div>
       <span class="stDot"></span></div>`).join('');
@@ -5887,10 +6008,9 @@ function renderFav(){
   const el=document.getElementById('favBox'); if(!el)return;
   const list=favList();
   if(!list.length){
-    el.innerHTML=`<div class="card favEmpty">
-      <div class="listHead"><span>★</span><b>Избранное</b>${hlp('fav')}</div>
-      <div class="hint">Отметьте звёздочкой пары в выборе актива — здесь появится быстрый скан только по ним.</div>
-      <button class="btn qt2" onclick="sigPickAsset()">Выбрать пары</button></div>`;
+    el.innerHTML=`<div class="favTip" onclick="sigPickAsset()">
+      <span>★</span>Отметьте пары звёздочкой — появится быстрый скан по избранному
+      <i class="chev">›</i></div>`;
     return;
   }
   const byId=id=>favScan.res.find(r=>r.id===id);
@@ -6607,10 +6727,7 @@ function renderSignals(){
 
   if(!sig){
     sigStatus('ждать','выберите пару и срок ниже');
-    wrap.innerHTML=`<div class="card" style="text-align:center;padding:26px 18px">
-      <div class="sub2" style="margin-bottom:14px">Сигнал ещё не рассчитан</div>
-      <button class="btn ok" onclick="sigLoad(S.asset,S.tf)">Рассчитать ${label(S.asset)} · ${S.tf}</button>
-    </div>`;
+    wrap.innerHTML='';
     renderSigLists(active,recent);
     return;
   }
@@ -6785,6 +6902,8 @@ function sigMarket(m){
 }
 
 function renderStartPanel(){
+  const mr=document.getElementById('mrStrat');
+  if(mr)mr.textContent=STRATS[STRAT].name;
   const sm=document.getElementById('stratMini');
   if(sm)sm.innerHTML=Object.entries(STRATS).map(([k,v])=>
     `<div class="stMini ${k===STRAT?'on':''}" onclick="setStrat('${k}');sigState.sig=null;renderStartPanel()">
