@@ -1052,6 +1052,44 @@ nav{position:fixed;left:0;right:0;bottom:0;background:rgba(8,15,26,.94);
 .sessPill i{width:7px;height:7px;border-radius:50%;background:currentColor;flex:none}
 .sessPill.on i{animation:lvp 2.4s infinite}
 @media (prefers-reduced-motion:reduce){.favCell,.favCell.hot,.sessPill.on i{animation:none!important;opacity:1}}
+
+.sigGo{margin:12px 0 2px;padding:12px 13px;border-radius:14px;background:var(--card2);
+  border:1px solid var(--line2)}
+.goRow{display:flex;align-items:center;justify-content:space-between;margin-bottom:9px}
+.goRow span{font-size:12px;color:var(--tx3);font-weight:700;letter-spacing:.04em;text-transform:uppercase}
+.goRow b{font-size:19px;font-weight:800;transition:color .3s}
+.goBar{height:6px;border-radius:4px;background:rgba(255,255,255,.08);overflow:hidden}
+.goBar i{display:block;height:100%;border-radius:4px;width:100%;
+  background:linear-gradient(90deg,var(--gold),var(--up));transition:width .5s linear}
+.goHint{margin-top:9px;font-size:11px;color:var(--tx3);line-height:1.45}
+
+.profHero.big{padding:22px 14px 20px;position:relative;overflow:hidden}
+.heroGlow{position:absolute;left:50%;top:0;width:280px;height:180px;transform:translateX(-50%);
+  background:radial-gradient(circle at 50% 35%,rgba(245,185,66,.16),transparent 66%);pointer-events:none}
+.myCard{overflow:hidden}
+.myTop{display:flex;align-items:center;gap:16px;margin-bottom:14px}
+.myRing{--p:0;width:96px;height:96px;border-radius:50%;flex:none;display:grid;place-content:center;
+  text-align:center;position:relative;
+  background:conic-gradient(var(--tx3) calc(var(--p)*1%),rgba(255,255,255,.07) 0);
+  transition:background .8s ease}
+.myRing:after{content:"";position:absolute;inset:8px;border-radius:50%;background:var(--card);
+  box-shadow:inset 0 2px 10px rgba(0,0,0,.6)}
+.myRing.good{background:conic-gradient(var(--up) calc(var(--p)*1%),rgba(255,255,255,.07) 0)}
+.myRing.bad{background:conic-gradient(var(--down) calc(var(--p)*1%),rgba(255,255,255,.07) 0)}
+.myRing b{position:relative;z-index:1;font:800 22px 'JetBrains Mono',monospace;display:block}
+.myRing s{position:relative;z-index:1;text-decoration:none;font-size:10px;color:var(--tx3)}
+.myNums{flex:1;display:grid;grid-template-columns:1fr 1fr;gap:9px}
+.myNums s{text-decoration:none;display:block;font-size:10px;color:var(--tx3);text-transform:uppercase}
+.myNums b{font:800 17px 'JetBrains Mono',monospace}
+.myBar{position:relative;height:10px;border-radius:5px;background:rgba(255,255,255,.06);
+  display:flex;overflow:visible}
+.myBar i{height:100%;transition:width .7s ease}
+.myBar i.w{background:var(--up);border-radius:5px 0 0 5px}
+.myBar i.l{background:var(--down);border-radius:0 5px 5px 0}
+.myBar b{position:absolute;top:-4px;width:2px;height:18px;background:var(--gold);border-radius:1px}
+.myLegend{display:flex;gap:14px;margin-top:9px;font-size:11px;color:var(--tx3)}
+.myLegend i{display:inline-block;width:8px;height:8px;border-radius:2px;margin-right:5px}
+.myLegend i.w{background:var(--up)} .myLegend i.l{background:var(--down)} .myLegend i.be{background:var(--gold)}
 .disc{font-size:11.5px;color:var(--tx3);line-height:1.5;padding:4px 4px 16px;text-align:center}
 
 /* вердикт над графиком */
@@ -1313,7 +1351,7 @@ nav{position:fixed;left:0;right:0;bottom:0;background:rgba(8,15,26,.94);
     <div class="brand">
       <span class="mark"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1"
         stroke-linecap="round" stroke-linejoin="round"><path d="M2 12h4l3-8 4 16 3-8h6"/></svg></span>
-      <div style="min-width:0"><h1>AI Comfort Signal</h1><span style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;display:block">анализ на реальных данных · <b id="verTap" onclick="versionTap()" style="color:var(--gold);font-weight:700;cursor:pointer">v66 · 16.09 06:43</b></span></div>
+      <div style="min-width:0"><h1>AI Comfort Signal</h1><span style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;display:block">анализ на реальных данных · <b id="verTap" onclick="versionTap()" style="color:var(--gold);font-weight:700;cursor:pointer">v71 · 16.09 11:35</b></span></div>
     </div>
     <button class="bell" onclick="openChat()" aria-label="Помощник"><svg viewBox="0 0 24 24" fill="none"
       stroke="currentColor" stroke-width="2"><path d="M18 8a6 6 0 10-12 0c0 7-3 8-3 8h18s-3-1-3-8"/>
@@ -1584,7 +1622,7 @@ nav{position:fixed;left:0;right:0;bottom:0;background:rgba(8,15,26,.94);
     <div class="sect">ПРОФИЛЬ И НАСТРОЙКИ</div>
     <div class="card">
       <div class="kv"><span>Пользователь</span><b id="pName">Гость</b></div>
-      <div class="kv"><span>Версия сборки</span><b class="mono" style="color:var(--gold)">v66 · 16.09 06:43</b></div>
+      <div class="kv"><span>Версия сборки</span><b class="mono" style="color:var(--gold)">v71 · 16.09 11:35</b></div>
       <div class="kv"><span>Источник данных</span><b>Binance Spot API</b></div>
       <div class="kv"><span>Сигналов в журнале</span><b id="pCount">0</b></div>
     </div>
@@ -2185,7 +2223,7 @@ async function fxCandles(pair,tf,limit){
     try{
       const base=`https://query1.finance.yahoo.com/v8/finance/chart/${pair}=X`
         +`?interval=${YTF[tf]||'5m'}&range=${YRANGE[YTF[tf]]||'5d'}`;
-      const j=await jget(FXPROXY[1](base),7000);
+      const j=await jget(FXPROXY[1](base),5000);
       const out=yahooParse(j,tf,limit);
       if(out&&out.length>=40)return out;
     }catch(e){ /* резерв не сработал — сообщаем основную причину */ }
@@ -2193,15 +2231,17 @@ async function fxCandles(pair,tf,limit){
   }
   const base=`https://query1.finance.yahoo.com/v8/finance/chart/${pair}=X`
     +`?interval=${YTF[tf]||'5m'}&range=${YRANGE[YTF[tf]]||'5d'}`;
-  for(const wrap of FXPROXY){
+  for(const wrap of FXPROXY.slice(0,2)){          // два резерва вместо трёх
     try{
-      const j=await jget(wrap(base),8000);
+      const j=await jget(wrap(base),6000);
       const out=yahooParse(j,tf,limit);
       if(out&&out.length>=40)return out;
       lastErr='резервный источник вернул мало свечей';
     }catch(e){ lastErr=e.message }
   }
-  throw new Error('для валютных пар нужен ключ Twelve Data. Откройте Профиль, вставьте бесплатный ключ — регистрация на twelvedata.com занимает минуту.');
+  throw new Error('валютные котировки недоступны: основной поток не отвечает'
+    +(TDKEY?'':', а резервный ключ не задан')
+    +'. Проверьте соединение в профиле — там есть кнопка проверки потока.');
 }
 
 /* ═══════════ ПОТОК КОТИРОВОК (WebSocket) ═══════════ */
@@ -2313,7 +2353,7 @@ async function getCandlesRaw(id,tf,limit=200,endTime){
   try{ return await qsCandles(id,tf,limit) }catch(e){ var qsErr=e.message }
   if(SYNTH_IDS.includes(id))throw new Error('индексы доступны только через поток: '+qsErr);
   try{ return await fxCandles(id,tf,limit) }
-  catch(e){ throw new Error(e.message+' · поток: '+qsErr) }
+  catch(e){ throw new Error(e.message) }
 }
 
 /* Кэш живёт не дольше 20 секунд, чтобы лента видела свежие свечи. */
@@ -2781,7 +2821,7 @@ function toggleFull(btn){
 
 /* ─────────────── actions ─────────────── */
 async function buildSignal(sym,tf){
-  const [k,h]=await Promise.all([getCandles(sym,tf,200),getCandles(sym,HTF[tf],120)]);
+  const [k,h]=await Promise.all([getCandles(sym,tf,200),getCandles(sym,HTF[tf],90)]);
   const a=analyze(k,h);
   const bt=quickBacktest(k,h);
   var _htf=h;
@@ -5067,7 +5107,7 @@ function openHelpScreen(){
 /* ═══════════ ЖУРНАЛ ДИАГНОСТИКИ ═══════════ */
 /* Ошибки не проглатываются: каждая попадает сюда и видна в профиле. */
 const DIAG=[];
-const BUILD='v66';
+const BUILD='v71';
 function logErr(ctx,e){
   const msg=(e&&e.message)||String(e||'неизвестно');
   DIAG.unshift({t:Date.now(),ctx,msg});
@@ -5300,6 +5340,91 @@ function versionTap(){
   }
 }
 
+
+/* ═══════════ ЛИЧНАЯ СТАТИСТИКА В ПРОФИЛЕ ═══════════ */
+function myStats(){
+  const all=history;
+  const done=all.filter(h=>h.result==='win'||h.result==='loss');
+  const w=done.filter(h=>h.result==='win').length, l=done.length-w;
+  const wr=done.length?w/done.length:0;
+  const be=1/(1+S.payout);
+  const pend=all.filter(h=>h.result===null).length;
+  // серия подряд
+  let streak=0, kind=null;
+  for(const h of done){
+    if(kind===null)kind=h.result;
+    if(h.result===kind)streak++; else break;
+  }
+  // лучший и худший актив
+  const m={};
+  done.forEach(h=>{(m[h.sym]=m[h.sym]||{n:0,w:0}); m[h.sym].n++; if(h.result==='win')m[h.sym].w++});
+  const rows=Object.entries(m).filter(([,v])=>v.n>=3)
+    .map(([k,v])=>({k,n:v.n,wr:v.w/v.n})).sort((a,b)=>b.wr-a.wr);
+  // решения пользователя
+  const taken=all.filter(h=>h.taken===true), skipped=all.filter(h=>h.taken===false);
+  const tw=taken.filter(h=>h.result==='win').length;
+  return{n:all.length,done:done.length,w,l,wr,be,pend,streak,kind,
+         best:rows[0],worst:rows.length>1?rows[rows.length-1]:null,
+         taken:taken.length,takenWr:taken.length?tw/taken.length:0,skipped:skipped.length};
+}
+
+function renderMyStats(){
+  const el=document.getElementById('myStats'); if(!el)return;
+  const s2=myStats();
+  if(!s2.n){
+    el.innerHTML=`<div class="card" style="text-align:center;padding:22px 14px">
+      <div class="sub2">Статистика появится после первого сигнала.</div>
+      <button class="btn qt2" style="margin:12px 0 0" onclick="go('home')">Получить сигнал</button></div>`;
+    return;
+  }
+  const good=s2.done>=10&&s2.wr>=s2.be;
+  const ring=Math.round(s2.wr*100);
+  el.innerHTML=`<div class="card myCard">
+    <div class="myTop">
+      <div class="myRing ${good?'good':s2.done>=10?'bad':''}" style="--p:${ring}">
+        <b id="myWr">${s2.done?ring+'%':'—'}</b><s>винрейт</s>
+      </div>
+      <div class="myNums">
+        <div><s>Сигналов</s><b>${s2.n}</b></div>
+        <div><s>Плюс</s><b style="color:var(--up)">${s2.w}</b></div>
+        <div><s>Минус</s><b style="color:var(--down)">${s2.l}</b></div>
+        <div><s>В ожидании</s><b>${s2.pend}</b></div>
+      </div>
+    </div>
+
+    <div class="myBar">
+      <i class="w" style="width:${s2.done?s2.w/s2.done*100:0}%"></i>
+      <i class="l" style="width:${s2.done?s2.l/s2.done*100:0}%"></i>
+      <b style="left:${s2.be*100}%" title="безубыточность"></b>
+    </div>
+    <div class="myLegend">
+      <span><i class="w"></i>сбылось ${s2.w}</span>
+      <span><i class="l"></i>мимо ${s2.l}</span>
+      <span><i class="be"></i>нужно ${(s2.be*100).toFixed(1)}%</span>
+    </div>
+
+    <div class="kv" style="margin-top:12px"><span>Серия подряд</span>
+      <b style="color:${s2.kind==='win'?'var(--up)':'var(--down)'}">${s2.streak} ${s2.kind==='win'?'в плюс':'в минус'}</b></div>
+    ${s2.best?`<div class="kv"><span>Лучший инструмент</span>
+      <b>${label(s2.best.k)} · ${(s2.best.wr*100).toFixed(0)}% на ${s2.best.n}</b></div>`:''}
+    ${s2.worst?`<div class="kv"><span>Худший инструмент</span>
+      <b>${label(s2.worst.k)} · ${(s2.worst.wr*100).toFixed(0)}% на ${s2.worst.n}</b></div>`:''}
+    ${s2.taken?`<div class="kv"><span>Вы входили</span>
+      <b>${s2.taken} раз · ${(s2.takenWr*100).toFixed(0)}% удачно</b></div>`:''}
+    ${s2.skipped?`<div class="kv"><span>Пропустили</span><b>${s2.skipped}</b></div>`:''}
+
+    <div class="note ${s2.done<10?'':good?'':'warn'}" style="margin-top:12px"><div>
+      <b>${s2.done<10?'Данных пока мало'
+        :good?'Вы выше точки безубыточности'
+        :'Пока ниже точки безубыточности'}</b>
+      ${s2.done<10?`Закрыто ${s2.done} сделок. По такой выборке судить о результате рано.`
+        :good?`При выплате ${(S.payout*100).toFixed(0)}% нужно ${(s2.be*100).toFixed(1)}%, у вас ${(s2.wr*100).toFixed(1)}%.`
+        :`При выплате ${(S.payout*100).toFixed(0)}% нужно ${(s2.be*100).toFixed(1)}%, у вас ${(s2.wr*100).toFixed(1)}%. Разбор причин — в разделе «Что менять».`}
+    </div></div>
+    <button class="btn qt2" onclick="go('analytics')">Полная аналитика</button>
+  </div>`;
+}
+
 /* ═══════════ ПРОФИЛЬ ═══════════ */
 const SETROWS=()=>[
   ['🎯','Сила сигнала',S.min+' / 10','min','score'],
@@ -5339,15 +5464,20 @@ function renderProfile(){
   const u=TG?.initDataUnsafe?.user;
   const name=u?([u.first_name,u.last_name].filter(Boolean).join(' ')||u.username||'Гость'):'Гость';
   const done=history.filter(h=>h.result==='win'||h.result==='loss').length;
+  setTimeout(renderMyStats,0);
   const adv=document.getElementById('acc-adv');
   if(adv)adv.style.display=isAdmin()?'block':'none';
   el.innerHTML=`
-  <div class="profHero">
-    <div data-msc="1" data-size="78">${mascot(MASCOT_STATE,78)}</div>
+  <div class="profHero big">
+    <div class="heroGlow"></div>
+    <div data-msc="1" data-size="104">${mascot(MASCOT_STATE,104)}</div>
     <b>AI Comfort Signal</b>
     <span class="sub2">${u?.username?'@'+u.username:name}</span>
     <span class="bdgTrial">Пробный доступ</span>
   </div>
+
+  <div class="lbl2" style="margin:18px 0 8px">ВАША СТАТИСТИКА</div>
+  <div id="myStats"></div>
 
   <div class="lbl2" style="margin:18px 0 8px">НАСТРОЙКИ</div>
   <div class="card" style="padding:4px 14px">
@@ -6365,6 +6495,14 @@ function renderSignals(){
       <div class="sigExp"><s>Экспирация</s><b>${sig.tf}</b></div>
     </div>
 
+    ${wait?'':`<div class="sigGo">
+      <div class="goRow"><span>Вход в течение</span>
+        <b class="mono" id="goLeft" data-exp="${sig.ts+MS[sig.tf]}">—</b></div>
+      <div class="goBar"><i id="goBar"></i></div>
+      <div class="goHint">Полоса показывает, сколько осталось до экспирации этого расчёта.
+        После неё сигнал уходит в журнал и проверяется по реальной цене.</div>
+    </div>`}
+
     <div class="sigRow3">
       <div><s>Время сигнала</s><b>${new Date(sig.ts).toLocaleTimeString('ru',{hour:'2-digit',minute:'2-digit'})}</b></div>
       <div><s>Текущая цена</s><b class="mono" id="sigPx">${fmtP(a.price)}</b></div>
@@ -6459,6 +6597,24 @@ function renderSigLists(active,recent){
   </div>`:''}`;
 }
 
+
+/* отсчёт до экспирации в карточке сигнала */
+setInterval(()=>{
+  const el=document.getElementById('goLeft'); if(!el)return;
+  const exp=+el.dataset.exp, tf=sigState.sig?MS[sigState.sig.tf]:3e5;
+  const left=exp-Date.now();
+  const bar=document.getElementById('goBar');
+  if(left<=0){
+    el.textContent='истёк'; el.style.color='var(--tx3)';
+    if(bar)bar.style.width='0%';
+    return;
+  }
+  const s2=Math.floor(left/1000);
+  el.textContent=`${String(Math.floor(s2/60)).padStart(2,'0')}:${String(s2%60).padStart(2,'0')}`;
+  el.style.color=s2<20?'var(--down)':s2<60?'var(--gold)':'var(--up)';
+  if(bar)bar.style.width=Math.max(0,Math.min(100,left/tf*100))+'%';
+},500);
+
 /* отсчёт в списке активных */
 setInterval(()=>{
   document.querySelectorAll('.actTime b[data-exp]').forEach(el=>{
@@ -6519,7 +6675,7 @@ function go(t,from){
   if(t!=='home'&&LF.on)lfStop();
   if(t==='home'){ sigSyncHead(); renderSignals(); renderHome(); renderExtras(); renderTicker(); renderFav(); renderSessionPill();
     if(sigState.sig&&!LF.on)lfStart(sigState.sym,sigState.tf); setMascot(sigState.sig?sigState.sig.a.dir:'idle'); }
-  if(t==='profile'){renderProfile();setMascotState('profile')}
+  if(t==='profile'){renderProfile();setMascotState('profile');setTimeout(renderMyStats,30)}
   if(t==='chart')mountPage('ifChart','pg-chart');
   if(t==='signals'){renderEngine();renderAllSignals();renderLive();renderSess();}
   if(t==='analytics'){setMascotState('analytics');renderAnalytics();anaLiveStart();if(anaPane==='auto')renderAuto();if(anaPane==='advice'){renderAdvice();renderDiscipline()}}
