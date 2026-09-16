@@ -1273,7 +1273,7 @@ nav{position:fixed;left:0;right:0;bottom:0;background:rgba(8,15,26,.94);
     <div class="brand">
       <span class="mark"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1"
         stroke-linecap="round" stroke-linejoin="round"><path d="M2 12h4l3-8 4 16 3-8h6"/></svg></span>
-      <div style="min-width:0"><h1>AI Comfort Signal</h1><span style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;display:block">анализ на реальных данных · <b style="color:var(--gold);font-weight:700">v61 · 15.09 16:34</b></span></div>
+      <div style="min-width:0"><h1>AI Comfort Signal</h1><span style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;display:block">анализ на реальных данных · <b id="verTap" onclick="versionTap()" style="color:var(--gold);font-weight:700;cursor:pointer">v63 · 16.09 06:21</b></span></div>
     </div>
     <button class="bell" onclick="openChat()" aria-label="Помощник"><svg viewBox="0 0 24 24" fill="none"
       stroke="currentColor" stroke-width="2"><path d="M18 8a6 6 0 10-12 0c0 7-3 8-3 8h18s-3-1-3-8"/>
@@ -1534,14 +1534,14 @@ nav{position:fixed;left:0;right:0;bottom:0;background:rgba(8,15,26,.94);
   <!-- ================= PROFILE ================= -->
   <section class="tab" id="tab-profile">
     <div id="profMain"></div>
-    <div class="acc" id="acc-adv">
+    <div class="acc" id="acc-adv" style="display:none">
       <button class="accH" onclick="accToggle('adv')">
         <b>Расширенные настройки</b><span class="accArr">▾</span></button>
       <div class="accB">
     <div class="sect">ПРОФИЛЬ И НАСТРОЙКИ</div>
     <div class="card">
       <div class="kv"><span>Пользователь</span><b id="pName">Гость</b></div>
-      <div class="kv"><span>Версия сборки</span><b class="mono" style="color:var(--gold)">v61 · 15.09 16:34</b></div>
+      <div class="kv"><span>Версия сборки</span><b class="mono" style="color:var(--gold)">v63 · 16.09 06:21</b></div>
       <div class="kv"><span>Источник данных</span><b>Binance Spot API</b></div>
       <div class="kv"><span>Сигналов в журнале</span><b id="pCount">0</b></div>
     </div>
@@ -2740,8 +2740,9 @@ async function buildSignal(sym,tf){
   const [k,h]=await Promise.all([getCandles(sym,tf,200),getCandles(sym,HTF[tf],120)]);
   const a=analyze(k,h);
   const bt=quickBacktest(k,h);
+  var _htf=h;
   return {id:Date.now()+'-'+sym,sym,tf,a,bt,ts:Date.now(),
-          entry:a.price,payout:S.payout,      // выплата фиксируется на момент сигнала
+          entry:a.price,payout:S.payout,htf:_htf,   // выплата и старший срок на момент сигнала
           expiry:Date.now()+MS[tf],result:null};
 }
 
@@ -2821,7 +2822,11 @@ async function resolvePending(){
       s.result = p===s.entry?'tie':((s.a.dir==='CALL')===(p>s.entry)?'win':'loss');
     }catch(e){ logErr('resolvePending',e) }
   }
-  if(due.length){saveHistory(); renderHistory()}
+  if(due.length){
+    saveHistory(); renderHistory();
+    const an=document.getElementById('tab-analytics');
+    if(an&&an.classList.contains('on'))renderAnalytics();   // приборы едут за журналом
+  }
 }
 
 let hF='ALL', hPeriod=0;
@@ -4153,9 +4158,10 @@ function openPulse(id){
     },90);
   });
   setTimeout(sheetTick,1600);
+  pulseLiveStart();
 }
 
-function closePulse(){document.getElementById('pulseWrap').classList.remove('on');pulseSym=null;haptic()}
+function closePulse(){document.getElementById('pulseWrap').classList.remove('on');pulseSym=null;pulseLiveStop();haptic()}
 
 async function pulseToSignal(id){
   closePulse();
@@ -4633,6 +4639,7 @@ async function pulseTick(){
         ch.style.color=dp>=0?'var(--up)':'var(--down)';
       }
     });
+    pulseRowsLive();
     const st=document.getElementById('pulseTick');
     if(st)st.textContent='обновлено только что';
   }catch(e){ logErr('pulseTick',e) }
@@ -5016,6 +5023,7 @@ function openHelpScreen(){
 /* ═══════════ ЖУРНАЛ ДИАГНОСТИКИ ═══════════ */
 /* Ошибки не проглатываются: каждая попадает сюда и видна в профиле. */
 const DIAG=[];
+const BUILD='v63';
 function logErr(ctx,e){
   const msg=(e&&e.message)||String(e||'неизвестно');
   DIAG.unshift({t:Date.now(),ctx,msg});
@@ -5114,6 +5122,140 @@ function openNotifSheet(){
   openOv('setWrap');
 }
 
+
+
+/* выгрузка журнала */
+function exportCSV(){
+  if(!history.length)return toast('Журнал пуст','Сначала получите хотя бы один сигнал.');
+  const head=['время','актив','срок','направление','сила','цена_входа','цена_выхода','исход',
+              'выплата','rsi','atr_pct','mtf','за_рост','за_падение'];
+  const rows=history.map(h=>[
+    new Date(h.ts).toISOString(),h.sym,h.tf,h.a.dir,h.a.score.toFixed(2),h.entry,
+    h.exit??'',h.result??'открыт',((h.payout??S.payout)*100).toFixed(0)+'%',
+    h.a.rsi.toFixed(1),h.a.atrPct.toFixed(3),h.a.mtf,h.a.up.toFixed(1),h.a.dn.toFixed(1)]);
+  const csv='\ufeff'+[head,...rows].map(r=>r.join(';')).join('\n');
+  try{
+    const b=new Blob([csv],{type:'text/csv;charset=utf-8'});
+    const a=document.createElement('a');
+    a.href=URL.createObjectURL(b);
+    a.download='journal-'+new Date().toISOString().slice(0,10)+'.csv';
+    document.body.appendChild(a); a.click(); a.remove();
+    setTimeout(()=>URL.revokeObjectURL(a.href),4000);
+    toast('Файл готов','Выгружено записей: '+history.length,1);
+  }catch(e){
+    logErr('exportCSV',e);
+    navigator.clipboard?.writeText(csv).then(
+      ()=>toast('Скопировано','Скачивание недоступно, таблица в буфере обмена.',1),
+      ()=>toast('Не получилось',e.message));
+  }
+}
+
+/* ═══════════ АДМИН-ПАНЕЛЬ ═══════════ */
+/* ВНИМАНИЕ: это разграничение интерфейса, а не защита. Файл доступен всем,
+   кто откроет исходник страницы. Настоящее ограничение возможно только на сервере. */
+const ADMIN_IDS=[];                       // сюда впишите свой Telegram ID
+function myTgId(){ return TG?.initDataUnsafe?.user?.id||null }
+function isAdmin(){
+  const id=myTgId();
+  if(ADMIN_IDS.length&&id)return ADMIN_IDS.includes(id);
+  try{ return localStorage.getItem('acs_admin')==='1' }catch{ return false }
+}
+function setAdminLocal(on){
+  try{ on?localStorage.setItem('acs_admin','1'):localStorage.removeItem('acs_admin') }catch(e){ logErr('setAdminLocal',e) }
+  renderProfile(); applyFlags();
+}
+
+/* ── переключатели возможностей ── */
+const FLAG_DEF=[
+  ['live','Живая лента','бот сам обходит инструменты'],
+  ['sim','Симулятор','виртуальный счёт и кривая капитала'],
+  ['ai','ИИ-помощник','ответы моделью по вашему ключу'],
+  ['otc','Раздел OTC','расчёт по базовой паре'],
+  ['synth','Индексы','инструменты без выходных'],
+  ['pulse','Пульс рынка','список и спидометры'],
+  ['diagShow','Диагностика в профиле','журнал сбоев']
+];
+let FLAGS=LS.get('acs_flags',{live:1,sim:1,ai:1,otc:1,synth:1,pulse:1,diagShow:1});
+const flagsSave=()=>LS.set('acs_flags',FLAGS);
+const flagOn=k=>FLAGS[k]!==0&&FLAGS[k]!==false;
+
+/* применяем флаги к интерфейсу */
+function applyFlags(){
+  const nav=k=>document.querySelector(`.nb[data-t="${k}"]`);
+  const setNav=(k,on)=>{const e=nav(k); if(e)e.style.display=on?'':'none'};
+  setNav('market',flagOn('pulse'));
+  setNav('analytics',true);
+  const lb=document.getElementById('liveBox'); if(lb)lb.style.display=flagOn('live')?'':'none';
+  const otcBtn=document.querySelector('#sigMkt button[data-m="otc"]');
+  if(otcBtn)otcBtn.style.display=flagOn('otc')?'':'none';
+  const otcCat=document.querySelector('#cats .opt[data-cat="otc"]');
+  if(otcCat)otcCat.style.display=flagOn('otc')?'':'none';
+  const bell=document.querySelector('.icb'); if(bell)bell.style.display=flagOn('ai')?'':'none';
+  if(!flagOn('synth'))REG.forex=REG.forex.filter(a=>a.group!=='synth');
+  else if(typeof addSynth==='function')addSynth();
+}
+
+/* ── окно администратора ── */
+function openAdmin(){
+  if(!isAdmin())return;
+  const w=document.getElementById('setWrap');
+  const id=myTgId();
+  const done=history.filter(h=>h.result==='win'||h.result==='loss').length;
+  w.innerHTML=`<div class="sheet">
+    <div class="shHead"><div style="flex:1"><b>Панель управления</b>
+      <div class="sub2">видна только вам</div></div>
+      <button class="shX" onclick="closeOv('setWrap')">✕</button></div>
+    <div class="shBody">
+      <div class="note warn"><div><b>Это не защита, а разграничение вида</b>
+        Файл приложения открыт: кто посмотрит исходный код страницы, увидит и этот раздел, и ваш идентификатор.
+        Ограничить по-настоящему можно только на стороне сервера.</div></div>
+
+      <div class="lbl2" style="margin:16px 0 8px">ВОЗМОЖНОСТИ ДЛЯ ПОЛЬЗОВАТЕЛЕЙ</div>
+      ${FLAG_DEF.map(([k,t,d])=>`<div class="setOpt ${flagOn(k)?'on':''}"
+        onclick="FLAGS['${k}']=flagOn('${k}')?0:1;flagsSave();applyFlags();openAdmin()">
+        <div style="flex:1"><b>${t}</b><p class="sub2" style="margin:4px 0 0">${d}</p></div>
+        <span class="sw ${flagOn(k)?'on':''}"></span></div>`).join('')}
+
+      <div class="lbl2" style="margin:18px 0 8px">СОСТОЯНИЕ</div>
+      <div class="card" style="margin:0">
+        <div class="kv"><span>Ваш Telegram ID</span><b class="mono">${id||'недоступен вне Telegram'}</b></div>
+        <div class="kv"><span>Записей в журнале</span><b class="mono">${history.length} · закрыто ${done}</b></div>
+        <div class="kv"><span>Событий диагностики</span><b class="mono">${DIAG.length}</b></div>
+        <div class="kv"><span>Поток котировок</span><b class="mono">${qsSock&&qsSock.readyState===1?'подключён':'не подключён'}</b></div>
+        <div class="kv"><span>Резервный ключ</span><b class="mono">${TDKEY?'задан':'нет'}</b></div>
+        <div class="kv"><span>Ключ модели</span><b class="mono">${AIKEY?'задан':'нет'}</b></div>
+        <div class="kv"><span>Сборка</span><b class="mono">${BUILD}</b></div>
+      </div>
+
+      <div class="lbl2" style="margin:18px 0 8px">ДЕЙСТВИЯ</div>
+      <button class="btn qt2" style="margin:0 0 8px" onclick="closeOv('setWrap');openDiag()">Открыть диагностику</button>
+      <button class="btn qt2" style="margin:0 0 8px" onclick="exportCSV()">Выгрузить журнал в CSV</button>
+      <button class="btn qt2" style="margin:0 0 8px" onclick="CACHE.clear();toast('Кэш очищен','Свечи будут загружены заново.',1)">Очистить кэш свечей</button>
+      <button class="btn qt2" style="margin:0 0 8px;border-color:rgba(255,92,108,.4);color:var(--down)"
+        onclick="if(confirm('Удалить журнал и настройки?')){localStorage.clear();location.reload()}">Сбросить всё</button>
+      <button class="btn qt2" style="margin:0" onclick="setAdminLocal(false);closeOv('setWrap')">Выйти из режима администратора</button>
+      <div class="disc">Флаги хранятся на этом устройстве и влияют только на него.</div>
+    </div></div>`;
+  openOv('setWrap');
+}
+
+/* вход в режим: пять нажатий по версии в шапке */
+let verTaps=0, verTimer=null;
+function versionTap(){
+  verTaps++; clearTimeout(verTimer);
+  verTimer=setTimeout(()=>verTaps=0,1600);
+  if(verTaps>=5){
+    verTaps=0;
+    if(isAdmin()){ openAdmin(); return }
+    const id=myTgId();
+    if(ADMIN_IDS.length&&id&&!ADMIN_IDS.includes(id))
+      return toast('Доступ закрыт','Этот раздел предназначен для владельца приложения.');
+    setAdminLocal(true);
+    toast('Режим администратора включён', id?('ваш ID: '+id+' — впишите его в список ADMIN_IDS в коде'):'вход по локальной отметке',1);
+    openAdmin();
+  }
+}
+
 /* ═══════════ ПРОФИЛЬ ═══════════ */
 const SETROWS=()=>[
   ['🎯','Сила сигнала',S.min+' / 10','min','score'],
@@ -5135,6 +5277,7 @@ function profAction(act){
     case 'about': return openAbout();
     case 'diag':  return openDiag();
     case 'support': return openSupport();
+    case 'admin': return openAdmin();
     default: logErr('profAction','неизвестное действие: '+act);
   }
 }
@@ -5152,6 +5295,8 @@ function renderProfile(){
   const u=TG?.initDataUnsafe?.user;
   const name=u?([u.first_name,u.last_name].filter(Boolean).join(' ')||u.username||'Гость'):'Гость';
   const done=history.filter(h=>h.result==='win'||h.result==='loss').length;
+  const adv=document.getElementById('acc-adv');
+  if(adv)adv.style.display=isAdmin()?'block':'none';
   el.innerHTML=`
   <div class="profHero">
     <div data-msc="1" data-size="78">${mascot(MASCOT_STATE,78)}</div>
@@ -5175,9 +5320,12 @@ function renderProfile(){
       <div style="flex:1"><b>Справка и поддержка</b></div><span class="chev">›</span></div>
     <div class="setRow" data-act="about"><span class="setIc">ℹ️</span>
       <div style="flex:1"><b>О приложении</b></div><span class="chev">›</span></div>
-    <div class="setRow" data-act="diag"><span class="setIc">🩺</span>
+    ${flagOn('diagShow')||isAdmin()?`<div class="setRow" data-act="diag"><span class="setIc">🩺</span>
       <div style="flex:1"><b>Диагностика</b></div>
-      <span class="setV">${DIAG.length?DIAG.length+' событий':'чисто'}</span><span class="chev">›</span></div>
+      <span class="setV">${DIAG.length?DIAG.length+' событий':'чисто'}</span><span class="chev">›</span></div>`:''}
+    ${isAdmin()?`<div class="setRow" data-act="admin"><span class="setIc">🛠</span>
+      <div style="flex:1"><b>Панель управления</b></div>
+      <span class="setV">только для вас</span><span class="chev">›</span></div>`:''}
     <div class="setRow" data-act="support"><span class="setIc">✈️</span>
       <div style="flex:1"><b>Чат поддержки</b></div>
       <span class="setV">@${SUPPORT}</span><span class="chev">›</span></div>
@@ -5703,6 +5851,211 @@ async function sigMTF(){
   sigMtfData=out; box.innerHTML=sigMtfHTML(); haptic();
 }
 
+
+/* ═══════════ ЖИВЫЕ ПРИБОРЫ: ПУЛЬС И АНАЛИТИКА ═══════════ */
+/* Стрелка не стоит на месте: между пересчётами она плавно идёт к новому значению,
+   а само значение обновляется по свежим свечам. */
+let pulseLive=null, anaLive=null;
+
+function needleEase(id,target){
+  const g=document.getElementById(id); if(!g)return;
+  const cur=parseFloat((g.style.transform.match(/-?[\d.]+/)||[0])[0])/90;
+  const next=cur+(target-cur)*0.45;          // подтягиваем, а не прыгаем
+  g.style.transform=`rotate(${90*Math.max(-1,Math.min(1,next))}deg)`;
+}
+
+/* шторка пульса: пересчёт по свежим свечам каждые 6 секунд */
+function pulseLiveStart(){
+  clearInterval(pulseLive);
+  pulseLive=setInterval(async()=>{
+    if(!pulseSym||document.hidden)return;
+    if(!document.getElementById('pulseWrap').classList.contains('on'))return;
+    try{
+      const [k,h]=await Promise.all([getCandles(pulseSym,S.tf,200),
+                                     getCandles(pulseSym,HTF[S.tf]||S.tf,120)]);
+      const a=analyze(k,h);
+      const osc=groupScore(a,OSC), trn=groupScore(a,TRN), all=groupScore(a,[...OSC,...TRN]);
+      const row=PULSE.find(x=>x.id===pulseSym);
+      if(row){ row.a=a; row.v=all.norm; row.k=k }
+      needleEase('ndlMain',all.norm); needleEase('ndlOsc',osc.norm); needleEase('ndlTrn',trn.norm);
+      const pc=document.getElementById('shPct');
+      if(pc)countUp(pc,Math.round(Math.abs(all.norm)*100),'%',700);
+      const px=document.getElementById('shPx');
+      if(px){ const prev=parseFloat(px.textContent.replace(/[^\d.-]/g,''));
+        px.textContent=fmtP(a.price); if(isFinite(prev)&&prev!==a.price)flash(px,a.price>prev) }
+      const vd=document.getElementById('shVerd');
+      if(vd){ const [t,c]=verdictOf(all.norm); vd.textContent=t; vd.style.color=c; vd.style.borderColor=c }
+      const ts=document.getElementById('shTime');
+      if(ts)ts.textContent='обновлено '+new Date().toLocaleTimeString('ru',
+        {hour:'2-digit',minute:'2-digit',second:'2-digit'});
+    }catch(e){ logErr('pulseLive',e) }
+  },6000);
+}
+function pulseLiveStop(){ clearInterval(pulseLive) }
+
+/* список пульса: цены идут живьём */
+function pulseRowsLive(){
+  const rows=document.querySelectorAll('#pulseList .pRow'); if(!rows.length)return;
+  PULSE.forEach(r=>{
+    const el=document.querySelector(`#pr-${r.id} .pPx b`);
+    const ch=document.querySelector(`#pr-${r.id} .pPx s`);
+    const bar=document.querySelector(`#pr-${r.id} .pBar i`);
+    const num=document.querySelector(`#pr-${r.id} .pNum`);
+    if(bar){ const pct=Math.round(Math.abs(r.v)*100); bar.style.width=pct+'%';
+      if(num)num.textContent=pct }
+    if(el&&r.last!=null){ const prev=parseFloat(el.textContent.replace(/[^\d.-]/g,''));
+      if(prev!==r.last){ el.textContent=fmtP(r.last); flash(el,r.last>prev) } }
+    if(ch&&r.last!=null&&r.a?.price){ const dp=(r.last-r.a.price)/r.a.price*100;
+      ch.textContent=(dp>=0?'+':'')+dp.toFixed(3)+'%';
+      ch.style.color=dp>=0?'var(--up)':'var(--down)' }
+  });
+}
+
+/* аналитика: прибор точности подтягивается по мере закрытия сделок */
+function anaLiveStart(){
+  clearInterval(anaLive);
+  anaLive=setInterval(()=>{
+    const t=document.getElementById('tab-analytics');
+    if(!t||!t.classList.contains('on')||document.hidden)return;
+    const done=history.filter(h=>h.result==='win'||h.result==='loss');
+    if(!done.length)return;
+    const w=done.filter(h=>h.result==='win').length, wr=w/done.length, be=1/(1+S.payout);
+    needleEase('anaNdl',Math.max(-1,Math.min(1,(wr-be)/Math.max(be,1-be))));
+    const el=document.getElementById('anaAcc');
+    if(el){ const shown=parseFloat(el.textContent)||0, real=+(wr*100).toFixed(1);
+      if(Math.abs(shown-real)>0.05)countUp(el,real,'%',700) }
+  },4000);
+}
+
+/* ═══════════ ЖИВОЙ ПОТОК: ГРАФИК И ПРИБОРЫ ═══════════ */
+/* Один источник на всё приложение: крипта — поток биржи, валюты и индексы — тики потока.
+   Последняя свеча дорисовывается на месте, приборы едут за ней. */
+const LF={sym:null,tf:null,ws:null,sub:null,last:null,reTimer:null,drawTimer:null,on:false};
+
+function lfStop(){
+  LF.on=false;
+  try{ LF.ws&&LF.ws.close() }catch(e){ logErr('lfStop.ws',e) }
+  LF.ws=null;
+  if(LF.sub){ try{ qsSend({forget:LF.sub}) }catch(e){ logErr('lfStop.qs',e) } LF.sub=null }
+  clearInterval(LF.reTimer); clearInterval(LF.drawTimer);
+}
+
+/* приклеиваем тик к последней свече */
+function lfApply(price,ts){
+  const sig=sigState.sig; if(!sig||!sig.a.k||!sig.a.k.length)return;
+  const k=sig.a.k, last=k[k.length-1];
+  const step=MS[LF.tf]||3e5;
+  if(ts&&ts-last.t>=step){
+    // началась новая свеча
+    k.push({t:last.t+step,o:price,h:price,l:price,c:price,v:0,ct:last.t+step*2});
+    if(k.length>240)k.shift();
+  }else{
+    last.c=price;
+    if(price>last.h)last.h=price;
+    if(price<last.l)last.l=price;
+  }
+  sig.a.price=price;
+  LF.last=price;
+}
+
+/* мягкое обновление показателей без полной перерисовки */
+function lfPaint(){
+  const sig=sigState.sig; if(!sig)return;
+  const home=document.getElementById('tab-home');
+  if(!home||!home.classList.contains('on')||document.hidden)return;
+
+  const cv=document.getElementById('sigChart');
+  if(cv)drawSigChart();
+
+  const px=document.getElementById('sigPx');
+  if(px&&LF.last!=null){
+    const prev=parseFloat(px.textContent.replace(/[^\d.-]/g,''));
+    const now=fmtP(LF.last);
+    if(px.textContent!==now){ px.textContent=now; flash(px,LF.last>prev) }
+  }
+}
+
+/* пересчёт индикаторов: стрелки и сила едут за рынком */
+function lfRecalc(){
+  const sig=sigState.sig; if(!sig||document.hidden)return;
+  const home=document.getElementById('tab-home');
+  if(!home||!home.classList.contains('on'))return;
+  try{
+    const a=analyze(sig.a.k,sig.htf||sig.a.k.filter((_,i)=>i%3===0));
+    a.k=sig.a.k;
+    sig.a=a;
+    const conf=Math.round(a.score*10);
+    const cf=document.getElementById('sigConf');
+    if(cf&&cf.textContent!==conf+'%')countUp(cf,conf,'%',600);
+    document.querySelectorAll('.dots i').forEach((el,i)=>
+      el.classList.toggle('on',i<Math.round(conf/12.5)));
+    const ind=document.querySelectorAll('.sigInd b');
+    if(ind.length>=4){
+      ind[0].textContent=a.rsi.toFixed(1);
+      ind[0].style.color=a.rsi>70?'var(--down)':a.rsi<30?'var(--up)':'var(--tx)';
+      ind[1].textContent=a.atrPct.toFixed(2)+'%';
+      ind[2].textContent=a.trend;
+      ind[3].textContent=a.mtf;
+      ind[3].style.color=a.mtf==='Согласован'?'var(--up)':'var(--down)';
+    }
+    // стрелки на экране сигналов
+    const osc=groupScore(a,OSC), trn=groupScore(a,TRN);
+    setNeedle('sgOsc',osc.norm); setNeedle('sgTrn',trn.norm);
+    setNeedle('visOsc',osc.norm); setNeedle('visTrn',trn.norm);
+    // смена вердикта — обновляем карточку целиком
+    const badge=document.querySelector('.sigDir b');
+    const want=a.dir==='CALL'?'ВВЕРХ':a.dir==='PUT'?'ВНИЗ':'ЖДАТЬ';
+    if(badge&&badge.textContent!==want){ renderSignals(); setMascot(a.dir); }
+  }catch(e){ logErr('lfRecalc',e) }
+}
+
+/* подписка на поток по текущему инструменту */
+async function lfStart(sym,tf){
+  lfStop();
+  LF.sym=sym; LF.tf=tf; LF.on=true;
+  LF.drawTimer=setInterval(lfPaint,1000);
+  LF.reTimer=setInterval(lfRecalc,5000);
+
+  if(marketOf(sym)==='crypto'){
+    try{
+      const s=sym.toLowerCase();
+      LF.ws=new WebSocket(`wss://stream.binance.com:9443/ws/${s}@kline_${tf}`);
+      LF.ws.onmessage=e=>{
+        try{
+          const k=JSON.parse(e.data).k; if(!k)return;
+          lfApply(+k.c,+k.t);
+        }catch(err){ logErr('lfStart.msg',err) }
+      };
+      LF.ws.onerror=()=>logErr('lfStart','поток биржи недоступен');
+    }catch(e){ logErr('lfStart.open',e) }
+    return;
+  }
+
+  // валюты, металлы и индексы — тики общего потока
+  try{
+    const qsym=qsSymbol(sym);
+    if(!qsym)return;
+    const m=await qsSend({ticks:qsym,subscribe:1});
+    LF.sub=m?.subscription?.id||null;
+    if(qsSock){
+      const prev=qsSock.onmessage;
+      qsSock.onmessage=ev=>{
+        prev&&prev(ev);
+        try{
+          const d=JSON.parse(ev.data);
+          if(d.tick&&d.tick.symbol===qsym)lfApply(+d.tick.quote,d.tick.epoch*1000);
+        }catch(err){ logErr('lfStart.tick',err) }
+      };
+    }
+  }catch(e){ logErr('lfStart.qs',e) }
+}
+
+/* поток идёт только когда экран открыт */
+document.addEventListener('visibilitychange',()=>{
+  if(document.hidden)lfStop();
+  else if(sigState.sig)lfStart(sigState.sym,sigState.tf);
+});
+
 /* ═══════════ ЭКРАН СИГНАЛОВ ═══════════ */
 const SIG_TFS=['1m','5m','15m','30m','1h'];
 let sigState={sym:null,tf:null,sig:null,busy:false,chartTimer:null};
@@ -5714,6 +6067,7 @@ async function sigLoad(sym,tf,quiet){
   try{
     const sig=await buildSignal(sym,tf);
     sigState.sym=sym; sigState.tf=tf; sigState.sig=sig;
+    lfStart(sym,tf);                       // дальше график и приборы живут сами
     const exists=signals.find(x=>x.sym===sym&&x.tf===tf&&Math.abs(x.ts-Date.now())<MS[tf]/2);
     if(!exists){ signals.unshift(sig); signals=signals.slice(0,20) }
     renderSignals();
@@ -6004,11 +6358,13 @@ function go(t,from){
   document.querySelectorAll('.nb').forEach(b=>b.classList.toggle('on',b.dataset.t===(t==='detail'?lastTab:t)));
   window.scrollTo(0,0); haptic();
   if(t==='market'){ mkPane==='pulse'?renderPulse():renderOverview(); } if(t==='history'){setMascotState('history');renderHistory()}
-  if(t==='home'){ sigSyncHead(); renderSignals(); renderHome(); renderExtras(); renderTicker(); setMascot(sigState.sig?sigState.sig.a.dir:'idle'); }
+  if(t!=='home'&&LF.on)lfStop();
+  if(t==='home'){ sigSyncHead(); renderSignals(); renderHome(); renderExtras(); renderTicker();
+    if(sigState.sig&&!LF.on)lfStart(sigState.sym,sigState.tf); setMascot(sigState.sig?sigState.sig.a.dir:'idle'); }
   if(t==='profile'){renderProfile();setMascotState('profile')}
   if(t==='chart')mountPage('ifChart','pg-chart');
   if(t==='signals'){renderEngine();renderAllSignals();renderLive();renderSess();}
-  if(t==='analytics'){setMascotState('analytics');renderAnalytics();if(anaPane==='auto')renderAuto();if(anaPane==='advice'){renderAdvice();renderDiscipline()}}
+  if(t==='analytics'){setMascotState('analytics');renderAnalytics();anaLiveStart();if(anaPane==='auto')renderAuto();if(anaPane==='advice'){renderAdvice();renderDiscipline()}}
 }
 
 function pick(container,attr,fn){
@@ -6051,7 +6407,7 @@ document.getElementById('runBtn').removeAttribute('onclick');
 document.getElementById('beVal').textContent=(100/(1+S.payout)).toFixed(1)+'%';
 document.querySelectorAll('#payouts .opt').forEach(o=>o.classList.toggle('on',+o.dataset.p===S.payout));
 document.querySelectorAll('#mins .opt').forEach(o=>o.classList.toggle('on',+o.dataset.m===S.min));
-renderHistory(); renderHome(); renderSess(); renderAuto(); renderLive(); renderStrat(); sigSyncHead(); renderSignals(); renderExtras(); setMascot('idle'); renderTicker(); if(AUTO&&AUTO.on)autoLoop(); setLang.init();
+renderHistory(); renderHome(); renderSess(); renderAuto(); renderLive(); renderStrat(); applyFlags(); sigSyncHead(); renderSignals(); renderExtras(); setMascot('idle'); renderTicker(); if(AUTO&&AUTO.on)autoLoop(); setLang.init();
 if(TDKEY)document.getElementById('tdKey').value=TDKEY;
 document.getElementById('qsApp').value=QS_APP;
 if(AIKEY)document.getElementById('aiKey').value=AIKEY; resolvePending(); setInterval(resolvePending,30000);
