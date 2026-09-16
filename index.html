@@ -975,6 +975,54 @@ nav{position:fixed;left:0;right:0;bottom:0;background:rgba(8,15,26,.94);
 @keyframes mLook{0%,100%{transform:translateX(0)}30%{transform:translateX(-2.5px)}65%{transform:translateX(2.5px)}}
 @media (prefers-reduced-motion:reduce){
   .msc .mBody,.msc .mShadow,.msc .mEyes,.msc .mAnt{animation:none!important}}
+
+/* приветствие-проводник */
+.guideWrap{display:flex;align-items:flex-start;gap:12px;margin-bottom:16px}
+.guideMsc{flex:none;filter:drop-shadow(0 8px 18px rgba(0,0,0,.5))}
+.bubble{position:relative;flex:1;background:var(--card);border:1px solid var(--line);
+  border-radius:18px;padding:13px 15px;font-size:14px;line-height:1.55;color:var(--tx);
+  opacity:0;transform:translateY(8px);margin-top:14px}
+.bubble.in{animation:bubIn .45s cubic-bezier(.2,1,.3,1) forwards}
+@keyframes bubIn{to{opacity:1;transform:none}}
+.bubble:before{content:"";position:absolute;left:-7px;top:24px;width:13px;height:13px;
+  background:var(--card);border-left:1px solid var(--line);border-bottom:1px solid var(--line);
+  transform:rotate(45deg)}
+.guideBody{flex:1;overflow-y:auto;min-height:0}
+.gT{font-size:22px;font-weight:800;letter-spacing:-.3px;margin-bottom:12px}
+.guideBody p{margin:0 0 10px;font-size:13.5px;line-height:1.6;color:var(--tx2)}
+.gRow{background:var(--card2);border:1px solid var(--line2);border-radius:13px;
+  padding:10px 13px;margin-bottom:7px}
+.gRow b{display:block;font-size:13.5px;font-weight:700}
+.gRow s{text-decoration:none;font-size:11.5px;color:var(--tx3)}
+.gNums{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:11px}
+.gNums div{background:var(--card2);border:1px solid var(--line2);border-radius:13px;
+  padding:11px 5px;text-align:center}
+.gNums b{display:block;font:800 20px 'JetBrains Mono',monospace}
+.gNums s{text-decoration:none;font-size:9.5px;color:var(--tx3);line-height:1.3;display:block;margin-top:3px}
+#bTour{display:none}
+#bTour.on{display:flex;flex-direction:column}
+#bNext{margin-top:auto}
+@media (prefers-reduced-motion:reduce){.bubble.in{animation:none;opacity:1;transform:none}}
+
+/* ═══ модальные окна поверх приложения ═══ */
+.ov{position:fixed;inset:0;z-index:118;display:none;background:rgba(0,0,0,.62);
+  backdrop-filter:blur(3px);align-items:flex-end;justify-content:center}
+.ov.on{display:flex;animation:ovIn .2s ease}
+@keyframes ovIn{from{opacity:0}to{opacity:1}}
+.ov .sheet{background:var(--bg);border-radius:26px 26px 0 0;width:100%;max-width:520px;
+  max-height:92vh;display:flex;flex-direction:column;border-top:1px solid var(--line);
+  animation:shUp .32s cubic-bezier(.2,1,.3,1)}
+@keyframes shUp{from{transform:translateY(40px);opacity:.6}to{transform:none;opacity:1}}
+.ov .shHead{display:flex;align-items:center;gap:12px;padding:16px;
+  border-bottom:1px solid var(--line2);flex:none;position:sticky;top:0;background:var(--bg);
+  border-radius:26px 26px 0 0;z-index:2}
+.ov .shBody{overflow-y:auto;-webkit-overflow-scrolling:touch;
+  padding:16px 16px max(20px,env(safe-area-inset-bottom));flex:1}
+.ov .shX{width:38px;height:38px;border-radius:50%;background:var(--card2);
+  border:1px solid var(--line2);color:var(--tx);font-size:16px;cursor:pointer;flex:none;
+  display:grid;place-items:center}
+.ov .shX:active{background:var(--card)}
+@media (prefers-reduced-motion:reduce){.ov.on,.ov .sheet{animation:none}}
 .disc{font-size:11.5px;color:var(--tx3);line-height:1.5;padding:4px 4px 16px;text-align:center}
 
 /* вердикт над графиком */
@@ -1009,7 +1057,7 @@ nav{position:fixed;left:0;right:0;bottom:0;background:rgba(8,15,26,.94);
 <body>
 
 <style>
-#boot{position:fixed;inset:0;z-index:99;background:
+#boot{position:fixed;inset:0;z-index:200;background:
   radial-gradient(720px 460px at 50% 18%,rgba(245,185,66,.13),transparent 65%),
   radial-gradient(600px 400px at 12% 88%,rgba(38,120,255,.12),transparent 60%),#040810;
   display:flex;flex-direction:column;transition:opacity .5s,visibility .5s}
@@ -1092,63 +1140,22 @@ nav{position:fixed;left:0;right:0;bottom:0;background:rgba(8,15,26,.94);
   </div>
 
   <!-- 1.5 выбор языка -->
-  <div class="stage" id="bLang">
-    <div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center">
-      <div class="bIco" style="margin-bottom:18px">🌐</div>
-      <h2 style="font-size:23px;font-weight:800;margin:0 0 6px">Выберите язык</h2>
-      <p style="color:var(--tx2);margin:0;font-size:14px">Choose your language</p>
-      <div class="langPick" id="bLangList"></div>
-    </div>
-  </div>
-
-  <!-- 2. онбординг -->
   <div class="stage" id="bTour">
     <div class="bTop">
-      <div class="bDots" id="bDots"><i class="on"></i><i></i><i></i><i></i></div>
+      <div class="bDots" id="bDots"></div>
       <button class="bSkip" onclick="bootFinish()">Пропустить</button>
     </div>
 
-    <div class="bSlide" data-i="0">
-      <div class="bIco">📡</div>
-      <h2>Работает на реальных данных</h2>
-      <p>Приложение берёт настоящие свечи с биржи Binance и считает по ним семь классических индикаторов — тренд, импульс, перекупленность, объём и старший таймфрейм.</p>
-      <p>На выходе одно из трёх: CALL, PUT или WAIT. Никаких скрытых формул: каждый фактор показан отдельно, с его весом.</p>
+    <div class="guideWrap">
+      <div class="guideMsc" id="gMsc"></div>
+      <div class="bubble" id="gBubble"></div>
     </div>
 
-    <div class="bSlide hide" data-i="1">
-      <div class="bIco">🎯</div>
-      <h2>Сила сигнала от 0 до 10</h2>
-      <p>Число показывает, насколько индикаторы согласны между собой. Пятнадцать голосов складываются, разница между «за рост» и «за падение» превращается в шкалу.</p>
-      <ul class="bList">
-        <li><span>◆</span><div><b>Ниже 5.5</b> — WAIT, согласия нет</div></li>
-        <li><span>◆</span><div><b>5.5–7</b> — направление есть, но слабое</div></li>
-        <li><span>◆</span><div><b>Выше 7</b> — индикаторы смотрят в одну сторону</div></li>
-      </ul>
-    </div>
+    <div class="guideBody" id="gBody"></div>
 
-    <div class="bSlide hide" data-i="2">
-      <div class="bIco">🗂</div>
-      <h2>Фиксирует результат</h2>
-      <p>Каждый сигнал уходит в журнал. Через время экспирации приложение подтягивает реальную цену и отмечает результат. Никто не правит статистику вручную.</p>
-      <p>Так через неделю вы будете знать свой настоящий процент совпадений — по фактическим результатам.</p>
-    </div>
-
-    <div class="bSlide hide" data-i="3">
-      <div class="bIco">⚖️</div>
-      <h2>Главная цифра, прежде чем начать</h2>
-      <div class="bNums">
-        <div class="bNum"><b>80%</b><s>выплата<br>при выигрыше</s></div>
-        <div class="bNum"><b>100%</b><s>потеря<br>при проигрыше</s></div>
-        <div class="bNum"><b>55.6%</b><s>нужная точность<br>ради нуля</s></div>
-      </div>
-      <p style="margin-top:18px">Выигрыш и проигрыш стоят по-разному, поэтому половины совпадений недостаточно. Приложение всегда показывает эту границу рядом с вашим винрейтом.</p>
-      <div class="bWarn"><b>Это инструмент анализа, а не советник</b>Приложение не подключено к брокеру и не гарантирует результат. Решение о сделке всегда ваше.</div>
-    </div>
-
-    <button class="btn" id="bNext" onclick="bootNext()" style="margin-bottom:6px">Дальше</button>
+    <button class="btn" id="bNext" onclick="bootNext()">Дальше</button>
   </div>
 
-  <!-- 3. прогрев -->
   <div class="stage" id="bLoad">
     <div class="ring"></div>
     <b>Подключаюсь к бирже</b>
@@ -1167,27 +1174,74 @@ nav{position:fixed;left:0;right:0;bottom:0;background:rgba(8,15,26,.94);
   const t=setInterval(()=>{p=Math.min(100,p+Math.random()*22+8);bar.style.width=p+'%';
     if(p>=100){clearInterval(t);setTimeout(()=>{
       if(seen)return warm();
-      const L=[['ru','Русский','🇷🇺'],['uk','Українська','🇺🇦'],['en','English','🇬🇧'],
-               ['es','Español','🇪🇸'],['de','Deutsch','🇩🇪']];
-      document.getElementById('bLangList').innerHTML=L.map(l=>
-        `<button onclick="bootLang('${l[0]}')"><span>${l[2]}</span>${l[1]}</button>`).join('');
-      stage('bLang');
+      paintGuide(); stage('bTour');
     },260)}},170);
 
-  window.bootLang=function(code){
-    try{localStorage.setItem('acs_lang',code)}catch(e){ logErr('app',e) }
-    if(typeof setLang==='function'&&code!=='ru')setLang(code);
-    stage('bTour');
-    window.Telegram?.WebApp?.HapticFeedback?.impactOccurred?.('medium');
-  };
+  const GUIDE=[
+    {st:'hero',say:'Привет. Я помогу разобрать рынок по шагам — без обещаний и цифр из воздуха.',
+      t:'Что это такое',
+      body:`<p>Приложение берёт настоящие свечи с биржи и считает по ним пятнадцать факторов:
+        тренд, импульс, осцилляторы, объём, уровни, фигуры, свечные формации и расхождения.</p>
+        <p>На выходе одно из трёх — ВВЕРХ, ВНИЗ или ЖДАТЬ. И всегда видно, какой фактор за, а какой против.</p>`},
+    {st:'idle',say:'Сначала выберите, с чем работаете. Ничего не считается, пока вы сами не нажмёте кнопку.',
+      t:'Рынки и инструменты',
+      body:`<div class="gRow"><b>Криптовалюты</b><s>сотни пар с биржи, круглосуточно</s></div>
+        <div class="gRow"><b>Валютные пары</b><s>мажоры, кроссы и металлы — по торговым сессиям</s></div>
+        <div class="gRow"><b>Индексы</b><s>работают без выходных, когда рынок закрыт</s></div>
+        <div class="gRow"><b>OTC</b><s>считается по базовой паре, о чём честно сказано в разборе</s></div>`},
+    {st:'think',say:'Профиль меняет вес факторов. Один и тот же график при разных подходах даёт разный ответ.',
+      t:'Три стратегии',
+      body:`<div class="gRow"><b>Мульти-анализ</b><s>все пятнадцать факторов поровну</s></div>
+        <div class="gRow"><b>Smart Money</b><s>упор на уровни, объём и старший срок</s></div>
+        <div class="gRow"><b>Price Action</b><s>главное — свечные формации и фигуры</s></div>
+        <p>Срок экспирации выбирается отдельно: от минуты до суток.</p>`},
+    {st:'loading',say:'Нажали кнопку — я собираю данные и показываю результат. Дальше решаете, копать ли глубже.',
+      t:'Сигнал и разбор',
+      body:`<p>Сначала короткий ответ: направление, сила от нуля до десяти, четыре главных довода
+        и обязательно один против.</p>
+        <p>Знак вопроса рядом открывает визуальный разбор в шесть шагов: график с уровнями и фигурой,
+        зоны, формации, показатели со спидометрами, что подтверждает и что ослабляет, итог.</p>`},
+    {st:'analytics',say:'Самое полезное здесь — не сигнал, а то, что с ним случилось потом.',
+      t:'Проверка и статистика',
+      body:`<p>Каждый сигнал уходит в журнал. После экспирации приложение подтягивает реальную цену
+        и само отмечает, сбылся он или нет.</p>
+        <div class="gRow"><b>Итог</b><s>точность и вывод по доверительному интервалу</s></div>
+        <div class="gRow"><b>Что менять</b><s>какой актив, срок и час работают лучше</s></div>
+        <div class="gRow"><b>Симулятор</b><s>виртуальный счёт и кривая капитала</s></div>`},
+    {st:'shield',say:'И последнее — арифметика, ради которой всё это и затевалось.',
+      t:'Цифра, которую надо знать',
+      body:`<div class="gNums">
+          <div><b style="color:var(--up)">80%</b><s>выплата при выигрыше</s></div>
+          <div><b style="color:var(--down)">100%</b><s>потеря при проигрыше</s></div>
+          <div><b style="color:var(--gold)">55.6%</b><s>нужная точность</s></div>
+        </div>
+        <p>Выигрыш и проигрыш стоят по-разному, поэтому половины совпадений не хватает.
+        Эта граница показана рядом с вашей статистикой во всех разделах.</p>
+        <div class="note warn"><div><b>Результат не гарантирован</b>
+          Приложение считает и проверяет себя, но решение остаётся за вами. Торговля связана с риском.</div></div>`}
+  ];
+  let gi=0;
+  function paintGuide(){
+    const g=GUIDE[gi];
+    const mm=document.getElementById('gMsc');
+    if(mm&&typeof mascot==='function')mm.innerHTML=mascot(g.st,92);
+    const bub=document.getElementById('gBubble');
+    if(bub){ bub.innerHTML=g.say; bub.classList.remove('in'); void bub.offsetWidth; bub.classList.add('in') }
+    const body=document.getElementById('gBody');
+    if(body){
+      body.innerHTML=`<div class="gT">${g.t}</div>${g.body}`;
+      [...body.querySelectorAll('p,.gRow,.gNums,.note')].forEach((el,i)=>{
+        el.style.animation=`slideUp .45s ease ${.1+i*.09}s both`;
+      });
+    }
+    const dots=document.getElementById('bDots');
+    if(dots)dots.innerHTML=GUIDE.map((_,i)=>`<i class="${i<=gi?'on':''}"></i>`).join('');
+    const nx=document.getElementById('bNext');
+    if(nx)nx.textContent=gi===GUIDE.length-1?'Всё понятно, начать':'Дальше';
+  }
   window.bootNext=function(){
-    const slides=document.querySelectorAll('.bSlide');
-    if(step>=slides.length-1)return warm();
-    slides[step].classList.add('hide'); step++;
-    const s=slides[step]; s.classList.remove('hide'); s.classList.add('bAnim');
-    setTimeout(()=>s.classList.remove('bAnim'),520);
-    document.querySelectorAll('#bDots i').forEach((d,i)=>d.classList.toggle('on',i<=step));
-    document.getElementById('bNext').textContent = step===slides.length-1?'Всё понятно, начать':'Дальше';
+    if(gi>=GUIDE.length-1)return warm();
+    gi++; paintGuide();
     window.Telegram?.WebApp?.HapticFeedback?.impactOccurred?.('light');
   };
   window.bootFinish=warm;
@@ -1219,7 +1273,7 @@ nav{position:fixed;left:0;right:0;bottom:0;background:rgba(8,15,26,.94);
     <div class="brand">
       <span class="mark"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1"
         stroke-linecap="round" stroke-linejoin="round"><path d="M2 12h4l3-8 4 16 3-8h6"/></svg></span>
-      <div style="min-width:0"><h1>AI Comfort Signal</h1><span style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;display:block">анализ на реальных данных · <b style="color:var(--gold);font-weight:700">v58 · 15.09 12:15</b></span></div>
+      <div style="min-width:0"><h1>AI Comfort Signal</h1><span style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;display:block">анализ на реальных данных · <b style="color:var(--gold);font-weight:700">v61 · 15.09 16:34</b></span></div>
     </div>
     <button class="bell" onclick="openChat()" aria-label="Помощник"><svg viewBox="0 0 24 24" fill="none"
       stroke="currentColor" stroke-width="2"><path d="M18 8a6 6 0 10-12 0c0 7-3 8-3 8h18s-3-1-3-8"/>
@@ -1487,7 +1541,7 @@ nav{position:fixed;left:0;right:0;bottom:0;background:rgba(8,15,26,.94);
     <div class="sect">ПРОФИЛЬ И НАСТРОЙКИ</div>
     <div class="card">
       <div class="kv"><span>Пользователь</span><b id="pName">Гость</b></div>
-      <div class="kv"><span>Версия сборки</span><b class="mono" style="color:var(--gold)">v58 · 15.09 12:15</b></div>
+      <div class="kv"><span>Версия сборки</span><b class="mono" style="color:var(--gold)">v61 · 15.09 16:34</b></div>
       <div class="kv"><span>Источник данных</span><b>Binance Spot API</b></div>
       <div class="kv"><span>Сигналов в журнале</span><b id="pCount">0</b></div>
     </div>
@@ -1597,8 +1651,8 @@ nav{position:fixed;left:0;right:0;bottom:0;background:rgba(8,15,26,.94);
   <div id="pkList"></div>
 </div>
 <div id="pulseWrap"><div id="pulseSheet"></div></div>
-<div class="ov" id="aboutWrap"></div>
-<div class="ov" id="visWrap">
+<div class="ov" id="aboutWrap" onclick="if(event.target.id==='aboutWrap')closeOv('aboutWrap')"></div>
+<div class="ov" id="visWrap" onclick="if(event.target.id==='visWrap')closeOv('visWrap')">
   <div class="sheet">
     <div class="shHead"><div style="flex:1"><b>Визуальный разбор</b>
       <div class="sub2">шесть шагов: от графика до итога</div></div>
@@ -1606,8 +1660,8 @@ nav{position:fixed;left:0;right:0;bottom:0;background:rgba(8,15,26,.94);
     <div class="shBody" id="visBody"></div>
   </div>
 </div>
-<div class="ov" id="setWrap"></div>
-<div class="ov" id="helpScr"></div>
+<div class="ov" id="setWrap" onclick="if(event.target.id==='setWrap')closeOv('setWrap')"></div>
+<div class="ov" id="helpScr" onclick="if(event.target.id==='helpScr')closeOv('helpScr')"></div>
 <div id="helpWrap" onclick="if(event.target.id==='helpWrap')closeHelp()"></div>
 <div id="toast"></div>
 <nav>
