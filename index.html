@@ -8,6 +8,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="src/academy/academy-shell.css">
 <style>
 :root{
   /* шкалы оформления (Phase 1): единые отступы, радиусы и типографика */
@@ -5944,243 +5945,7 @@ function openEduArticle(id){
   openOv('eduWrap'); haptic();
 }
 
-/* ═══════════════════════════════════════════════════════════
-   MARKET AI ACADEMY — PHASE 2
-   Модели данных, реестры, прогресс, валидация.
-   Только данные и чистые функции: UI здесь нет.
-   Блок переносится в отдельный модуль без правок при переходе на сборку.
-   ═══════════════════════════════════════════════════════════ */
-
-/* ── Типы шагов урока (спецификация V2, раздел 55) ── */
-const STEP_TYPES=['intro','character_message','explanation','chart','highlight_candle',
-  'highlight_zone','draw_line','show_indicator','show_pattern','animation','question',
-  'tap_candle','tap_zone','select_direction','multiple_choice','true_false','market_tip',
-  'warning','example','counter_example','summary','explain_to_market_ai','market_replay',
-  'scenario_tree','comparison','drag_level','mark_structure'];
-
-/* ── Состояния персонажа, допустимые в уроках ── */
-const CHAR_STATES=['idle','loading','CALL','PUT','wait','analytics','history','think',
-  'shield','globe','bell','listen','hero','wave','error'];
-
-/* ── Жизненный цикл освоения (раздел 120) ── */
-const MASTERY=['none','learned','practiced','tested','mastered'];
-
-/* ── Миры академии. Стабильные идентификаторы, не менять. ── */
-const WORLDS=[
-  {id:'w_basics',   ic:'📘', order:10, titleKey:'w.basics',   modules:['m_market','m_chart']},
-  {id:'w_candles',  ic:'🕯', order:20, titleKey:'w.candles',  modules:['m_anatomy','m_patterns']},
-  {id:'w_trend',    ic:'📈', order:30, titleKey:'w.trend',    modules:['m_phases','m_structure']},
-  {id:'w_levels',   ic:'📐', order:40, titleKey:'w.levels',   modules:['m_zones','m_breakouts']},
-  {id:'w_indi',     ic:'📉', order:50, titleKey:'w.indi',     modules:['m_osc','m_trendind']},
-  {id:'w_mtf',      ic:'🔭', order:60, titleKey:'w.mtf',      modules:['m_timeframes']},
-  {id:'w_risk',     ic:'🛡', order:70, titleKey:'w.risk',     modules:['m_money','m_psy']},
-  {id:'w_binary',   ic:'🎯', order:80, titleKey:'w.binary',   modules:['m_contract','m_timing']}
-];
-
-const MODULES=[
-  {id:'m_market',    worldId:'w_basics',  order:10, titleKey:'m.market'},
-  {id:'m_chart',     worldId:'w_basics',  order:20, titleKey:'m.chart'},
-  {id:'m_anatomy',   worldId:'w_candles', order:10, titleKey:'m.anatomy'},
-  {id:'m_patterns',  worldId:'w_candles', order:20, titleKey:'m.patterns'},
-  {id:'m_phases',    worldId:'w_trend',   order:10, titleKey:'m.phases'},
-  {id:'m_structure', worldId:'w_trend',   order:20, titleKey:'m.structure'},
-  {id:'m_zones',     worldId:'w_levels',  order:10, titleKey:'m.zones'},
-  {id:'m_breakouts', worldId:'w_levels',  order:20, titleKey:'m.breakouts'},
-  {id:'m_osc',       worldId:'w_indi',    order:10, titleKey:'m.osc'},
-  {id:'m_trendind',  worldId:'w_indi',    order:20, titleKey:'m.trendind'},
-  {id:'m_timeframes',worldId:'w_mtf',     order:10, titleKey:'m.timeframes'},
-  {id:'m_money',     worldId:'w_risk',    order:10, titleKey:'m.money'},
-  {id:'m_psy',       worldId:'w_risk',    order:20, titleKey:'m.psy'},
-  {id:'m_contract',  worldId:'w_binary',  order:10, titleKey:'m.contract'},
-  {id:'m_timing',    worldId:'w_binary',  order:20, titleKey:'m.timing'}
-];
-
-/* ── Реестр уроков. Единственный источник правды (раздел 136). ──
-   На этой фазе заполнен каркас из существующих 11 статей обучения:
-   каждая статья становится уроком с шагами explanation.
-   Интерактивные шаги добавляются в Phase 5, пока их нет честно. */
-function lessonFromArticle(art,moduleId,order,prereq){
-  const mod=MODULES.find(m=>m.id===moduleId);
-  return {
-    id:'l_'+art.id,
-    worldId:mod?mod.worldId:null,
-    moduleId,
-    order,
-    icon:art.ic,
-    titleKey:'l.'+art.id+'.title',
-    subtitleKey:'l.'+art.id+'.short',
-    difficulty:1,
-    estimatedTime:4,
-    xp:20,
-    prerequisites:prereq||[],
-    characterState:'think',
-    steps:[
-      {type:'intro',characterState:'hero',textKey:'l.'+art.id+'.title'},
-      ...art.blocks.map((b,i)=>({
-        type:'explanation',
-        characterState:'think',
-        titleKey:'l.'+art.id+'.b'+i+'.title',
-        bodyKeys:b.slice(1).map((_,j)=>'l.'+art.id+'.b'+i+'.p'+j)
-      })),
-      {type:'summary',characterState:'idle',textKey:'l.'+art.id+'.summary'}
-    ],
-    quiz:[],        // [PLANNED] Phase 5
-    practice:[],    // [PLANNED] Phase 14
-    source:'edu'    // помечаем происхождение: перенесено из статей
-  };
-}
-
-const LESSON_MAP={
-  basics:['m_market',10,[]],       trend:['m_phases',10,['l_basics']],
-  levels:['m_zones',10,['l_trend']], patterns:['m_patterns',10,['l_candles']],
-  candles:['m_anatomy',10,['l_basics']], indi:['m_osc',10,['l_trend']],
-  mtf:['m_timeframes',10,['l_trend']], risk:['m_money',10,[]],
-  math:['m_money',20,['l_risk']],   mistakes:['m_psy',10,['l_risk']],
-  glossary:['m_chart',10,[]]
-};
-
-function buildLessonRegistry(){
-  const out=[];
-  (typeof EDU!=='undefined'?EDU:[]).forEach(a=>{
-    const m=LESSON_MAP[a.id];
-    if(!m){ logErr('LessonRegistry','нет привязки модуля для '+a.id); return }
-    out.push(lessonFromArticle(a,m[0],m[1],m[2]));
-  });
-  return out;
-}
-let LESSONS=[];
-
-/* ── Реестр сценариев (раздел 69). Детерминированные фикстуры. ── */
-const SCENARIO_TYPES=['ideal','weak','false','ambiguous','no_trade'];
-
-/* Генератор OHLC по зерну: одинаковое зерно даёт одинаковый ряд. */
-function seededOHLC(seed,n,opts){
-  const o=opts||{};
-  let s=seed>>>0, p=o.start||100;
-  const rnd=()=>{ s=(s*1664525+1013904223)>>>0; return s/4294967296 };
-  const drift=o.drift||0, vol=o.vol||0.6, out=[];
-  for(let i=0;i<n;i++){
-    const op=p;
-    p=Math.max(0.01,p+(rnd()-0.5)*vol+drift);
-    const hi=Math.max(op,p)+rnd()*vol*0.4;
-    const lo=Math.min(op,p)-rnd()*vol*0.4;
-    out.push({t:i*60000,o:op,h:hi,l:lo,c:p,v:1000+rnd()*500,ct:(i+1)*60000});
-  }
-  return out;
-}
-
-function makeScenario(cfg){
-  return {
-    id:cfg.id,
-    marketType:cfg.marketType||'crypto',
-    timeframe:cfg.timeframe||'5m',
-    regime:cfg.regime||'trend',
-    seed:cfg.seed,
-    candles:cfg.n||80,
-    type:cfg.type,
-    difficulty:cfg.difficulty||1,
-    correctAnswer:cfg.correct,                 // 'up' | 'down' | 'skip'
-    acceptableAnswers:cfg.acceptable||[cfg.correct],
-    conflicts:cfg.conflicts||[],
-    riskFactors:cfg.riskFactors||[],
-    explainKey:'s.'+cfg.id+'.explain',
-    dataLabel:'TRAINING SCENARIO',             // раздел 67: никогда не LIVE
-    ohlc(){ return seededOHLC(cfg.seed,cfg.n||80,cfg.gen||{}) }
-  };
-}
-
-const SCENARIOS=[
-  makeScenario({id:'sc_trend_up_1',type:'ideal',regime:'trend',seed:1001,n:80,
-    gen:{drift:0.22,vol:0.5},correct:'up',difficulty:1}),
-  makeScenario({id:'sc_trend_dn_1',type:'ideal',regime:'trend',seed:1002,n:80,
-    gen:{drift:-0.22,vol:0.5},correct:'down',difficulty:1}),
-  makeScenario({id:'sc_range_1',type:'no_trade',regime:'range',seed:1003,n:80,
-    gen:{drift:0,vol:0.35},correct:'skip',difficulty:2,
-    riskFactors:['нет направления','цена в середине диапазона']}),
-  makeScenario({id:'sc_chaos_1',type:'ambiguous',regime:'chaos',seed:1004,n:80,
-    gen:{drift:0,vol:1.4},correct:'skip',difficulty:3,
-    conflicts:['высокая волатильность','структура не читается']}),
-  makeScenario({id:'sc_weak_up_1',type:'weak',regime:'trend',seed:1005,n:80,
-    gen:{drift:0.08,vol:0.9},correct:'skip',acceptable:['skip','up'],difficulty:4,
-    conflicts:['слабый импульс','широкие тени']})
-];
-
-/* ── Прогресс. Новый ключ, старые не трогаем (раздел 131). ── */
-const EDU_KEY='acs_edu_v2';
-let EDUP=LS.get(EDU_KEY,{
-  version:2, xp:0, lessons:{}, mistakes:{}, achievements:[],
-  tourDone:false, experienceLevel:null, lastLesson:null
-});
-const eduSave=()=>LS.set(EDU_KEY,EDUP);
-
-function lessonState(id){ return EDUP.lessons[id]||{mastery:'none',attempts:0,correct:0,ts:0} }
-function lessonAvailable(l){
-  return (l.prerequisites||[]).every(p=>{
-    const st=lessonState(p).mastery;
-    return st==='learned'||st==='practiced'||st==='tested'||st==='mastered';
-  });
-}
-function setMastery(id,level){
-  if(!MASTERY.includes(level))return logErr('setMastery','неизвестный уровень: '+level);
-  const st=lessonState(id);
-  if(MASTERY.indexOf(level)<=MASTERY.indexOf(st.mastery))return;   // не понижаем
-  EDUP.lessons[id]={...st,mastery:level,ts:Date.now()};
-  eduSave();
-}
-function addXP(n){ EDUP.xp=(EDUP.xp||0)+n; eduSave() }
-function recordMistake(kind){
-  EDUP.mistakes[kind]=(EDUP.mistakes[kind]||0)+1; eduSave();
-}
-
-/* ── Валидация контента (раздел 132). Ошибки не прячем. ── */
-function validateAcademy(){
-  const errors=[], warns=[];
-  const ids=new Set(), wIds=new Set(WORLDS.map(w=>w.id)), mIds=new Set(MODULES.map(m=>m.id));
-
-  MODULES.forEach(m=>{ if(!wIds.has(m.worldId))errors.push(`модуль ${m.id}: мира ${m.worldId} нет`) });
-  WORLDS.forEach(w=>(w.modules||[]).forEach(m=>{
-    if(!mIds.has(m))errors.push(`мир ${w.id}: модуля ${m} нет`) }));
-
-  LESSONS.forEach(l=>{
-    if(ids.has(l.id))errors.push(`дубль идентификатора урока: ${l.id}`);
-    ids.add(l.id);
-    if(!mIds.has(l.moduleId))errors.push(`урок ${l.id}: модуля ${l.moduleId} нет`);
-    if(!l.steps||!l.steps.length)errors.push(`урок ${l.id}: нет шагов`);
-    (l.steps||[]).forEach((s,i)=>{
-      if(!STEP_TYPES.includes(s.type))errors.push(`урок ${l.id} шаг ${i}: тип ${s.type} неизвестен`);
-      if(s.characterState&&!CHAR_STATES.includes(s.characterState))
-        errors.push(`урок ${l.id} шаг ${i}: состояние ${s.characterState} неизвестно`);
-    });
-    if(!l.quiz.length)warns.push(`урок ${l.id}: нет проверки знаний [PLANNED]`);
-  });
-  LESSONS.forEach(l=>(l.prerequisites||[]).forEach(p=>{
-    if(!ids.has(p))errors.push(`урок ${l.id}: требование ${p} не существует`) }));
-
-  const sIds=new Set();
-  SCENARIOS.forEach(s=>{
-    if(sIds.has(s.id))errors.push(`дубль идентификатора сценария: ${s.id}`);
-    sIds.add(s.id);
-    if(!SCENARIO_TYPES.includes(s.type))errors.push(`сценарий ${s.id}: тип ${s.type} неизвестен`);
-    if(!['up','down','skip'].includes(s.correctAnswer))
-      errors.push(`сценарий ${s.id}: недопустимый ответ ${s.correctAnswer}`);
-    const a=s.ohlc();
-    if(a.length!==s.candles)errors.push(`сценарий ${s.id}: свечей ${a.length}, ожидалось ${s.candles}`);
-    const b=s.ohlc();
-    if(a[10].c!==b[10].c)errors.push(`сценарий ${s.id}: генератор недетерминирован`);
-  });
-
-  return {ok:!errors.length,errors,warns,
-    counts:{worlds:WORLDS.length,modules:MODULES.length,
-            lessons:LESSONS.length,scenarios:SCENARIOS.length}};
-}
-
-/* Инициализация реестра после загрузки статей */
-function initAcademy(){
-  LESSONS=buildLessonRegistry();
-  const v=validateAcademy();
-  if(!v.ok)v.errors.forEach(e=>logErr('validateAcademy',e));
-  return v;
-}
+/* MARKET AI Academy core moved to src/academy/academy-core.js */
 
 /* ═══════════ ПРОФИЛЬ ═══════════ */
 const SETROWS=()=>[
@@ -7667,11 +7432,37 @@ document.getElementById('runBtn').removeAttribute('onclick');
 document.getElementById('beVal').textContent=(100/(1+S.payout)).toFixed(1)+'%';
 document.querySelectorAll('#payouts .opt').forEach(o=>o.classList.toggle('on',+o.dataset.p===S.payout));
 document.querySelectorAll('#mins .opt').forEach(o=>o.classList.toggle('on',+o.dataset.m===S.min));
-renderHistory(); renderHome(); renderSess(); renderAuto(); renderLive(); renderStrat(); applyFlags(); initAcademy(); cmdStart(); renderFav(); renderSessionPill(); sigSyncHead(); renderSignals(); renderExtras(); setMascot('idle'); renderTicker(); if(AUTO&&AUTO.on)autoLoop(); setLang.init();
+renderHistory(); renderHome(); renderSess(); renderAuto(); renderLive(); renderStrat(); applyFlags(); cmdStart(); renderFav(); renderSessionPill(); sigSyncHead(); renderSignals(); renderExtras(); setMascot('idle'); renderTicker(); if(AUTO&&AUTO.on)autoLoop(); setLang.init();
 if(TDKEY)document.getElementById('tdKey').value=TDKEY;
 document.getElementById('qsApp').value=QS_APP;
 if(AIKEY)document.getElementById('aiKey').value=AIKEY; resolvePending(); setInterval(resolvePending,30000);
 </script>
+<script src="src/academy/academy-core.js"></script>
+<script src="src/academy/academy-shell.js"></script>
+<script src="src/academy/chart-annotations.js"></script>
+<script src="src/academy/chart-event-layer.js"></script>
+<script src="src/academy/character-choreography.js"></script>
+<script src="src/academy/character-director.js"></script>
+<script src="src/academy/character-scene.js"></script>
+<script src="src/academy/character-timeline.js"></script>
+<script src="src/academy/replay-controller.js"></script>
+<script src="src/academy/academy-tour.js"></script>
+<script src="src/academy/zero-knowledge-journey.js"></script>
+<script src="src/academy/universe-engine.js"></script>
+<script src="src/academy/academy-progress.js"></script>
+<script src="src/academy/scenario-hub.js"></script>
+<script src="src/academy/universe-progression.js"></script>
+<script src="src/academy/progress-events.js"></script>
+<script src="src/academy/scenario-engine.js"></script>
+<script src="src/academy/replay-library.js"></script>
+<script src="src/academy/curriculum-catalog.js"></script>
+<script src="src/academy/adaptive-coach.js"></script>
+<script src="src/academy/exam-engine.js"></script>
+<script src="src/academy/academy-settings.js"></script>
+<script src="src/academy/academy-diagnostics.js"></script>
+<script src="src/academy/production-readiness.js"></script>
+<script src="src/academy/lesson-engine.js"></script>
+<script>initAcademy(); initAcademyShell();</script>
 
 <script type="text/html" id="pg-chart"><!DOCTYPE html>
 <html lang="ru">
