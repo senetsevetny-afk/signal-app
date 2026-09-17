@@ -1,10 +1,82 @@
-/* Checkpoints 22–23 — lightweight Universe foundation + touch camera. No WebGL/3D dependency yet. */
+/* MARKET AI Academy — V92 Telegram-safe Universe navigation.
+   No drag/pan capture. Vertical gestures always belong to Telegram/page.
+   Planet selection = tap -> cinematic focus -> open world. */
 (function(){
- const names={w_basics:'Основы',w_candles:'Свечи',w_trend:'Структура',w_levels:'Уровни',w_indi:'Индикаторы',w_mtf:'Таймфреймы',w_risk:'Риск',w_binary:'Binary'};
- let cam={x:0,y:0,scale:1};
- function progress(id){const ls=LESSONS.filter(l=>l.worldId===id);return ls.length?Math.round(ls.filter(l=>lessonState(l.id).mastery!=='none').length/ls.length*100):0}
- function render(){const host=document.getElementById('acUniverse');if(!host)return;const planets=WORLDS.slice().sort((a,b)=>a.order-b.order).map((w,n)=>{const a=n/WORLDS.length*Math.PI*2,r=118+(n%2)*54,x=Math.cos(a)*r,y=Math.sin(a)*r,p=progress(w.id);return `<button class="acUPlanet" data-world="${w.id}" style="--x:${x}px;--y:${y}px"><span>${w.ic}</span><b>${names[w.id]||w.id}</b><small>${p}%</small><i style="--p:${p}%"></i></button>`}).join('');host.innerHTML=`<div class="acUViewport"><div class="acUCamera"><div class="acUCore"><b>MARKET</b><span>AI</span></div>${planets}</div></div><div class="acUHint">Перетаскивай карту · нажми на планету</div>`;apply();bind(host)}
- function apply(){const c=document.querySelector('#acUniverse .acUCamera');if(c)c.style.transform=`translate(${cam.x}px,${cam.y}px) scale(${cam.scale})`}
- function bind(host){const vp=host.querySelector('.acUViewport');let drag=null,pinch=null;vp.addEventListener('pointerdown',e=>{drag={x:e.clientX,y:e.clientY,cx:cam.x,cy:cam.y};vp.setPointerCapture?.(e.pointerId)});vp.addEventListener('pointermove',e=>{if(!drag)return;cam.x=drag.cx+e.clientX-drag.x;cam.y=drag.cy+e.clientY-drag.y;apply()});vp.addEventListener('pointerup',()=>drag=null);vp.addEventListener('wheel',e=>{e.preventDefault();cam.scale=Math.max(.72,Math.min(1.45,cam.scale+(e.deltaY<0?.08:-.08)));apply()},{passive:false});host.querySelectorAll('.acUPlanet').forEach(b=>b.onclick=e=>{if(Math.abs(cam.x-(drag?.cx||cam.x))>8)return;openAcademyWorld(b.dataset.world)});}
- window.MarketAIUniverse={mount(){cam={x:0,y:0,scale:1};render();setTimeout(()=>window.MarketAIUniverseProgression?.decorate?.(),0)},reset(){cam={x:0,y:0,scale:1};apply()}};
+  'use strict';
+  const names={w_basics:'Основы',w_candles:'Свечи',w_trend:'Структура',w_levels:'Уровни',w_indi:'Индикаторы',w_mtf:'Таймфреймы',w_risk:'Риск',w_binary:'Binary'};
+  let animating=false, openTimer=0;
+
+  function progress(id){
+    const ls=LESSONS.filter(l=>l.worldId===id);
+    return ls.length?Math.round(ls.filter(l=>lessonState(l.id).mastery!=='none').length/ls.length*100):0;
+  }
+
+  function layout(){
+    const host=document.getElementById('acUniverse');
+    const width=Math.max(280,Math.min(host?.clientWidth||340,430));
+    const rx=Math.min(132,width*.34), ry=Math.min(116,width*.30);
+    return WORLDS.slice().sort((a,b)=>a.order-b.order).map((w,n)=>{
+      const a=(-Math.PI/2)+(n/WORLDS.length)*Math.PI*2;
+      return {w,x:Math.cos(a)*rx,y:Math.sin(a)*ry};
+    });
+  }
+
+  function render(){
+    const host=document.getElementById('acUniverse'); if(!host)return;
+    const planets=layout().map(({w,x,y})=>{
+      const p=progress(w.id);
+      return `<button type="button" class="acUPlanet" data-world="${w.id}" data-x="${x.toFixed(2)}" data-y="${y.toFixed(2)}" style="--x:${x.toFixed(2)}px;--y:${y.toFixed(2)}px" aria-label="${names[w.id]||w.id}"><span>${w.ic}</span><b>${names[w.id]||w.id}</b><small>${p}%</small><i style="--p:${p}%"></i></button>`;
+    }).join('');
+    host.innerHTML=`<div class="acUViewport"><div class="acUCamera"><div class="acUCore"><b>MARKET</b><span>AI</span></div>${planets}</div></div><div class="acUHint">Нажми на планету, чтобы открыть мир</div>`;
+    bind(host);
+  }
+
+  function focusPlanet(btn){
+    if(animating || !btn || btn.disabled)return;
+    animating=true;
+    const host=btn.closest('#acUniverse');
+    const camera=host?.querySelector('.acUCamera');
+    if(!camera){animating=false;return;}
+    const x=Number(btn.dataset.x)||0, y=Number(btn.dataset.y)||0;
+    host.classList.add('acUChoosing');
+    host.querySelectorAll('.acUPlanet').forEach(p=>{
+      p.classList.toggle('acUSelected',p===btn);
+      p.classList.toggle('acUDimmed',p!==btn);
+    });
+    camera.classList.add('acUSmooth');
+    camera.style.transform=`translate(${-x*1.18}px,${-y*1.18}px) scale(1.22)`;
+    if(typeof setMascotState==='function')setMascotState('point');
+    try{navigator.vibrate?.(8)}catch(_){ }
+    clearTimeout(openTimer);
+    openTimer=setTimeout(()=>{
+      const world=btn.dataset.world;
+      animating=false;
+      if(typeof openAcademyWorld==='function')openAcademyWorld(world);
+    },360);
+  }
+
+  function bind(host){
+    const vp=host.querySelector('.acUViewport');
+    if(!vp)return;
+    /* Do not register pointerdown/move/touchmove handlers here.
+       Native pan-y stays untouched, so Telegram/page scrolling wins. */
+    vp.addEventListener('click',e=>{
+      const btn=e.target.closest('.acUPlanet');
+      if(btn)focusPlanet(btn);
+    });
+  }
+
+  window.MarketAIUniverse={
+    mount(){
+      clearTimeout(openTimer); animating=false; render();
+      setTimeout(()=>window.MarketAIUniverseProgression?.decorate?.(),0);
+    },
+    reset(){
+      const host=document.getElementById('acUniverse'); if(!host)return;
+      host.classList.remove('acUChoosing');
+      host.querySelectorAll('.acUPlanet').forEach(p=>p.classList.remove('acUSelected','acUDimmed'));
+      const c=host.querySelector('.acUCamera'); if(c){c.classList.add('acUSmooth');c.style.transform='translate(0,0) scale(1)';}
+      animating=false;
+    }
+  };
 })();

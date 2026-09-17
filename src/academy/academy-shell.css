@@ -109,3 +109,48 @@
 @media(max-width:400px){
   .acTourCard .maiScene,.acZeroCard .maiScene{grid-template-columns:72px 1fr;gap:10px}
 }
+
+/* Universe V2 — Telegram Mini App touch behavior + cinematic planet focus */
+#acUniverse .acUViewport{touch-action:pan-y!important;overscroll-behavior-y:auto;-webkit-user-select:none;user-select:none}
+#acUniverse .acUCamera{transition:none!important;will-change:transform}
+#acUniverse .acUCamera.acUSmooth{transition:transform .42s cubic-bezier(.2,.8,.2,1)!important}
+#acUniverse .acUPlanet{transition:transform .28s ease,box-shadow .28s ease,filter .28s ease,opacity .28s ease;will-change:transform}
+#acUniverse .acUPlanet.acUSelected{transform:translate(-50%,-50%) scale(1.16);box-shadow:0 0 0 2px rgba(99,230,255,.38),0 0 44px rgba(99,230,255,.3);z-index:4}
+#acUniverse .acUPlanet:active{transform:translate(-50%,-50%) scale(.96)}
+
+/* Academy Visual Engine v1 — lightweight teaching scenes */
+.avScene{position:relative;overflow:hidden;margin:4px 0 2px;border:1px solid rgba(99,230,255,.14);border-radius:18px;background:linear-gradient(180deg,rgba(7,20,31,.96),rgba(5,12,20,.98));padding:12px}.avScene svg{display:block;width:100%;height:auto;max-height:210px}.avBadge{display:inline-flex;padding:4px 7px;border:1px solid rgba(99,230,255,.22);border-radius:999px;font:800 8px Manrope,sans-serif;letter-spacing:.12em;color:#63e6ff;background:rgba(99,230,255,.05)}.avCaption{font-size:11px;line-height:1.5;color:#8fa5ae;margin-top:7px}.avScene text{fill:#8fa5ae;font:700 9px Manrope,sans-serif;letter-spacing:.06em}.avGrid path{stroke:rgba(255,255,255,.055);stroke-width:1}.avCandles path{stroke:#2bd98a;stroke-width:2}.avCandles rect{fill:#2bd98a}.avCandles .dn{fill:#ff5c6c}.avCandles g:has(.dn) path{stroke:#ff5c6c}.avLine,.avPrice{fill:none;stroke:#63e6ff;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round}.avDots circle,.avPulse circle{fill:#f5b942}.avZone{fill:rgba(245,185,66,.10);stroke:rgba(245,185,66,.45)}.avLevel,.avStrike{stroke:#f5b942;stroke-width:1.5;stroke-dasharray:6 5}.avMA{fill:none;stroke:#b79cff;stroke-width:2}.avOsc{fill:none;stroke:#2bd98a;stroke-width:2}.avMid{stroke:rgba(255,255,255,.15);stroke-dasharray:4 4}.avTF rect{fill:rgba(255,255,255,.025);stroke:rgba(99,230,255,.16)}.avTF polyline{fill:none;stroke:#63e6ff;stroke-width:2}.avArrow{stroke:#f5b942;stroke-width:2}.avBars rect{fill:rgba(255,92,108,.22);stroke:#ff5c6c}.avRisk{stroke:#ff5c6c}.avExpire{stroke:#b79cff;stroke-width:2;stroke-dasharray:5 5}.avEntry{fill:#f5b942}.avChoices text{fill:#63e6ff}.avScene .avCandles g{transform-box:fill-box;transform-origin:center;animation:avCandle 2.6s ease-in-out infinite alternate}.avScene .avCandles g:nth-child(2){animation-delay:.18s}.avScene .avCandles g:nth-child(3){animation-delay:.36s}.avScene .avCandles g:nth-child(4){animation-delay:.54s}.avScene .avCandles g:nth-child(5){animation-delay:.72s}.avPulse circle,.avEntry{animation:avPulse 1.6s ease-in-out infinite}.avLine,.avPrice,.avMA,.avOsc{stroke-dasharray:700;stroke-dashoffset:700;animation:avDraw 2.2s ease forwards}.avZone{animation:avZone 1.8s ease-in-out infinite alternate}@keyframes avDraw{to{stroke-dashoffset:0}}@keyframes avPulse{50%{opacity:.35;transform:scale(1.25)}}@keyframes avCandle{from{opacity:.55;transform:scaleY(.84)}to{opacity:1;transform:scaleY(1)}}@keyframes avZone{from{opacity:.45}to{opacity:1}}@media(prefers-reduced-motion:reduce){.avScene *{animation:none!important}}
+
+/* === MARKET AI ACADEMY V92 — Telegram-safe Universe === */
+#acUniverse{contain:layout paint;margin:10px 0 18px}
+#acUniverse .acUViewport{
+  height:300px!important;
+  position:relative;
+  overflow:hidden!important;
+  touch-action:pan-y!important;
+  overscroll-behavior-x:none;
+  overscroll-behavior-y:auto;
+  -webkit-user-select:none;
+  user-select:none;
+}
+#acUniverse .acUCamera{
+  left:50%;top:50%;
+  transform:translate(0,0) scale(1);
+  transition:none!important;
+  will-change:transform;
+}
+#acUniverse .acUCamera.acUSmooth{transition:transform .36s cubic-bezier(.2,.8,.2,1)!important}
+#acUniverse .acUPlanet{
+  width:66px!important;
+  min-height:66px!important;
+  touch-action:manipulation!important;
+  -webkit-tap-highlight-color:transparent;
+  transition:transform .25s ease,opacity .25s ease,filter .25s ease,box-shadow .25s ease!important;
+}
+#acUniverse .acUPlanet.acUDimmed{opacity:.22;filter:blur(.4px) saturate(.55);pointer-events:none}
+#acUniverse .acUPlanet.acUSelected{transform:translate(-50%,-50%) scale(1.24)!important;opacity:1;filter:none;z-index:8;box-shadow:0 0 0 2px rgba(99,230,255,.48),0 0 48px rgba(99,230,255,.34)}
+#acUniverse .acUCore{transition:opacity .25s ease,transform .25s ease}
+#acUniverse.acUChoosing .acUCore{opacity:.35;transform:scale(.88)}
+#acUniverse .acUHint{font-size:11px;margin-top:8px;pointer-events:none}
+@media(max-width:380px){#acUniverse .acUViewport{height:276px!important}#acUniverse .acUPlanet{width:60px!important;min-height:60px!important}#acUniverse .acUPlanet span{font-size:17px}}
+@media(prefers-reduced-motion:reduce){#acUniverse .acUCamera.acUSmooth,#acUniverse .acUPlanet,#acUniverse .acUCore{transition-duration:.001ms!important}}

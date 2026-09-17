@@ -8,17 +8,19 @@
   function sourceStep(lesson,index){
     const a=article(lesson), step=lesson.steps[index];
     if(!step)return null;
-    if(step.type==='intro') return {title:a?.t||lesson.id, body:[a?.short||'Урок MARKET AI']};
-    if(step.type==='summary') return {title:'Главное', body:['Ты прошёл материал. Теперь закрепи идею практикой и возвращайся к ней, когда понадобится.']};
+    const rawBody=step.body??step.text??step.message??step.prompt??'';
+    const body=Array.isArray(rawBody)?rawBody:(rawBody?[rawBody]:[]);
+    if(step.type==='intro') return {title:step.title||lesson.title||a?.t||lesson.id, body:body.length?body:[lesson.subtitle||a?.short||'Урок MARKET AI']};
+    if(step.type==='summary') return {title:step.title||'Главное', body:body.length?body:['Ты прошёл материал. Теперь закрепи идею практикой.']};
     if(step.type==='explanation'){
+      if(step.title||body.length)return {title:step.title||'Разбор',body};
       const expIndex=lesson.steps.slice(0,index+1).filter(s=>s.type==='explanation').length-1;
       const block=a?.blocks?.[expIndex];
       return block?{title:block[0],body:block.slice(1)}:{title:'Разбор',body:[]};
     }
-    if(step.type==='question'||step.type==='true_false'||step.type==='multiple_choice'||step.type==='select_direction'||step.type==='tap_candle'||step.type==='tap_zone'||step.type==='drag_level'||step.type==='mark_structure'||step.type==='mark_structure_sequence'||step.type==='market_replay'){
-      return {title:step.title||'Проверь себя',body:step.body?[step.body]:[]};
-    }
-    return {title:'MARKET AI',body:[]};
+    if(step.type==='character_message'||step.type==='character_demo'||step.type==='animation'||step.type==='practice_scene'||step.type==='warning'||step.type==='market_tip'||step.type==='example'||step.type==='counter_example') return {title:step.title||'MARKET AI',body};
+    if(step.type==='question'||step.type==='true_false'||step.type==='multiple_choice'||step.type==='select_direction'||step.type==='tap_candle'||step.type==='tap_zone'||step.type==='drag_level'||step.type==='mark_structure'||step.type==='mark_structure_sequence'||step.type==='market_replay') return {title:step.title||'Проверь себя',body};
+    return {title:step.title||'MARKET AI',body};
   }
   function mascot(step,answer,scene){
     if(window.MarketAICharacter){
@@ -73,10 +75,11 @@
     const options=Array.isArray(step.options)?step.options:[];
     const buttons=options.map(o=>{
       const selected=answer?.selected===o.id;
+      const expected=scenario?.acceptableAnswers||[step.correctAnswer];
       let cls='leAnswer';
       if(selected)cls+=' selected';
-      if(answer?.submitted&&o.id===step.correctAnswer)cls+=' correct';
-      if(answer?.submitted&&selected&&o.id!==step.correctAnswer)cls+=' incorrect';
+      if(answer?.submitted&&expected.includes(o.id))cls+=' correct';
+      if(answer?.submitted&&selected&&!expected.includes(o.id))cls+=' incorrect';
       return `<button class="${cls}" ${answer?.submitted?'disabled':''} onclick="lessonEngineChoose('${esc(o.id)}')"><span>${esc(o.label)}</span></button>`;
     }).join('');
     const feedback=answer?.submitted?`<div class="leFeedback ${answer.correct?'ok':'bad'}"><b>${answer.correct?'✓ Верно':'Разбор MARKET AI'}</b><p>${esc(answer.correct?step.feedback?.correct:step.feedback?.incorrect)}</p></div>`:'';
@@ -89,7 +92,15 @@
     const scene=window.MarketAICharacterDirector?MarketAICharacterDirector.get():null;
     const body=(src.body||[]).map(p=>`<p>${esc(p)}</p>`).join('');
     const interactive=isInteractive(step);
-    const content=step.type==='market_replay'?renderMarketReplay(step,answer):(step.type==='tap_candle'?renderTapCandle(step,answer):(step.type==='tap_zone'?renderTapZone(step,answer):(step.type==='drag_level'?renderDragLevel(step,answer):(step.type==='mark_structure'?renderStructure(step,answer):(step.type==='mark_structure_sequence'?renderStructureSequence(step,answer):(interactive?renderQuestion(step,answer):body))))));
+    const visual=['animation','character_demo','practice_scene'].includes(step.type)&&window.MarketAIAcademyVisuals?MarketAIAcademyVisuals.render(lesson,step):'';
+    let content=visual||body;
+    if(interactive)content=renderQuestion(step,answer);
+    if(step.type==='mark_structure_sequence')content=renderStructureSequence(step,answer);
+    if(step.type==='mark_structure')content=renderStructure(step,answer);
+    if(step.type==='drag_level')content=renderDragLevel(step,answer);
+    if(step.type==='tap_zone')content=renderTapZone(step,answer);
+    if(step.type==='tap_candle')content=renderTapCandle(step,answer);
+    if(step.type==='market_replay')content=renderMarketReplay(step,answer);
     const canAdvance=!interactive||answer?.submitted;
     return `<div class="leStage ${scene?.noHint?'leNoHint':''}" data-step="${index}" data-scene-phase="${esc(scene?.phase||'')}">${mascot(step,answer,scene)}<div class="leProgress"><i style="width:${Math.round((index+1)/lesson.steps.length*100)}%"></i></div><div class="leCounter">ШАГ ${index+1} / ${lesson.steps.length}</div><div class="leCard"><div class="leType">${esc(step.type.replaceAll('_',' '))}</div><h2>${esc(src.title)}</h2>${content}</div><div class="leNav"><button class="acGhost" ${index===0?'disabled':''} onclick="lessonEnginePrev()">← Назад</button><button class="btn" ${canAdvance?'':'disabled'} onclick="${last?`lessonEngineFinish('${lesson.id}')`:'lessonEngineNext()'}">${last?'✓ Завершить урок':interactive&&!answer?.submitted?'Сначала ответь':'Дальше →'}</button></div></div>`;
   }
@@ -191,7 +202,7 @@
   window.openLessonEngine=function(id){
     const lesson=LESSONS.find(l=>l.id===id); if(!lesson||!lessonAvailable(lesson))return;
     EDUP.lastLesson=id; eduSave(); sessions.set(id,{index:0,startedAt:Date.now(),answers:{}});
-    const a=article(lesson), title=a?.t||lesson.id;
+    const a=article(lesson), title=lesson.title||a?.t||lesson.id;
     if(typeof academyShellRender!=='function')return;
     academyShellRender(`<button class="acBack" onclick="openAcademyWorld('${lesson.worldId}')">‹ К урокам мира</button><div id="lessonEngineHost" data-lesson-id="${esc(id)}"></div>`,'MARKET AI ACADEMY',title);
     mount();
