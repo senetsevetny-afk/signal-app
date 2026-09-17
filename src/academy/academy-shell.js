@@ -70,3 +70,34 @@
     return {ok:true,worlds:WORLDS.length,lessons:LESSONS.length};
   };
 })();
+/* MARKET AI — Academy curriculum bootstrap */
+(async function loadAcademyCurriculum() {
+  function loadScript(src) {
+    return new Promise((resolve, reject) => {
+      if (document.querySelector(`script[src="${src}"]`)) {
+        resolve();
+        return;
+      }
+
+      const script = document.createElement('script');
+      script.src = src;
+      script.onload = resolve;
+      script.onerror = reject;
+      document.head.appendChild(script);
+    });
+  }
+
+  try {
+    await loadScript('src/academy/curriculum-loader.js');
+    await loadScript('src/academy/candle-scene.js');
+    await loadScript('src/academy/curriculum/candles.js');
+
+    if (typeof initAcademy === 'function') {
+      initAcademy();
+    }
+
+    console.log('[MARKET AI] Academy curriculum connected');
+  } catch (error) {
+    console.error('[MARKET AI] Curriculum load failed', error);
+  }
+})();
