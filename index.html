@@ -1298,6 +1298,23 @@ nav{position:fixed;left:0;right:0;bottom:0;background:rgba(8,15,26,.94);
 .lvBadge b{display:block;font-size:13px;font-weight:700}
 .lvBadge s{text-decoration:none;font-size:11px;color:var(--tx3)}
 .lvDisc{margin-top:12px;font-size:11px;color:var(--tx3);line-height:1.5}
+
+.accCard{background:var(--card);border:1px solid var(--line2);border-radius:20px;padding:14px}
+.accCard.pro{border-color:rgba(245,185,66,.4);background:linear-gradient(165deg,rgba(245,185,66,.08),var(--card))}
+.accCard.trial{border-color:rgba(43,217,138,.32)}
+.accCard.err{border-color:rgba(255,92,108,.32)}
+.accTop{display:flex;align-items:center;gap:10px;margin-bottom:10px}
+.accTop b{display:block;font-size:15px;font-weight:800}
+.accTop s{text-decoration:none;font-size:12px;color:var(--tx3)}
+.accDot{width:9px;height:9px;border-radius:50%;background:var(--tx3);flex:none}
+.accCard.pro .accDot{background:var(--gold);animation:lvp 2.4s infinite}
+.accCard.trial .accDot{background:var(--up);animation:lvp 2.4s infinite}
+.accCard.err .accDot{background:var(--down)}
+.accGrid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:10px}
+.accGrid div{background:var(--card2);border:1px solid var(--line2);border-radius:12px;
+  padding:10px 4px;text-align:center}
+.accGrid s{text-decoration:none;display:block;font-size:10px;color:var(--tx3)}
+.accGrid b{font:800 16px 'JetBrains Mono',monospace}
 .disc{font-size:12px;color:var(--tx3);line-height:1.5;padding:4px 4px 16px;text-align:center}
 
 /* вердикт над графиком */
@@ -1328,6 +1345,7 @@ nav{position:fixed;left:0;right:0;bottom:0;background:rgba(8,15,26,.94);
 .pat-h b{font-size:16px;font-weight:800}
 .pat p{margin:0 0 8px;font-size:14px;color:var(--tx2);line-height:1.55}
 </style>
+<link rel="stylesheet" href="src/v93-theme.css?v=931">
 </head>
 <body>
 
@@ -1559,7 +1577,7 @@ nav{position:fixed;left:0;right:0;bottom:0;background:rgba(8,15,26,.94);
     <div class="brand">
       <span class="mark"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1"
         stroke-linecap="round" stroke-linejoin="round"><path d="M2 12h4l3-8 4 16 3-8h6"/></svg></span>
-      <div style="min-width:0"><h1>AI Comfort Signal</h1><span style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;display:block">анализ на реальных данных · <b id="verTap" onclick="versionTap()" style="color:var(--gold);font-weight:700;cursor:pointer">v86 · 17.09 11:24</b></span></div>
+      <div style="min-width:0"><h1>AI Comfort Signal</h1><span style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;display:block">анализ на реальных данных · <b id="verTap" onclick="versionTap()" style="color:var(--gold);font-weight:700;cursor:pointer">v93.1 · complete</b></span></div>
     </div>
     <button class="bell" onclick="openChat()" aria-label="Помощник"><svg viewBox="0 0 24 24" fill="none"
       stroke="currentColor" stroke-width="2"><path d="M18 8a6 6 0 10-12 0c0 7-3 8-3 8h18s-3-1-3-8"/>
@@ -1846,7 +1864,7 @@ nav{position:fixed;left:0;right:0;bottom:0;background:rgba(8,15,26,.94);
     <div class="sect">ПРОФИЛЬ И НАСТРОЙКИ</div>
     <div class="card">
       <div class="kv"><span>Пользователь</span><b id="pName">Гость</b></div>
-      <div class="kv"><span>Версия сборки</span><b class="mono" style="color:var(--gold)">v86 · 17.09 11:24</b></div>
+      <div class="kv"><span>Версия сборки</span><b class="mono" style="color:var(--gold)">v93.1 · complete</b></div>
       <div class="kv"><span>Источник данных</span><b>Binance Spot API</b></div>
       <div class="kv"><span>Сигналов в журнале</span><b id="pCount">0</b></div>
     </div>
@@ -2008,7 +2026,22 @@ function saveHistory(){
 }
 const LS={get:(k,d)=>{try{return JSON.parse(localStorage.getItem(k))??d}catch{return d}},
           set:(k,v)=>{try{localStorage.setItem(k,JSON.stringify(v))}catch(e){ logErr('saveHistory',e) }}};
-history=LS.get('acs_history',[]);
+/* Журнал может прийти повреждённым: обрыв записи, старый формат, ручная правка.
+   Одна битая запись раньше роняла журнал и аналитику — теперь отбрасывается. */
+function sanitizeHistory(arr){
+  if(!Array.isArray(arr))return [];
+  const ok=[], bad=[];
+  arr.forEach(h=>{
+    const valid = h && typeof h==='object' && h.id && h.sym && h.tf
+      && h.a && typeof h.a==='object' && typeof h.a.dir==='string'
+      && isFinite(h.a.score) && isFinite(h.ts);
+    (valid?ok:bad).push(h);
+  });
+  if(bad.length)setTimeout(()=>window.logErr?.('sanitizeHistory',
+    'отброшено повреждённых записей: '+bad.length),0);
+  return ok;
+}
+history=sanitizeHistory(LS.get('acs_history',[]));
 Object.assign(S,LS.get('acs_settings',{}));
 
 
@@ -2120,6 +2153,8 @@ function VWAP(k,n=30){
 }
 
 function analyze(k,htf){
+  if(!Array.isArray(k)||k.length<30)
+    throw new Error('мало свечей для расчёта: получено '+(Array.isArray(k)?k.length:0)+', нужно от 30');
   const c=k.map(x=>x.c), n=c.length-1;
   const e9=EMA(c,9),e21=EMA(c,21),e50=EMA(c,50),r=RSI(c),md=MACD(c),bb=BB(c),at=ATR(k);
   const hc=htf.map(x=>x.c), h9=EMA(hc,9), h21=EMA(hc,21), hn=hc.length-1;
@@ -3512,7 +3547,7 @@ function chatSend(){
 
 /* ═══════════ ЯЗЫКИ ═══════════ */
 const LANGS=[['ru','Русский','🇷🇺'],['uk','Українська','🇺🇦'],['en','English','🇬🇧'],
-             ['es','Español','🇪🇸'],['de','Deutsch','🇩🇪']];
+             ['es','Español','🇪🇸'],['de','Deutsch','🇩🇪'],['cs','Čeština','🇨🇿']];
 const DICT={
 uk:{"Пульс":"Пульс","Итоги":"Підсумки","Журнал":"Журнал","Настройки":"Налаштування","Получить сигнал":"Отримати сигнал","Профиль":"Профіль","Главная":"Головна","Сигналы":"Сигнали","Аналитика":"Аналітика","История":"Історія","Профиль":"Профіль",
 "Анализировать":"Аналізувати","Рынок":"Ринок","Актив":"Актив","Срок экспирации":"Строк експірації",
@@ -3584,7 +3619,25 @@ de:{"Пульс":"Puls","Итоги":"Ergebnisse","Журнал":"Journal","На
 "Высокий":"Hoch","Средний":"Mittel","Низкий":"Niedrig","Сильный":"Stark","Умеренный":"Moderat","Слабый":"Schwach",
 "Медвежий":"Bärisch","Бычий":"Bullisch","Плоский":"Flach","Согласован":"Im Einklang","Против":"Dagegen",
 "Растёт":"Steigt","Слабеет":"Schwächt","Падает":"Fällt","Стабильно":"Stabil","Волатильно":"Volatil",
-"Дальше":"Weiter","Пропустить":"Überspringen","Всё понятно, начать":"Alles klar, los","Язык":"Sprache"}
+"Дальше":"Weiter","Пропустить":"Überspringen","Всё понятно, начать":"Alles klar, los","Язык":"Sprache"},
+
+cs:{"Пульс":"Puls","Итоги":"Výsledky","Журнал":"Deník","Настройки":"Nastavení","Получить сигнал":"Získat signál","Профиль":"Profil","Главная":"Domů","Сигналы":"Signály","Аналитика":"Analytika","История":"Historie",
+"Анализировать":"Analyzovat","Рынок":"Trh","Актив":"Aktivum","Срок экспирации":"Expirace",
+"РЫНОК":"TRH","АКТИВ":"AKTIVUM","СРОК ЭКСПИРАЦИИ":"EXPIRACE","НОВЫЙ АНАЛИЗ":"NOVÁ ANALÝZA",
+"Пробный доступ":"Zkušební přístup","вход по сигналам без ограничений":"neomezený přístup k signálům",
+"Последние сигналы":"Poslední signály","ПОСЛЕДНИЕ СИГНАЛЫ":"POSLEDNÍ SIGNÁLY","Все":"Vše","Обновить":"Obnovit",
+"Открыть разбор":"Otevřít rozbor","Просмотреть анализ":"Zobrazit analýzu","Подробный анализ ▾":"Podrobná analýza ▾",
+"Свернуть разбор ▴":"Sbalit rozbor ▴","Объяснить словами":"Vysvětlit slovy","Назад":"Zpět","Отмена":"Zrušit",
+"ГЛАВНОЕ":"HLAVNÍ","УРОВНИ":"ÚROVNĚ","ФИГУРА НА ГРАФИКЕ":"FORMACE NA GRAFU","СВЕЧНЫЕ ФОРМАЦИИ":"SVÍČKOVÉ FORMACE",
+"ПРОВЕРКА НА ИСТОРИИ":"HISTORICKÁ KONTROLA","ПАРАМЕТРЫ СДЕЛКИ":"PARAMETRY OBCHODU",
+"Цена входа":"Vstupní cena","Экспирация":"Expirace","Живой график":"Živý graf","Помощник":"Asistent",
+"Криптовалюты":"Kryptoměny","Форекс":"Forex","Тренд":"Trend","Импульс":"Impuls","Структура":"Struktura",
+"Риск":"Riziko","Сила":"Síla","Срок":"Doba","закрыто":"uzavřeno","точность":"přesnost","ждут":"čeká",
+"ЖУРНАЛ СДЕЛОК":"OBCHODNÍ DENÍK","ПРОФИЛЬ И НАСТРОЙКИ":"PROFIL A NASTAVENÍ","Очистить журнал":"Vymazat deník",
+"Высокий":"Vysoký","Средний":"Střední","Низкий":"Nízký","Сильный":"Silný","Умеренный":"Střední","Слабый":"Slabý",
+"Медвежий":"Medvědí","Бычий":"Býčí","Плоский":"Boční","Согласован":"V souladu","Против":"Proti",
+"Растёт":"Roste","Слабеет":"Slábne","Падает":"Klesá","Стабильно":"Stabilní","Волатильно":"Volatilní",
+"Дальше":"Další","Пропустить":"Přeskočit","Всё понятно, начать":"Rozumím, začít","Язык":"Jazyk"}
 };
 
 let LANG=(()=>{try{return localStorage.getItem('acs_lang')||'ru'}catch{return 'ru'}})();
@@ -5394,7 +5447,7 @@ function openHelpScreen(){
 /* ═══════════ ЖУРНАЛ ДИАГНОСТИКИ ═══════════ */
 /* Ошибки не проглатываются: каждая попадает сюда и видна в профиле. */
 const DIAG=[];
-const BUILD='v86';
+const BUILD='v88';
 function logErr(ctx,e){
   const msg=(e&&e.message)||String(e||'неизвестно');
   DIAG.unshift({t:Date.now(),ctx,msg});
@@ -5453,17 +5506,14 @@ function openLangSheet(){
     <div class="shBody">
       <div style="text-align:center;padding:2px 0 12px" data-msc="1" data-size="66">${mascot('globe',66)}</div>
       ${setIntro('🌐','Что меняет язык',[
-        'Переводятся названия разделов, кнопки и значения — примерно восемьдесят фраз на язык.',
-        'Длинные пояснительные статьи пока остаются на русском.',
-        'Возврат на русский перезагружает интерфейс: перевод правит текст на месте и восстанавливается только заново.'])}
+        'Язык применяется к основному интерфейсу и MARKET AI Academy.',
+        'Выбор сохраняется на устройстве и используется после следующего запуска.',
+        'Язык можно изменить в любой момент без потери прогресса обучения.'])}
       ${LANGS.map(l=>`<div class="setOpt ${l[0]===LANG?'on':''}" onclick="pickLang('${l[0]}')">
         <span style="font-size:19px">${l[2]}</span>
         <b style="flex:1">${l[1]}</b>
         <span class="stDot"></span></div>`).join('')}
-      <div class="hint" style="margin-top:10px">Переведены названия разделов, кнопки и значения.
-        Длинные пояснительные тексты пока остаются на русском.
-        Возврат на русский перезагружает интерфейс — перевод правит текст на месте
-        и восстанавливается только заново.</div>
+      <div class="hint" style="margin-top:10px">Один язык используется в основном интерфейсе и MARKET AI Academy. Выбор сохраняется на устройстве.</div>
     </div></div>`;
   openOv('setWrap');
 }
@@ -6067,6 +6117,7 @@ function renderProfile(){
   const name=u?([u.first_name,u.last_name].filter(Boolean).join(' ')||u.username||'Гость'):'Гость';
   const done=history.filter(h=>h.result==='win'||h.result==='loss').length;
   setTimeout(renderMyStats,0);
+  setTimeout(()=>window.AccessClient?.render(),0);
 
   const adv=document.getElementById('acc-adv');
   if(adv)adv.style.display=isAdmin()?'block':'none';
@@ -6078,6 +6129,9 @@ function renderProfile(){
     <span class="sub2">${u?.username?'@'+u.username:name}</span>
     <span class="bdgTrial">Пробный доступ</span>
   </div>
+
+  <div class="lbl2" style="margin:18px 0 8px">ДОСТУП</div>
+  <div id="accBox"></div>
 
   <div class="lbl2" style="margin:18px 0 8px">ОБУЧЕНИЕ</div>
   <div id="lvBox">${window.MarketAILevels?MarketAILevels.render():''}</div>
@@ -7507,13 +7561,20 @@ document.getElementById('runBtn').removeAttribute('onclick');
 document.getElementById('beVal').textContent=(100/(1+S.payout)).toFixed(1)+'%';
 document.querySelectorAll('#payouts .opt').forEach(o=>o.classList.toggle('on',+o.dataset.p===S.payout));
 document.querySelectorAll('#mins .opt').forEach(o=>o.classList.toggle('on',+o.dataset.m===S.min));
-renderHistory(); renderHome(); renderSess(); renderAuto(); renderLive(); renderStrat(); applyFlags(); cmdStart(); renderFav(); renderSessionPill(); sigSyncHead(); renderSignals(); renderExtras(); setMascot('idle'); renderTicker(); if(AUTO&&AUTO.on)autoLoop(); setLang.init();
+renderHistory(); renderHome(); renderSess(); renderAuto(); renderLive(); renderStrat(); applyFlags(); cmdStart(); window.AccessClient?.start(); renderFav(); renderSessionPill(); sigSyncHead(); renderSignals(); renderExtras(); setMascot('idle'); renderTicker(); if(AUTO&&AUTO.on)autoLoop(); setLang.init();
 if(TDKEY)document.getElementById('tdKey').value=TDKEY;
 document.getElementById('qsApp').value=QS_APP;
 if(AIKEY)document.getElementById('aiKey').value=AIKEY; resolvePending(); setInterval(resolvePending,30000);
 </script>
 <script src="src/markets.js"></script>
+<script src="src/access-client.js"></script>
+<script src="src/academy/academy-i18n.js"></script>
+<script src="src/academy/curriculum-loader.js"></script>
+<script src="src/academy/curriculum/candles.js"></script>
+<script src="src/academy/curriculum/binary-options.js"></script>
+<script src="src/academy/curriculum/full-academy.js"></script>
 <script src="src/academy/academy-core.js"></script>
+<script src="src/academy/scenario-pack-1000.js"></script>
 <script src="src/academy/academy-shell.js"></script>
 <script src="src/academy/chart-annotations.js"></script>
 <script src="src/academy/chart-event-layer.js"></script>
@@ -7538,6 +7599,7 @@ if(AIKEY)document.getElementById('aiKey').value=AIKEY; resolvePending(); setInte
 <script src="src/academy/academy-settings.js"></script>
 <script src="src/academy/academy-diagnostics.js"></script>
 <script src="src/academy/production-readiness.js"></script>
+<script src="src/academy/academy-visual-engine.js"></script>
 <script src="src/academy/lesson-engine.js"></script>
 <script>initAcademy(); initAcademyShell();</script>
 
@@ -7971,9 +8033,6 @@ document.addEventListener('visibilitychange',()=>{ if(!document.hidden&&ws?.read
 
 restart(); loop();
 @@ES@@
-</body>
-</html>
-</script>
-
+<script src="src/v93-core.js?v=931"></script>
 </body>
 </html>
