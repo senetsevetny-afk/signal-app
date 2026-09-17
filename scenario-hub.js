@@ -1,6 +1,0 @@
-/* Checkpoint 25 — Scenario Practice Hub over existing lesson/scenario engines. */
-(function(){
- function candidates(){return LESSONS.filter(l=>(l.steps||[]).some(s=>['select_direction','tap_candle','tap_zone','drag_level','mark_structure','mark_structure_sequence','market_replay'].includes(s.type)))}
- function open(){const ls=candidates();const body=`<button class="acBack" onclick="openAcademy()">‹ Академия</button><div class="acHero"><div class="acEyebrow">PRACTICE LAB · SIMULATED DATA</div><h2>Тренажёр решений</h2><p>Практика использует учебные сценарии. Здесь оценивается процесс анализа, а не финансовый результат.</p></div><div class="acList">${ls.map(l=>{const a=typeof EDU!=='undefined'?EDU.find(e=>'l_'+e.id===l.id):null;return `<button class="acLesson" onclick="openAcademyLesson('${l.id}')"><span class="acLessonIc">${l.icon||'◈'}</span><span class="acLessonM"><b>${a?.t||l.id}</b><span>${(l.steps||[]).filter(s=>s.type!=='explanation').length} интерактивных этапов</span></span><span class="acState">PRACTICE</span></button>`}).join('')||'<div class="empty">Интерактивные сценарии ещё готовятся.</div>'}</div>`;academyShellRender(body,'MARKET AI PRACTICE','TRAINING SCENARIOS · SIMULATED MARKET DATA')}
- window.openAcademyScenarioHub=open;
-})();
