@@ -1,2 +1,0 @@
-/* CP44–45 — runtime readiness boundary and version manifest. */
-(function(){const VERSION='45.0';function manifest(){return {version:VERSION,checkpoint:45,mode:'training',simulatedMarketData:true,decisionQualitySeparateFromOutcome:true,modules:{lesson:!!window.openLessonEngine,scenario:!!window.MarketAIScenarioEngine,replay:!!window.MarketAIReplayController,character:!!window.MarketAICharacterDirector,universe:!!window.MarketAIUniverse,exam:!!window.MarketAIExam},generatedAt:'2026-09-17'}}window.MarketAIAcademyRelease={VERSION,manifest};})();
