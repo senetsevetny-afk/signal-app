@@ -431,6 +431,13 @@ function validateAcademy(){
 function initAcademy(){
   LESSONS=buildLessonRegistry();
   addPhase5InteractiveSteps();
+   if(window.MarketAIAcademy?.Curriculum){
+  const extraLessons=window.MarketAIAcademy.Curriculum.getLessons();
+  const existingIds=new Set(LESSONS.map(l=>l.id));
+  extraLessons.forEach(l=>{
+    if(!existingIds.has(l.id)) LESSONS.push(l);
+  });
+}
   addPhase6ScenarioStep();
 addPhase9TapCandleStep();
   addPhase10TapZoneStep();
