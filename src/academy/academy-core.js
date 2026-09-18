@@ -424,7 +424,12 @@ function validateAcademy(){
       if(s.characterState&&!CHAR_STATES.includes(s.characterState))
         errors.push(`урок ${l.id} шаг ${i}: состояние ${s.characterState} неизвестно`);
     });
-    if(!(l.quiz||[]).length)warns.push(`урок ${l.id}: нет проверки знаний [PLANNED]`);
+    /* Проверка знаний может жить и в steps (интерактивный шаг), и в quiz[].
+       Раньше учитывался только quiz[], и валидатор давал 331 ложное
+       предупреждение, из-за чего реальные проблемы в нём тонули. */
+    const INTERACTIVE=['question','true_false','multiple_choice','select_direction','tap_candle','tap_zone','drag_level','mark_structure','mark_structure_sequence','market_replay'];
+    const hasCheck=(l.quiz||[]).length||(l.steps||[]).some(s=>INTERACTIVE.includes(s.type));
+    if(!hasCheck)warns.push(`урок ${l.id}: нет ни одной проверки знаний`);
   });
   LESSONS.forEach(l=>(l.prerequisites||[]).forEach(p=>{
     if(!ids.has(p))errors.push(`урок ${l.id}: требование ${p} не существует`) }));
@@ -451,6 +456,31 @@ function validateAcademy(){
     counts:{worlds:WORLDS.length,modules:MODULES.length,
             lessons:LESSONS.length,scenarios:SCENARIOS.length}};
 }
+
+/* ── Единый резолвер названий урока. ──
+   Раньше заголовок доставали в трёх местах по-разному, и Practice Lab
+   печатал технический id вида full_basics_01_что_такое_рынок.
+   Теперь источник один: и shell, и hub, и Lesson Engine зовут его. */
+function academyLessonTitle(lesson){
+  const l=typeof lesson==='string'?LESSONS.find(x=>x.id===lesson):lesson;
+  if(!l)return '';
+  if(l.title)return l.title;
+  const art=typeof EDU!=='undefined'?EDU.find(e=>'l_'+e.id===l.id):null;
+  if(art?.t)return art.t;
+  const tr=window.MarketAII18n?.t;
+  if(l.titleKey&&tr){const v=tr(l.titleKey);if(v&&v!==l.titleKey)return v}
+  /* Последний рубеж: человекочитаемое имя из id, но НИКОГДА не сырой id. */
+  return String(l.id).replace(/^(l_|full_)/,'').replace(/^[a-z]+_\d+_/,'')
+    .replace(/_/g,' ').replace(/^\s*(\S)/,(m,c)=>c.toUpperCase())||'Урок MARKET AI';
+}
+function academyLessonSubtitle(lesson){
+  const l=typeof lesson==='string'?LESSONS.find(x=>x.id===lesson):lesson;
+  if(!l)return '';
+  const art=typeof EDU!=='undefined'?EDU.find(e=>'l_'+e.id===l.id):null;
+  return l.subtitle||art?.short||'';
+}
+window.academyLessonTitle=academyLessonTitle;
+window.academyLessonSubtitle=academyLessonSubtitle;
 
 /* Инициализация реестра после загрузки статей */
 function initAcademy(){
