@@ -4,13 +4,19 @@
   const sessions=new Map();
   const esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 
+  /* Сколько свечей исхода прячем до решения в select_direction.
+     Раздел ТЗ: будущее не должно быть видно, пока ответ не отправлен. */
+  const HIDDEN_FUTURE=6;
   function article(lesson){ return typeof EDU!=='undefined'?EDU.find(e=>'l_'+e.id===lesson.id):null; }
+  /* Единый источник названия — academy-core. Никогда не показываем сырой id. */
+  const lessonTitle=l=>window.academyLessonTitle?academyLessonTitle(l):(l?.title||'Урок MARKET AI');
+  const lessonSubtitle=l=>window.academyLessonSubtitle?academyLessonSubtitle(l):(l?.subtitle||'');
   function sourceStep(lesson,index){
     const a=article(lesson), step=lesson.steps[index];
     if(!step)return null;
     const rawBody=step.body??step.text??step.message??step.prompt??'';
     const body=Array.isArray(rawBody)?rawBody:(rawBody?[rawBody]:[]);
-    if(step.type==='intro') return {title:step.title||lesson.title||a?.t||lesson.id, body:body.length?body:[lesson.subtitle||a?.short||'Урок MARKET AI']};
+    if(step.type==='intro') return {title:step.title||lessonTitle(lesson), body:body.length?body:[lessonSubtitle(lesson)||'Урок MARKET AI']};
     if(step.type==='summary') return {title:step.title||'Главное', body:body.length?body:['Ты прошёл материал. Теперь закрепи идею практикой.']};
     if(step.type==='explanation'){
       if(step.title||body.length)return {title:step.title||'Разбор',body};
@@ -71,7 +77,8 @@
 
   function renderQuestion(step,answer){
     const scenario=step.type==='select_direction'&&typeof SCENARIOS!=='undefined'?SCENARIOS.find(s=>s.id===step.scenarioId):null;
-    const chart=scenario?`<div class="leScenario"><div class="leScenarioTop"><span>${esc(scenario.dataLabel||'TRAINING SCENARIO')}</span><b>${esc(scenario.timeframe||'')}</b></div><canvas class="leScenarioCanvas" data-scenario-id="${esc(scenario.id)}" height="190"></canvas><small>Будущие свечи скрыты · учебные данные</small></div>`:'';
+    const revealed=!!answer?.submitted;
+    const chart=scenario?`<div class="leScenario"><div class="leScenarioTop"><span>${esc(scenario.dataLabel||'TRAINING SCENARIO')}</span><b>${esc(scenario.timeframe||'')}</b></div><canvas class="leScenarioCanvas" data-scenario-id="${esc(scenario.id)}" data-decision="1" data-hide-future="${HIDDEN_FUTURE}" height="190"></canvas><small>${revealed?'Исход показан справа от линии решения · учебные данные':'Будущие свечи скрыты до твоего решения · учебные данные'}</small></div>`:'';
     const options=Array.isArray(step.options)?step.options:[];
     const buttons=options.map(o=>{
       const selected=answer?.selected===o.id;
@@ -108,16 +115,48 @@
     root.querySelectorAll('.leScenarioCanvas').forEach(canvas=>{
       const scenario=typeof SCENARIOS!=='undefined'?SCENARIOS.find(s=>s.id===canvas.dataset.scenarioId):null;
       if(!scenario)return;
-      const allData=scenario.ohlc().slice(-42), visibleN=canvas.dataset.marketReplay==='1'?Math.max(1,Math.min(allData.length,Number(canvas.dataset.visibleCandles)||allData.length)):allData.length, data=allData.slice(0,visibleN), dpr=Math.min(window.devicePixelRatio||1,2);
+      const allData=scenario.ohlc().slice(-42);
+      /* Решение принимается вслепую: свечи исхода прячем, пока ответ не отправлен.
+         Масштаб цены считаем по всему ряду, чтобы после раскрытия график не «прыгал». */
+      const decision=canvas.dataset.decision==='1';
+      const hideFuture=decision?Math.max(0,Math.min(allData.length-5,Number(canvas.dataset.hideFuture)||0)):0;
+      let decisionAnswered=false;
+      if(decision){const {session}=current();decisionAnswered=!!session?.answers?.[session?.index]?.submitted}
+      const cutoff=allData.length-hideFuture;
+      const visibleN=canvas.dataset.marketReplay==='1'
+        ?Math.max(1,Math.min(allData.length,Number(canvas.dataset.visibleCandles)||allData.length))
+        :(decision&&!decisionAnswered?cutoff:allData.length);
+      const data=allData.slice(0,visibleN), dpr=Math.min(window.devicePixelRatio||1,2);
       const cssW=Math.max(260,canvas.clientWidth||320), cssH=190;
       canvas.width=Math.round(cssW*dpr); canvas.height=Math.round(cssH*dpr);
       const ctx=canvas.getContext('2d'); ctx.setTransform(dpr,0,0,dpr,0,0);
       ctx.clearRect(0,0,cssW,cssH);
-      const pad=12, hi=Math.max(...data.map(x=>x.h)), lo=Math.min(...data.map(x=>x.l)), range=Math.max(.0001,hi-lo);
-      const y=v=>pad+(hi-v)/range*(cssH-pad*2), slot=(cssW-pad*2)/data.length, body=Math.max(2,slot*.55);
+      /* В режиме решения шкала и шаг берутся по полному ряду: раскрытие исхода
+         не должно сдвигать уже показанные свечи. */
+      const scaleData=decision?allData:data, slotCount=decision?allData.length:data.length;
+      const pad=12, hi=Math.max(...scaleData.map(x=>x.h)), lo=Math.min(...scaleData.map(x=>x.l)), range=Math.max(.0001,hi-lo);
+      const y=v=>pad+(hi-v)/range*(cssH-pad*2), slot=(cssW-pad*2)/slotCount, body=Math.max(2,slot*.55);
       ctx.strokeStyle='rgba(255,255,255,.055)'; ctx.lineWidth=1;
       for(let i=1;i<4;i++){const yy=pad+(cssH-pad*2)*i/4;ctx.beginPath();ctx.moveTo(pad,yy);ctx.lineTo(cssW-pad,yy);ctx.stroke()}
       data.forEach((c,i)=>{const x=pad+slot*i+slot/2, up=c.c>=c.o;ctx.strokeStyle=up?'#2BD98A':'#FF5C6C';ctx.fillStyle=ctx.strokeStyle;ctx.beginPath();ctx.moveTo(x,y(c.h));ctx.lineTo(x,y(c.l));ctx.stroke();const top=Math.min(y(c.o),y(c.c)), h=Math.max(1.5,Math.abs(y(c.o)-y(c.c)));ctx.fillRect(x-body/2,top,body,h)});
+      if(decision&&hideFuture>0){
+        const xCut=pad+slot*cutoff;
+        ctx.save();
+        if(!decisionAnswered){
+          /* Честно показываем, что справа скрыто, а не делаем вид, что данных нет. */
+          ctx.fillStyle='rgba(255,255,255,.035)';
+          ctx.fillRect(xCut,pad,Math.max(0,cssW-pad-xCut),cssH-pad*2);
+          ctx.fillStyle='rgba(147,166,192,.85)';ctx.font='700 9px Manrope';ctx.textAlign='center';
+          ctx.fillText('БУДУЩЕЕ СКРЫТО',Math.min(cssW-pad-4,xCut+(cssW-pad-xCut)/2),cssH/2);
+          ctx.textAlign='left';
+        }
+        ctx.strokeStyle=decisionAnswered?'rgba(99,230,255,.6)':'rgba(245,185,66,.75)';
+        ctx.lineWidth=1.5;ctx.setLineDash([5,4]);
+        ctx.beginPath();ctx.moveTo(xCut,pad);ctx.lineTo(xCut,cssH-pad);ctx.stroke();ctx.setLineDash([]);
+        ctx.fillStyle=decisionAnswered?'#63E6FF':'#F5B942';ctx.font='700 9px Manrope';
+        ctx.fillText('РЕШЕНИЕ',Math.max(2,Math.min(cssW-56,xCut-52)),pad+9);
+        ctx.restore();
+      }
       if(scenario.trainingMeta?.level!=null){
         const yy=y(scenario.trainingMeta.level);ctx.save();ctx.strokeStyle='rgba(245,185,66,.72)';ctx.lineWidth=1.5;ctx.setLineDash([6,5]);ctx.beginPath();ctx.moveTo(pad,yy);ctx.lineTo(cssW-pad,yy);ctx.stroke();ctx.setLineDash([]);ctx.fillStyle='#F5B942';ctx.font='700 10px Manrope';ctx.fillText('KEY LEVEL',pad+4,Math.max(12,yy-5));ctx.restore();
         const {session}=current(),answer=session?.answers?.[session?.index];
@@ -200,10 +239,22 @@
     host.scrollIntoView({block:'start'});
   }
   window.openLessonEngine=function(id){
-    const lesson=LESSONS.find(l=>l.id===id); if(!lesson||!lessonAvailable(lesson))return;
+    const lesson=LESSONS.find(l=>l.id===id);
+    /* Раньше неизвестный id и закрытый урок молча ничего не делали —
+       кнопка выглядела мёртвой. Теперь причина видна на экране. */
+    if(!lesson){
+      window.logErr?.('openLessonEngine','урок не найден: '+id);
+      if(typeof academyShellRender==='function')academyShellRender(`<button class="acBack" onclick="openAcademy()">‹ Академия</button><div class="leFeedback bad"><b>Урок не найден</b><p>Идентификатор «${esc(id)}» отсутствует в реестре. Вернись к списку миров и выбери урок заново.</p></div>`,'MARKET AI ACADEMY','ошибка открытия урока');
+      return;
+    }
+    if(!lessonAvailable(lesson)){
+      const need=(lesson.prerequisites||[]).map(pid=>lessonTitle(LESSONS.find(l=>l.id===pid)||{id:pid})).filter(Boolean);
+      if(typeof academyShellRender==='function')academyShellRender(`<button class="acBack" onclick="openAcademyWorld('${esc(lesson.worldId||'')}')">‹ К урокам мира</button><div class="leFeedback bad"><b>Урок пока закрыт</b><p>${need.length?'Сначала пройди: '+esc(need.join(', ')):'Сначала пройди предыдущий урок этого мира.'}</p></div>`,'MARKET AI ACADEMY',lessonTitle(lesson));
+      return;
+    }
     EDUP.lastLesson=id; eduSave(); sessions.set(id,{index:0,startedAt:Date.now(),answers:{}});
-    const a=article(lesson), title=lesson.title||a?.t||lesson.id;
-    if(typeof academyShellRender!=='function')return;
+    const title=lessonTitle(lesson);
+    if(typeof academyShellRender!=='function'){window.logErr?.('openLessonEngine','academyShellRender недоступен');return}
     academyShellRender(`<button class="acBack" onclick="openAcademyWorld('${lesson.worldId}')">‹ К урокам мира</button><div id="lessonEngineHost" data-lesson-id="${esc(id)}"></div>`,'MARKET AI ACADEMY',title);
     mount();
   };

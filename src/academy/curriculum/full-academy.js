@@ -1,9 +1,23 @@
-/* MARKET AI Academy — Full Curriculum Pack.
-   304 additional data-driven lessons across all stable worlds.
-   Educational training only; no profit/win-rate promises. */
+/* MARKET AI Academy — сборка основной учебной программы (304 урока).
+
+   Что изменилось: раньше этот файл сам генерировал текст уроков по одному
+   шаблону, где менялось только название темы. Теперь он только собирает
+   уроки из авторского содержания (content-*.js) и ничего не пишет сам.
+   Тема без авторского текста в программу не попадает — вместо заглушки
+   в лог уходит ошибка.
+
+   Список тем, их порядок, slug-функция и правило выбора модуля оставлены
+   без изменений: от них зависят идентификаторы уроков вида
+   full_binary_01_binary_contract_recap, а на идентификаторах держится
+   сохранённый прогресс. Менять их нельзя.
+
+   Только обучение. Никаких обещаний прибыли и win-rate. */
 (function(){
   'use strict';
   const C=window.MarketAIAcademy?.Curriculum;if(!C)return;
+  const Content=window.MarketAIAcademy?.Content;
+  if(!Content){(window.logErr||console.error)('FullAcademy','реестр содержания не загружен — программа не собрана');return}
+
   const worlds={
     w_basics:{module:['m_market','m_chart'],icon:'📘',topics:['Что такое рынок','Цена и котировка','Bid и Ask','Spread','Ликвидность','Волатильность','Участники рынка','Спрос и предложение','Рыночный контекст','График цены','Шкала времени','Шкала цены','Типы графиков','Свечи как язык цены','OHLC обзор','Импульс и коррекция','Диапазон','Тренд','Шум рынка','Сессии рынка','Новости и волатильность','Гэпы и резкие движения','Объём: базовая идея','Почему цена движется','Наблюдение без прогноза','Контекст перед решением','Подтверждение идеи','Противоречащие признаки','Неопределённость','SKIP как решение','План анализа','Чек-лист перед практикой','Типичные ошибки новичка','Как читать слева направо','История против будущего','Вероятность и неопределённость','Тренировочные данные','Мини-практика основ']},
     w_candles:{module:['m_anatomy','m_patterns'],icon:'🕯',topics:['Open High Low Close','Тело свечи','Верхняя тень','Нижняя тень','Бычья свеча','Медвежья свеча','Размер тела','Длина теней','Диапазон свечи','Сильный импульс','Слабый импульс','Rejection','Indecision','Doji','Pin-style форма','Engulfing: идея','Inside candle: идея','Outside candle: идея','Последовательность свечей','Две свечи в контексте','Три свечи в контексте','Свеча у уровня','Свеча в тренде','Свеча в диапазоне','Ложная уверенность','Большая свеча после импульса','Малые свечи и сжатие','Расширение диапазона','Тени и борьба сторон','Закрытие свечи','Незакрытая свеча','Контекст важнее формы','Паттерн без контекста','Сравнение тел','Сравнение теней','Поиск свечи на графике','Candle replay','Итоговая практика свечей']},
@@ -14,34 +28,35 @@
     w_risk:{module:['m_money','m_psy'],icon:'🛡',topics:['Что такое риск','Вероятность','Expected value','Payout','Break-even','Размер риска','Серия убытков','Drawdown','Capital preservation','Лимит на решение','Лимит на сессию','Overexposure','Корреляция рисков','Не увеличивать риск из эмоций','Martingale: математика риска','Recovery fallacy','FOMO','Revenge trading','Overtrading','Tilt','Confirmation bias','Loss chasing','Страх пропустить','Страх после убытка','Дисциплина','Ожидание','SKIP','Журнал решений','Process over outcome','Decision Quality','Outcome variance','Хорошее решение — плохой исход','Плохое решение — хороший исход','Пауза после серии','Чек-лист риска','Психология и размер позиции','План сессии','Итоговая практика риска']},
     w_binary:{module:['m_contract','m_timing'],icon:'🎯',topics:['Binary contract recap','CALL / UP практика','PUT / DOWN практика','Strike recap','Expiration recap','Payout recap','Break-even практика','Контракт и правила платформы','Direction против timing','Timing против outcome','Короткая экспирация','Длиннее не значит лучше','Контекст перед CALL','Контекст перед PUT','Range и binary','Trend и binary','Уровень и expiration','Volatility и expiration','Bad timing','Good analysis bad expiration','OTC: правила среды','OTC: ограничения','OTC и неопределённость','No Trade в binary','Конфликт сигналов','Payout и решение','Martingale risk demo','Серия убытков','Decision Quality','Lucky win','Unlucky loss','Hidden future candles','CALL/PUT/SKIP scenario','Контекст → timing → решение','Binary replay','Binary risk checklist','Binary practice lab','Binary mastery check']}
   };
+
+  /* Ниже — прежняя логика идентификаторов. Не трогать. */
   const slug=s=>s.toLowerCase().replace(/[^a-zа-яё0-9]+/gi,'_').replace(/^_|_$/g,'').slice(0,34);
-  const explain=(topic,i)=>`Разберём «${topic}» как часть процесса чтения рынка. Смотри на контекст, а не на один изолированный признак. Учебные примеры не являются обещанием результата.`;
-  const lessons=[];
+  const lessons=[]; const missing=[];
+
   Object.entries(worlds).forEach(([worldId,cfg])=>{
     let prev=null;
     cfg.topics.forEach((topic,i)=>{
       const moduleId=cfg.module[Math.min(cfg.module.length-1,Math.floor(i/(cfg.topics.length/cfg.module.length)))];
       const id=`full_${worldId.slice(2)}_${String(i+1).padStart(2,'0')}_${slug(topic)}`;
       const scenarioId=`mega_${String((Object.keys(worlds).indexOf(worldId)*cfg.topics.length+i)%1050+1).padStart(4,'0')}`;
-      const options=[{id:'context',label:'Сначала проверить контекст'},{id:'force',label:'Сразу выбрать направление'},{id:'recover',label:'Увеличить риск после ошибки'}];
+      const body=Content.get(worldId,topic);
+      if(!body){ missing.push(`${worldId} · ${topic}`); return }
       lessons.push({
         id,worldId,moduleId,order:200+i*10,icon:cfg.icon,title:topic,
-        subtitle:`Интерактивный урок: ${topic}`,difficulty:i<12?'beginner':i<28?'intermediate':'advanced',estimatedTime:6+(i%4),xp:20+(i%3)*5,
+        subtitle:body.subtitle||body.explain.slice(0,90).replace(/\s+\S*$/,'')+'…',
+        difficulty:i<12?'beginner':i<28?'intermediate':'advanced',
+        estimatedTime:6+(i%4),xp:20+(i%3)*5,
         prerequisites:prev?[prev]:[],characterState:'welcome',source:'curriculum',
-        steps:[
-          {type:'character_message',characterState:'welcome',title:'MARKET AI',text:`Сегодня разбираем: ${topic}. Я покажу идею, затем ты примешь решение сам.`},
-          {type:'explanation',characterState:'pointing',title:topic,body:explain(topic,i)},
-          {type:'animation',characterState:'explaining',title:'Визуальный разбор',text:`Следи за изменением цены и отмечай, где проявляется идея «${topic}».`},
-          {type:'example',characterState:'point',title:'Пример',text:`В тренировочной сцене найди признаки темы «${topic}» и сравни их с общим рыночным контекстом.`},
-          {type:'counter_example',characterState:'warning',title:'Контрпример',text:'Один похожий признак без контекста не делает вывод автоматически правильным.'},
-          {type:'multiple_choice',characterState:'question',title:'Проверь себя',prompt:`Какой подход лучше при анализе темы «${topic}»?`,options,correctAnswer:'context',feedback:{correct:'Верно. Контекст и подтверждение важнее автоматического сигнала.',incorrect:'Не форсируй направление и не увеличивай риск ради отыгрыша. Сначала контекст.'}},
-          {type:'select_direction',characterState:'thinking',title:'Тренировочное решение',prompt:'Оцени учебный график. Если ясного основания нет, используй SKIP.',scenarioId,options:[{id:'up',label:'CALL / UP'},{id:'down',label:'PUT / DOWN'},{id:'skip',label:'SKIP / NO TRADE'}],correctAnswer:(i%5===0?'skip':i%2===0?'up':'down'),feedback:{correct:'Решение принято по условиям сценария. Теперь сравни процесс с исходом.',incorrect:'Пересмотри структуру, контекст и timing. Outcome не равен качеству решения.'}},
-          {type:'summary',characterState:'celebrate',title:'Главное',text:`Ты разобрал тему «${topic}». Закрепляй навык на новых сценариях, а не запоминай один пример.`}
-        ],quiz:[],practice:[{scenarioId,type:'decision'}]
+        steps:Content.buildSteps(topic,body,scenarioId),
+        quiz:[],practice:[{scenarioId,type:'decision'}]
       });
       prev=id;
     });
   });
-  C.registerSafe('curriculum_full_academy_v1',{id:'curriculum_full_academy_v1',version:'1.0.0',title:'MARKET AI Full Academy',lessons});
-  console.log('[MARKET AI] Full curriculum registered:',lessons.length,'lessons');
+
+  if(missing.length){
+    (window.logErr||console.error)('FullAcademy','нет авторского содержания для '+missing.length+' тем: '+missing.slice(0,6).join(' | ')+(missing.length>6?' …':''));
+  }
+  C.registerSafe('curriculum_full_academy_v1',{id:'curriculum_full_academy_v1',version:'2.0.0',title:'MARKET AI Full Academy',lessons});
+  console.log('[MARKET AI] Full curriculum registered:',lessons.length,'lessons ·',missing.length,'без содержания');
 })();
